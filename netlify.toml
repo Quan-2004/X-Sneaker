@@ -1,4 +1,91 @@
+# Netlify configuration for X-Sneaker
+
+# IMPORTANT: Set publish directory to root since we have html/ folder
+# Netlify will serve from root, so we need to handle paths properly
+
+# Build settings (no build needed for static site)
+[build]
+  publish = "."
+  command = ""
+
+# Redirect all paths to /html/index.html for SPA-like behavior
+# This handles /Product, /Cart, etc. URLs
 [[redirects]]
-  from = "/*"
-  to = "/index.html"
+  from = "/"
+  to = "/html/index.html"
   status = 200
+  force = false
+
+[[redirects]]
+  from = "/Product"
+  to = "/html/Product.html"
+  status = 200
+
+[[redirects]]
+  from = "/Product-detail"
+  to = "/html/Product-detail.html"
+  status = 200
+
+[[redirects]]
+  from = "/Cart"
+  to = "/html/Cart.html"
+  status = 200
+
+[[redirects]]
+  from = "/Account"
+  to = "/html/Account.html"
+  status = 200
+
+[[redirects]]
+  from = "/login"
+  to = "/html/login.html"
+  status = 200
+
+[[redirects]]
+  from = "/register"
+  to = "/html/register.html"
+  status = 200
+
+[[redirects]]
+  from = "/Blog-list"
+  to = "/html/Blog-list.html"
+  status = 200
+
+[[redirects]]
+  from = "/Blog-detail"
+  to = "/html/Blog-detail.html"
+  status = 200
+
+[[redirects]]
+  from = "/About-us"
+  to = "/html/About-us.html"
+  status = 200
+
+[[redirects]]
+  from = "/Contact-Us"
+  to = "/html/Contact-Us.html"
+  status = 200
+
+# Headers for security and CORS
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "no-referrer-when-downgrade"
+
+# Cache CSS and JS files for better performance
+[[headers]]
+  for = "/css/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/js/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/image/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
