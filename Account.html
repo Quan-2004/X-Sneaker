@@ -7,9 +7,9 @@
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet" />
-    <script src="../js/tailwind-config.js"></script>
-    <link rel="stylesheet" href="../css/style.css" />
-    <script src="../js/common.js" defer></script>
+    <script src="js/tailwind-config.js"></script>
+    <link rel="stylesheet" href="css/style.css" />
+    <script src="js/common.js" defer></script>
     <script src="https://upload-widget.cloudinary.com/global/all.js"></script>
 </head>
 <body class="bg-background-light dark:bg-background-dark text-[#1b0e0f] dark:text-white transition-colors duration-300">
@@ -105,7 +105,7 @@
         <aside class="w-full md:w-72 flex flex-col gap-6">
             <div class="bg-white dark:bg-background-dark border border-gray-200 dark:border-white/10 rounded-xl p-6 shadow-sm">
                 <div class="flex items-center gap-4 mb-4">
-                    <div id="user-avatar" class="size-12 rounded-full bg-cover bg-center" style='background-image: url("../image/default-avatar.jpg");'></div>
+                    <div id="user-avatar" class="size-12 rounded-full bg-cover bg-center" style='background-image: url("image/default-avatar.jpg");'></div>
                     <div>
                         <h3 id="user-name" class="font-bold text-lg leading-none">Loading...</h3>
                         <p id="user-tier" class="text-xs text-primary font-bold uppercase tracking-wider mt-1">...</p>
@@ -385,7 +385,7 @@
             <form id="edit-profile-form" class="p-6 space-y-6">
                 <!-- Avatar Upload -->
                 <div class="flex flex-col items-center gap-4">
-                    <div id="preview-avatar" class="size-24 rounded-full bg-cover bg-center border-4 border-primary shadow-lg" style="background-image: url('../image/default-avatar.jpg');"></div>
+                    <div id="preview-avatar" class="size-24 rounded-full bg-cover bg-center border-4 border-primary shadow-lg" style="background-image: url('image/default-avatar.jpg');"></div>
                     <button type="button" id="upload-avatar-btn" class="flex items-center gap-2 px-4 py-2 bg-gray-100 dark:bg-white/10 text-sm font-bold rounded-lg hover:bg-gray-200 dark:hover:bg-white/20 transition-colors">
                         <span class="material-symbols-outlined text-lg">cloud_upload</span>
                         Thay Đổi Avatar
@@ -509,6 +509,6 @@
     </div>
 
     <!-- Account Logic -->
-    <script type="module" src="../js/account.js"></script>
+    <script type="module" src="js/account.js"></script>
 </body>
 </html>
