@@ -10,6 +10,7 @@
     <script src="../js/tailwind-config.js"></script>
     <link rel="stylesheet" href="../css/style.css" />
     <script src="../js/common.js" defer></script>
+    <script src="https://upload-widget.cloudinary.com/global/all.js"></script>
 </head>
 <body class="bg-background-light dark:bg-background-dark text-[#1b0e0f] dark:text-white transition-colors duration-300">
     <!-- Header -->
@@ -103,33 +104,34 @@
         <!-- Sidebar Navigation -->
         <aside class="w-full md:w-72 flex flex-col gap-6">
             <div class="bg-white dark:bg-background-dark border border-gray-200 dark:border-white/10 rounded-xl p-6 shadow-sm">
-                <div class="flex items-center gap-4 mb-8">
-                    <div class="size-12 rounded-full bg-cover bg-center" data-alt="User profile picture placeholder" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDwUS9__7kHgIXmZN4RWePsSInAvaIEIITeFjgGfFd4qklsHSwS6HhVQrjV_TJY67DS4vO1NbB3VXOV7ied6CsTnrzw2Agc2Um-J-T-O_7x3Xcwg3PA2rr8WHiruEbyC3UPvTPfIjwxjxKP5PaBD-MsMTtF8Dv2lGb-G4HiG4KSOieZb6_rE9-9Sl84Qn6Q1W1shVPEMNFGBOfmGx8NxDEw_lRY0C7NYVJybPZa9WdBWZ6kqIWVYQNGs9wBiTH-1Xi7fNfTH3A-V0Q");'></div>
+                <div class="flex items-center gap-4 mb-4">
+                    <div id="user-avatar" class="size-12 rounded-full bg-cover bg-center" style='background-image: url("../image/default-avatar.jpg");'></div>
                     <div>
-                        <h3 class="font-bold text-lg leading-none">Nguyễn Văn A</h3>
-                        <p class="text-xs text-primary font-bold uppercase tracking-wider mt-1">Thành viên VIP</p>
+                        <h3 id="user-name" class="font-bold text-lg leading-none">Loading...</h3>
+                        <p id="user-tier" class="text-xs text-primary font-bold uppercase tracking-wider mt-1">...</p>
                     </div>
                 </div>
+                <!-- Edit Profile Button -->
+                <button id="edit-profile-btn" class="w-full mb-8 px-4 py-2 bg-primary text-white font-bold rounded-lg hover:bg-red-700 transition-all flex items-center justify-center gap-2">
+                    <span class="material-symbols-outlined">edit</span>
+                    Chỉnh Sửa Thông Tin
+                </button>
                 <nav class="flex flex-col gap-1">
-                    <a class="flex items-center gap-3 px-4 py-3 rounded-lg bg-primary text-white font-bold transition-all" href="#">
+                    <button class="nav-tab active flex items-center gap-3 px-4 py-3 rounded-lg bg-primary text-white transition-all text-left" data-tab="profile">
                         <span class="material-symbols-outlined">person</span>
-                        <span class="text-sm">Thông tin tài khoản</span>
-                    </a>
-                    <a class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-gray-100 dark:hover:bg-white/5 transition-all text-gray-600 dark:text-gray-300" href="#">
+                        <span class="text-sm font-bold">Thông tin tài khoản</span>
+                    </button>
+                    <button class="nav-tab flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-gray-100 dark:hover:bg-white/5 transition-all text-left text-gray-600 dark:text-gray-300" data-tab="orders">
                         <span class="material-symbols-outlined">package_2</span>
-                        <span class="text-sm">Lịch sử đơn hàng</span>
-                    </a>
-                    <a class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-gray-100 dark:hover:bg-white/5 transition-all text-gray-600 dark:text-gray-300" href="#">
+                        <span class="text-sm font-medium">Lịch sử đơn hàng</span>
+                    </button>
+                    <button class="nav-tab flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-gray-100 dark:hover:bg-white/5 transition-all text-left text-gray-600 dark:text-gray-300" data-tab="wishlist">
                         <span class="material-symbols-outlined">favorite</span>
-                        <span class="text-sm">Danh sách yêu thích</span>
-                    </a>
-                    <a class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-gray-100 dark:hover:bg-white/5 transition-all text-gray-600 dark:text-gray-300" href="#">
-                        <span class="material-symbols-outlined">settings</span>
-                        <span class="text-sm">Cài đặt</span>
-                    </a>
+                        <span class="text-sm font-medium">Danh sách yêu thích</span>
+                    </button>
                 </nav>
                 <div class="mt-8 pt-6 border-t border-gray-100 dark:border-white/10">
-                    <a class="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-400 hover:text-primary transition-all" href="#">
+                    <a id="logout-link" class="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-400 hover:text-primary transition-all" href="#">
                         <span class="material-symbols-outlined">logout</span>
                         <span class="text-sm font-bold">Đăng xuất</span>
                     </a>
@@ -139,34 +141,75 @@
 
         <!-- Main Dashboard Area -->
         <section class="flex-1 flex flex-col gap-8">
-            <!-- Welcome Header -->
-            <div class="flex flex-col gap-2">
-                <h1 class="text-4xl font-black tracking-tight text-black dark:text-white">Bảng Điều Khiển</h1>
-                <p class="text-gray-500 dark:text-gray-400">Chào mừng trở lại, A! Bạn có 2 đơn hàng sắp được giao.</p>
-            </div>
+            <!-- Profile Tab (Default) -->
+            <div id="tab-profile" class="tab-content block space-y-8">
+                <!-- Header & User Info -->
+                <div class="flex flex-col gap-6">
+                    <div class="flex items-center justify-between">
+                        <h1 class="text-3xl font-black tracking-tight text-black dark:text-white">Thông tin tài khoản</h1>
+                        <!-- Edit Button (Moved here or kept in sidebar? Keeping sidebar for now, maybe add one here too if needed) -->
+                    </div>
+                    
+                    <!-- User Info Card -->
+                    <div class="bg-white dark:bg-background-dark border border-gray-200 dark:border-white/10 rounded-xl p-6 shadow-sm">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="space-y-1">
+                                <label class="text-xs text-gray-500 uppercase font-bold">Họ và Tên</label>
+                                <p id="info-displayname" class="font-medium text-lg">Đang tải...</p>
+                            </div>
+                            <div class="space-y-1">
+                                <label class="text-xs text-gray-500 uppercase font-bold">Email</label>
+                                <p id="info-email" class="font-medium text-lg text-gray-600">Đang tải...</p>
+                            </div>
+                            <div class="space-y-1">
+                                <label class="text-xs text-gray-500 uppercase font-bold">Số Điện Thoại</label>
+                                <p id="info-phone" class="font-medium text-lg">--</p>
+                            </div>
+                            <div class="space-y-1">
+                                <label class="text-xs text-gray-500 uppercase font-bold">Giới Tính</label>
+                                <p id="info-gender" class="font-medium text-lg">--</p>
+                            </div>
+                            <div class="col-span-1 md:col-span-2 space-y-1">
+                                <label class="text-xs text-gray-500 uppercase font-bold">Địa Chỉ</label>
+                                <p id="info-address" class="font-medium text-lg">--</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
             <!-- Stats Overview -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div class="bg-white dark:bg-background-dark border border-gray-200 dark:border-white/10 p-6 rounded-xl shadow-sm">
-                    <p class="text-sm font-medium text-gray-500 uppercase tracking-wider">Tổng đơn hàng</p>
-                    <p class="text-3xl font-black mt-2">12</p>
-                    <div class="mt-4 text-xs font-bold text-green-600 flex items-center gap-1">
-                        <span class="material-symbols-outlined text-xs">trending_up</span>
-                        +2 tháng này
+                    <div class="flex items-center gap-4">
+                        <div class="size-12 rounded-lg bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-blue-600 dark:text-blue-400">
+                            <span class="material-symbols-outlined text-2xl">package_2</span>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500 dark:text-gray-400 font-bold uppercase tracking-wider">Đơn Hàng</p>
+                            <p id="total-orders" class="text-3xl font-black mt-2">0</p>
+                        </div>
                     </div>
                 </div>
                 <div class="bg-white dark:bg-background-dark border border-gray-200 dark:border-white/10 p-6 rounded-xl shadow-sm">
-                    <p class="text-sm font-medium text-gray-500 uppercase tracking-wider">Mục yêu thích</p>
-                    <p class="text-3xl font-black mt-2">5</p>
-                    <div class="mt-4 text-xs font-bold text-primary flex items-center gap-1 cursor-pointer hover:underline">
-                        Xem danh sách
+                    <div class="flex items-center gap-4">
+                        <div class="size-12 rounded-lg bg-pink-100 dark:bg-pink-900/30 flex items-center justify-center text-pink-600 dark:text-pink-400">
+                            <span class="material-symbols-outlined text-2xl">favorite</span>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500 dark:text-gray-400 font-bold uppercase tracking-wider">Yêu Thích</p>
+                            <p id="wishlist-count" class="text-3xl font-black mt-2">0</p>
+                        </div>
                     </div>
                 </div>
                 <div class="bg-white dark:bg-background-dark border border-gray-200 dark:border-white/10 p-6 rounded-xl shadow-sm">
-                    <p class="text-sm font-medium text-gray-500 uppercase tracking-wider">Điểm thành viên</p>
-                    <p class="text-3xl font-black mt-2">1,250</p>
-                    <div class="mt-4 text-xs font-bold text-blue-600 flex items-center gap-1">
-                        Hạng: Bạch Kim
+                    <div class="flex items-center gap-4">
+                        <div class="size-12 rounded-lg bg-yellow-100 dark:bg-yellow-900/30 flex items-center justify-center text-yellow-600 dark:text-yellow-400">
+                            <span class="material-symbols-outlined text-2xl">loyalty</span>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500 dark:text-gray-400 font-bold uppercase tracking-wider">Điểm Thưởng</p>
+                            <p id="loyalty-points" class="text-3xl font-black mt-2">0</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -189,53 +232,13 @@
                                 <th class="px-6 py-4 text-right">Hành Động</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-gray-100 dark:divide-white/10">
-                            <!-- Order 1 -->
-                            <tr class="hover:bg-gray-50/50 dark:hover:bg-white/5 transition-colors">
-                                <td class="px-6 py-5 font-bold text-sm">#XS-98421</td>
-                                <td class="px-6 py-5 text-sm text-gray-500">24/10/2023</td>
-                                <td class="px-6 py-5">
-                                    <div class="flex -space-x-2">
-                                        <div class="size-8 rounded-full border-2 border-white dark:border-background-dark bg-cover bg-center" data-alt="Sneaker photo" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCU5oFXoSYykNO9xOkp1_eunCz54oTba29XZyRYL9Tf10b_7-MPMQm3hj70Q9NUGa_XMZHjO_3yrFk35TQYSTQ6HrXlww8-x1wgHKC7JvCPjzGBel7zzgBI3LRrK3fPLUCLru9gc_dCncTfu0qle-GigyCTh47FkVUKmv6k77J8FTrQUWPeCnYu9QlsmjnobwD9T1zRbkOZOkDwA8-3wuSqs_AlZrqSK-mcy8OWLLKwo22mVIH1cvnFnPfREkv1Z2fWjuxrZ8SfgwM');"></div>
-                                        <div class="size-8 rounded-full border-2 border-white dark:border-background-dark bg-cover bg-center" data-alt="Sneaker photo" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBU3DZXhbYeMSHsWDAhfDxmpMEphkRFOvc8D49X_twLU-RKslGvKXLMKn8-bxaMffH5lDARADpyNyZfHRCGo5uSGvGcXiZlbOsyLyNak4E7D_Y0EFuehG9O3uyXgfpueFjRCZ-Rwbc2J_NmzDBaUjWmV_vPoPPTnFEzspheZLxyC_NjWI3l_jASzVfMEiFGD3VKSbhtOODBvZABatHPN8Wl1RuBwDSo6_mJOt_h9Io-3bNaGSwAW0ud6zkAzV045FQ3EZ6dpEiE0b4');"></div>
+                        <tbody id="orders-table-body" class="divide-y divide-gray-100 dark:divide-white/5">
+                            <!-- Dynamic orders content -->
+                            <tr>
+                                <td colspan="6" class="text-center py-8">
+                                    <div class="flex justify-center">
+                                        <span class="material-symbols-outlined animate-spin text-3xl text-gray-400">progress_activity</span>
                                     </div>
-                                </td>
-                                <td class="px-6 py-5">
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-primary/10 text-primary uppercase">Đang xử lý</span>
-                                </td>
-                                <td class="px-6 py-5 font-bold text-sm">7.680.000₫</td>
-                                <td class="px-6 py-5 text-right">
-                                    <button class="bg-primary text-white text-[10px] font-black uppercase px-4 py-2 rounded-lg hover:bg-red-700 transition-colors">Chi Tiết</button>
-                                </td>
-                            </tr>
-                            <!-- Order 2 -->
-                            <tr class="hover:bg-gray-50/50 dark:hover:bg-white/5 transition-colors">
-                                <td class="px-6 py-5 font-bold text-sm">#XS-98415</td>
-                                <td class="px-6 py-5 text-sm text-gray-500">18/10/2023</td>
-                                <td class="px-6 py-5">
-                                    <div class="size-8 rounded-full border-2 border-white dark:border-background-dark bg-cover bg-center" data-alt="Sneaker photo" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuA74G8FOygxf7uL_0Jfzihm2xwlWsTKJRzktxo8e-Xmu5nAvE3qB50I62XhmIMK5cd6UH8pF1dV5uzeZi8RXUENTh869eG3Y3vH4CaF5OHhEToFFet2Y9JxKt8fEPO17dlt6S08VzsMZAsmqIvvfZScKsdlYrmjYDfXeZLhNdCY8qYcADgRCguv_y9-GoiQgjrOchOMgsEPShcuCJIjaDEZOIS7sot6xtq2mGESMR1D3JJzuYv2hqM8hSKQeCBBylsKc5wjO1NaUkw');"></div>
-                                </td>
-                                <td class="px-6 py-5">
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-100 text-blue-700 uppercase">Đã gửi</span>
-                                </td>
-                                <td class="px-6 py-5 font-bold text-sm">4.440.000₫</td>
-                                <td class="px-6 py-5 text-right">
-                                    <button class="bg-primary text-white text-[10px] font-black uppercase px-4 py-2 rounded-lg hover:bg-red-700 transition-colors">Chi Tiết</button>
-                                </td>
-                            </tr>
-                            <!-- Order 3 -->
-                            <tr class="hover:bg-gray-50/50 dark:hover:bg-white/5 transition-colors">
-                                <td class="px-6 py-5 font-bold text-sm">#XS-98390</td>
-                                <td class="px-6 py-5 text-sm text-gray-500">05/10/2023</td>
-                                <td class="px-6 py-5">
-                                    <div class="size-8 rounded-full border-2 border-white dark:border-background-dark bg-cover bg-center" data-alt="Sneaker photo" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuA61T8kIACseL7vMYkqiinhPFqPJFwBlW-vtgH7cvFvU3aFWNXly7LIqPsHMI-rissYwxPYMHmQL8RX16uC3RohXvG9iBkSpZHmarVfsSY-DXzVqufIu2TwOoq9Jv0mI1DpFfUIJA8kn2Kxhxv92YvZ23vuG6JBjgIvj7EYBocptApse8IFuoYbkyc4OX4vMYMVT7p_wVkaW5a884OiRJ8jJxdGehKdmGZeSJXFeX4l5QNdph2HnqUf6c9PRFnRXXz635MhbWrbdhA');"></div>
-                                </td>
-                                <td class="px-6 py-5">
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-green-100 text-green-700 uppercase">Đã giao</span>
-                                </td>
-                                <td class="px-6 py-5 font-bold text-sm">5.040.000₫</td>
-                                <td class="px-6 py-5 text-right">
-                                    <button class="bg-primary text-white text-[10px] font-black uppercase px-4 py-2 rounded-lg hover:bg-red-700 transition-colors">Chi Tiết</button>
                                 </td>
                             </tr>
                         </tbody>
@@ -252,6 +255,58 @@
                 </div>
                 <div class="absolute right-0 top-0 bottom-0 w-1/3 bg-gradient-to-l from-primary/30 to-transparent pointer-events-none"></div>
                 <span class="material-symbols-outlined text-8xl text-white/5 absolute -right-4 -bottom-4">celebration</span>
+            </div>
+
+            <!-- Delete Account Section -->
+            <div class="pt-10 border-t border-gray-200 dark:border-white/10 mt-10">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h3 class="text-lg font-bold text-red-600">Xóa Tài Khoản</h3>
+                        <p class="text-sm text-gray-500 max-w-xl mt-1">
+                            Tài khoản của bạn sẽ bị vô hiệu hóa trong 7 ngày. Sau thời gian này, tài khoản và toàn bộ dữ liệu sẽ bị xóa vĩnh viễn và không thể khôi phục.
+                        </p>
+                    </div>
+                    <button id="btn-request-delete" class="px-6 py-3 bg-red-50 text-red-600 font-bold rounded-lg border border-red-100 hover:bg-red-600 hover:text-white transition-all">
+                        Xóa Tài Khoản
+                    </button>
+                </div>
+            </div>
+
+            </div> <!-- End tab-profile -->
+
+            <!-- Orders Tab -->
+            <div id="tab-orders" class="tab-content hidden space-y-6">
+                <h2 class="text-2xl font-bold">Lịch Sử Đơn Hàng</h2>
+                <div class="bg-white dark:bg-background-dark border border-gray-200 dark:border-white/10 rounded-xl shadow-sm overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left">
+                            <thead>
+                                <tr class="bg-gray-50 dark:bg-white/5 text-[10px] uppercase tracking-widest text-gray-400 font-bold">
+                                    <th class="px-6 py-4">Mã Đơn</th>
+                                    <th class="px-6 py-4">Ngày</th>
+                                    <th class="px-6 py-4">Sản Phẩm</th>
+                                    <th class="px-6 py-4">Trạng Thái</th>
+                                    <th class="px-6 py-4">Tổng Tiền</th>
+                                    <th class="px-6 py-4 text-right">Hành Động</th>
+                                </tr>
+                            </thead>
+                            <tbody id="full-orders-table-body" class="divide-y divide-gray-100 dark:divide-white/5">
+                                <!-- Dynamic orders content will be loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Wishlist Tab -->
+            <div id="tab-wishlist" class="tab-content hidden space-y-6">
+                <h2 class="text-2xl font-bold">Danh Sách Yêu Thích</h2>
+                <div id="wishlist-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Wishlist items will be loaded here -->
+                    <div class="col-span-full text-center py-12">
+                        <span class="material-symbols-outlined animate-spin text-4xl text-gray-300">progress_activity</span>
+                    </div>
+                </div>
             </div>
         </section>
     </main>
@@ -314,5 +369,146 @@
             </div>
         </div>
     </footer>
+
+    <!-- Edit Profile Modal -->
+    <div id="edit-profile-modal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-[100] hidden flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-background-dark rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <!-- Modal Header -->
+            <div class="sticky top-0 bg-white dark:bg-background-dark border-b border-gray-200 dark:border-white/10 p-6 flex items-center justify-between z-10">
+                <h2 class="text-2xl font-bold">Chỉnh Sửa Thông Tin</h2>
+                <button id="close-modal-btn" class="text-gray-400 hover:text-gray-600 transition-colors">
+                    <span class="material-symbols-outlined text-3xl">close</span>
+                </button>
+            </div>
+
+            <!-- Modal Body -->
+            <form id="edit-profile-form" class="p-6 space-y-6">
+                <!-- Avatar Upload -->
+                <div class="flex flex-col items-center gap-4">
+                    <div id="preview-avatar" class="size-24 rounded-full bg-cover bg-center border-4 border-primary shadow-lg" style="background-image: url('../image/default-avatar.jpg');"></div>
+                    <button type="button" id="upload-avatar-btn" class="flex items-center gap-2 px-4 py-2 bg-gray-100 dark:bg-white/10 text-sm font-bold rounded-lg hover:bg-gray-200 dark:hover:bg-white/20 transition-colors">
+                        <span class="material-symbols-outlined text-lg">cloud_upload</span>
+                        Thay Đổi Avatar
+                    </button>
+                    <input type="hidden" id="avatar-url" name="photoURL">
+                </div>
+
+                <div class="w-full h-px bg-gray-100 dark:bg-white/10"></div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Full Name -->
+                    <div class="md:col-span-2">
+                        <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Họ và Tên</label>
+                        <input type="text" id="edit-displayName" name="displayName" class="w-full rounded-lg border-gray-200 dark:border-white/10 bg-white dark:bg-white/5 p-3 font-semibold focus:ring-primary focus:border-primary" required>
+                    </div>
+
+                    <!-- Email (Read-only) -->
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Email</label>
+                        <input type="email" id="edit-email" name="email" class="w-full rounded-lg border-transparent bg-gray-100 dark:bg-white/10 p-3 text-gray-500 cursor-not-allowed" readonly>
+                    </div>
+
+                    <!-- Phone -->
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Số Điện Thoại</label>
+                        <input type="tel" id="edit-phone" name="phone" pattern="[0-9]{10}" class="w-full rounded-lg border-gray-200 dark:border-white/10 bg-white dark:bg-white/5 p-3 font-semibold focus:ring-primary focus:border-primary" placeholder="09xxxxxxxx">
+                    </div>
+
+                    <!-- Gender -->
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Giới Tính</label>
+                        <select id="edit-gender" name="gender" class="w-full rounded-lg border-gray-200 dark:border-white/10 bg-white dark:bg-white/5 p-3 font-semibold focus:ring-primary focus:border-primary">
+                            <option value="">Chọn giới tính</option>
+                            <option value="male">Nam</option>
+                            <option value="female">Nữ</option>
+                            <option value="other">Khác</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="w-full h-px bg-gray-100 dark:bg-white/10"></div>
+
+                <!-- Address Section -->
+                <div>
+                    <h3 class="font-bold text-lg mb-4">Địa Chỉ Giao Hàng</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="md:col-span-2">
+                            <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Địa chỉ cụ thể</label>
+                            <input type="text" id="edit-street" name="address.street" class="w-full rounded-lg border-gray-200 dark:border-white/10 bg-white dark:bg-white/5 p-3 font-semibold focus:ring-primary focus:border-primary" placeholder="Số nhà, tên đường">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Phường/Xã</label>
+                            <input type="text" id="edit-ward" name="address.ward" class="w-full rounded-lg border-gray-200 dark:border-white/10 bg-white dark:bg-white/5 p-3 font-semibold focus:ring-primary focus:border-primary">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Quận/Huyện</label>
+                            <input type="text" id="edit-district" name="address.district" class="w-full rounded-lg border-gray-200 dark:border-white/10 bg-white dark:bg-white/5 p-3 font-semibold focus:ring-primary focus:border-primary">
+                        </div>
+                        <div class="md:col-span-2">
+                            <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Tỉnh/Thành Phố</label>
+                            <input type="text" id="edit-city" name="address.city" class="w-full rounded-lg border-gray-200 dark:border-white/10 bg-white dark:bg-white/5 p-3 font-semibold focus:ring-primary focus:border-primary">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex gap-4 pt-4 border-t border-gray-100 dark:border-white/10">
+                    <button type="button" id="cancel-edit-btn" class="flex-1 px-6 py-3 rounded-xl bg-gray-100 dark:bg-white/10 font-bold hover:bg-gray-200 dark:hover:bg-white/20 transition-colors">
+                        Hủy Bỏ
+                    </button>
+                    <button type="submit" class="flex-1 px-6 py-3 rounded-xl bg-primary text-white font-bold hover:bg-red-700 transition-colors shadow-lg shadow-primary/30">
+                        Lưu Thay Đổi
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Logout Confirmation Modal -->
+    <div id="logout-modal" class="fixed inset-0 z-[70] hidden items-center justify-center bg-black/50 backdrop-blur-sm p-4 opacity-0 transition-opacity duration-300">
+        <div class="bg-white dark:bg-background-dark w-full max-w-md rounded-2xl p-6 shadow-2xl transform scale-95 transition-transform duration-300">
+            <div class="text-center">
+                <div class="size-16 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center mx-auto mb-4 text-red-600">
+                    <span class="material-symbols-outlined text-3xl">logout</span>
+                </div>
+                <h3 class="text-xl font-bold mb-2">Đăng Xuất?</h3>
+                <p class="text-gray-500 dark:text-gray-400 mb-8">Bạn có chắc chắn muốn đăng xuất khỏi tài khoản không?</p>
+                <div class="flex gap-4">
+                    <button id="btn-cancel-logout" class="flex-1 px-4 py-3 bg-gray-100 dark:bg-white/5 font-bold rounded-xl hover:bg-gray-200 transition-colors">
+                        Hủy
+                    </button>
+                    <button id="btn-confirm-logout" class="flex-1 px-4 py-3 bg-primary text-white font-bold rounded-xl hover:bg-red-700 transition-colors">
+                        Đăng Xuất
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Account Confirmation Modal -->
+    <div id="delete-account-modal" class="fixed inset-0 z-[70] hidden items-center justify-center bg-black/50 backdrop-blur-sm p-4 opacity-0 transition-opacity duration-300">
+        <div class="bg-white dark:bg-background-dark w-full max-w-md rounded-2xl p-6 shadow-2xl transform scale-95 transition-transform duration-300">
+            <div class="text-center">
+                <div class="size-16 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center mx-auto mb-4 text-red-600">
+                    <span class="material-symbols-outlined text-3xl">warning</span>
+                </div>
+                <h3 class="text-xl font-bold mb-2">Xác Nhận Xóa Tài Khoản</h3>
+                <p class="text-gray-500 dark:text-gray-400 mb-6 text-sm">
+                    Hành động này sẽ lên lịch xóa tài khoản của bạn. Bạn có <strong>7 ngày</strong> để đăng nhập lại và hủy yêu cầu này. Sau đó, dữ liệu sẽ mất vĩnh viễn.
+                </p>
+                <div class="flex gap-4">
+                    <button id="btn-cancel-delete" class="flex-1 px-4 py-3 bg-gray-100 dark:bg-white/5 font-bold rounded-xl hover:bg-gray-200 transition-colors">
+                        Giữ Lại
+                    </button>
+                    <button id="btn-confirm-delete" class="flex-1 px-4 py-3 bg-red-600 text-white font-bold rounded-xl hover:bg-red-700 transition-colors">
+                        Xác Nhận Xóa
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Account Logic -->
+    <script type="module" src="../js/account.js"></script>
 </body>
 </html>
