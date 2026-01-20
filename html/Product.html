@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html class="light" lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>X-Sneaker | Cửa Hàng</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet" />
+    <script src="../js/tailwind-config.js"></script>
+    <link rel="stylesheet" href="../css/style.css" />
+    <script src="../js/common.js" defer></script>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-[#1b0e0f] dark:text-white transition-colors duration-300">
+    <!-- Header -->
+    <header class="sticky top-0 z-50 bg-[#000000] border-b border-white/10">
+        <div class="max-w-[1440px] mx-auto px-4 md:px-10 lg:px-20 py-4 flex items-center justify-between">
+            <a class="flex items-center gap-2 text-white shrink-0" href="index.html">
+                <div class="size-8 text-primary">
+                    <svg fill="currentColor" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M36.7273 44C33.9891 44 31.6043 39.8386 30.3636 33.69C29.123 39.8386 26.7382 44 24 44C21.2618 44 18.877 39.8386 17.6364 33.69C16.3957 39.8386 14.0109 44 11.2727 44C7.25611 44 4 35.0457 4 24C4 12.9543 7.25611 4 11.2727 44C7.25611 44 4 35.0457 4 24C4 12.9543 7.25611 4 11.2727 44C7.25611 44 4 35.0457 4 24C4 12.9543 7.25611 4 11.2727 44C7.25611 44 4 35.0457 4 24C4 12.9543 7.25611 4 11.2727 44C7.25611 44 4 35.0457 4 24C4 12.9543 7.25611 4 11.2727 44C7.25611 44 4 35.0457 4 24C4 12.9543 7.25611 4 11.2727 4C14.0109 4 16.3957 8.16144 17.6364 14.31C18.877 8.16144 21.2618 4 24 4C26.7382 4 29.123 8.16144 30.3636 14.31C31.6043 8.16144 33.9891 4 36.7273 4C40.7439 4 44 12.9543 44 24C44 35.0457 40.7439 44 36.7273 44Z"></path>
+                    </svg>
+                </div>
+                <h2 class="text-xl font-extrabold tracking-tighter uppercase italic">X-Sneaker</h2>
+            </a>
+            <nav class="hidden lg:flex items-center gap-10 text-white ml-10">
+                <div class="shop-nav-item relative py-2">
+                    <a class="text-sm font-semibold hover:text-primary transition-colors flex items-center gap-1" href="Product.html">
+                        Cửa hàng <span class="material-symbols-outlined text-[16px]">expand_more</span>
+                    </a>
+                    <div class="mega-menu absolute top-full left-1/2 -translate-x-1/2 pt-4 w-[600px]">
+                        <div class="bg-white text-black shadow-2xl rounded-xl p-8 grid grid-cols-3 gap-8 border border-gray-100">
+                            <div>
+                                <h4 class="font-black text-xs uppercase tracking-widest text-primary mb-4">Nam</h4>
+                                <ul class="space-y-3 text-sm font-medium">
+                                    <li><a class="hover:text-primary transition-colors" href="Product.html">Thời trang</a></li>
+                                    <li><a class="hover:text-primary transition-colors" href="Product.html">Chạy bộ</a></li>
+                                    <li><a class="hover:text-primary transition-colors" href="Product.html">Bóng rổ</a></li>
+                                    <li><a class="hover:text-primary transition-colors" href="Product.html">Tập luyện</a></li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 class="font-black text-xs uppercase tracking-widest text-primary mb-4">Nữ</h4>
+                                <ul class="space-y-3 text-sm font-medium">
+                                    <li><a class="hover:text-primary transition-colors" href="Product.html">Thời trang</a></li>
+                                    <li><a class="hover:text-primary transition-colors" href="Product.html">Chạy bộ</a></li>
+                                    <li><a class="hover:text-primary transition-colors" href="Product.html">Gym &amp; Training</a></li>
+                                    <li><a class="hover:text-primary transition-colors" href="Product.html">Yoga</a></li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 class="font-black text-xs uppercase tracking-widest text-primary mb-4">Phụ kiện</h4>
+                                <ul class="space-y-3 text-sm font-medium">
+                                    <li><a class="hover:text-primary transition-colors" href="Product.html">Tất / Vớ</a></li>
+                                    <li><a class="hover:text-primary transition-colors" href="Product.html">Chăm sóc giày</a></li>
+                                    <li><a class="hover:text-primary transition-colors" href="Product.html">Túi &amp; Balo</a></li>
+                                    <li><a class="hover:text-primary transition-colors" href="Product.html">Dây giày</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <a class="text-sm font-semibold hover:text-primary transition-colors" href="Product.html">Khuyến mãi</a>
+                <a class="text-sm font-semibold hover:text-primary transition-colors" href="Blog-list.html">Tin tức</a>
+                <a class="text-sm font-semibold hover:text-primary transition-colors" href="About-us.html">Giới thiệu</a>
+                <a class="text-sm font-semibold hover:text-primary transition-colors" href="Contact-Us.html">Liên hệ</a>
+            </nav>
+            <div class="flex items-center gap-6 text-white">
+                <button class="hover:text-primary transition-colors flex items-center justify-center">
+                    <span class="material-symbols-outlined">search</span>
+                </button>
+                <a href="Product.html" class="hover:text-primary transition-colors">Khuyến mãi</a>
+                <a href="Account.html" class="hover:text-primary transition-colors flex items-center justify-center">
+                    <span class="material-symbols-outlined">person</span>
+                </a>
+                <button class="hover:text-primary transition-colors flex items-center justify-center">
+                    <span class="material-symbols-outlined">favorite</span>
+                </button>
+                <a href="Cart.html" class="hover:text-primary transition-colors relative flex items-center justify-center">
+                    <span class="material-symbols-outlined">shopping_cart</span>
+                    <span class="absolute -top-2 -right-2 bg-primary text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold text-white border border-black">3</span>
+                </a>
+                <button id="mobile-menu-btn" class="lg:hidden text-white"><span class="material-symbols-outlined">menu</span></button>
+            </div>
+        </div>
+        <!-- Mobile Menu Overlay -->
+        <div id="mobile-menu" class="fixed inset-0 bg-black/95 z-[60] hidden flex-col items-center justify-center text-white transition-opacity duration-300">
+            <button id="close-menu-btn" class="absolute top-6 right-6 text-white p-2">
+                <span class="material-symbols-outlined text-4xl">close</span>
+            </button>
+            <nav class="flex flex-col items-center gap-8 text-xl font-bold uppercase tracking-widest">
+                <a href="Product.html" class="hover:text-primary transition-colors">Cửa hàng</a>
+                <a href="Product.html" class="hover:text-primary transition-colors">Khuyến mãi</a>
+                <a href="Blog-list.html" class="hover:text-primary transition-colors">Tin tức</a>
+                <a href="About-us.html" class="hover:text-primary transition-colors">Giới thiệu</a>
+                <a href="Contact-Us.html" class="hover:text-primary transition-colors">Liên hệ</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="max-w-[1440px] mx-auto min-h-screen">
+        <!-- Top Utility Bar (Breadcrumbs & Sort) -->
+        <div class="flex flex-col md:flex-row md:items-center justify-between px-6 lg:px-20 py-6">
+            <div class="flex items-center gap-2 text-sm text-gray-500 mb-4 md:mb-0">
+                <a class="hover:text-primary transition-colors" href="index.html">Trang chủ</a>
+                <span class="material-symbols-outlined text-base">chevron_right</span>
+                <span class="font-medium text-black dark:text-white">Danh mục sản phẩm</span>
+            </div>
+            <div class="flex items-center gap-4">
+                <span class="text-sm font-medium text-gray-500 uppercase tracking-wide">Sắp xếp theo:</span>
+                <div class="relative inline-block text-left">
+                    <button class="flex items-center gap-2 px-4 py-2 bg-white dark:bg-background-dark border border-gray-200 dark:border-gray-800 rounded-lg text-sm font-semibold">
+                        Phổ biến nhất
+                        <span class="material-symbols-outlined text-xl">expand_more</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="flex flex-col lg:flex-row px-6 lg:px-20 pb-20 gap-10">
+            <!-- Sidebar Filters -->
+            <aside class="w-full lg:w-64 flex-shrink-0 space-y-8">
+                <div>
+                    <h3 class="text-sm font-bold uppercase tracking-widest mb-4 flex items-center justify-between">
+                        Danh Mục
+                        <span class="material-symbols-outlined text-gray-400">expand_less</span>
+                    </h3>
+                    <div class="space-y-2">
+                        <label class="flex items-center gap-3 cursor-pointer group">
+                            <input checked="" class="rounded border-gray-300 text-primary focus:ring-primary h-4 w-4" type="checkbox"/>
+                            <span class="text-sm text-gray-700 dark:text-gray-300 group-hover:text-black dark:group-hover:text-white">Thời trang</span>
+                        </label>
+                        <label class="flex items-center gap-3 cursor-pointer group">
+                            <input class="rounded border-gray-300 text-primary focus:ring-primary h-4 w-4" type="checkbox"/>
+                            <span class="text-sm text-gray-700 dark:text-gray-300 group-hover:text-black dark:group-hover:text-white">Chạy bộ</span>
+                        </label>
+                        <label class="flex items-center gap-3 cursor-pointer group">
+                            <input class="rounded border-gray-300 text-primary focus:ring-primary h-4 w-4" type="checkbox"/>
+                            <span class="text-sm text-gray-700 dark:text-gray-300 group-hover:text-black dark:group-hover:text-white">Bóng rổ</span>
+                        </label>
+                        <label class="flex items-center gap-3 cursor-pointer group">
+                            <input class="rounded border-gray-300 text-primary focus:ring-primary h-4 w-4" type="checkbox"/>
+                            <span class="text-sm text-gray-700 dark:text-gray-300 group-hover:text-black dark:group-hover:text-white">Tập luyện &amp; Gym</span>
+                        </label>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-sm font-bold uppercase tracking-widest mb-4">Thương Hiệu</h3>
+                    <div class="space-y-2">
+                        <label class="flex items-center gap-3 cursor-pointer group">
+                            <input class="rounded border-gray-300 text-primary focus:ring-primary h-4 w-4" type="checkbox"/>
+                            <span class="text-sm text-gray-700 dark:text-gray-300">Nike</span>
+                        </label>
+                        <label class="flex items-center gap-3 cursor-pointer group">
+                            <input class="rounded border-gray-300 text-primary focus:ring-primary h-4 w-4" type="checkbox"/>
+                            <span class="text-sm text-gray-700 dark:text-gray-300">Adidas</span>
+                        </label>
+                        <label class="flex items-center gap-3 cursor-pointer group">
+                            <input class="rounded border-gray-300 text-primary focus:ring-primary h-4 w-4" type="checkbox"/>
+                            <span class="text-sm text-gray-700 dark:text-gray-300">Jordan</span>
+                        </label>
+                        <label class="flex items-center gap-3 cursor-pointer group">
+                            <input class="rounded border-gray-300 text-primary focus:ring-primary h-4 w-4" type="checkbox"/>
+                            <span class="text-sm text-gray-700 dark:text-gray-300">New Balance</span>
+                        </label>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-sm font-bold uppercase tracking-widest mb-4">Size (US)</h3>
+                    <div class="grid grid-cols-4 gap-2">
+                        <button class="py-2 text-xs font-semibold border border-gray-200 dark:border-gray-800 rounded hover:border-black dark:hover:border-white transition-colors">7</button>
+                        <button class="py-2 text-xs font-semibold border border-black dark:border-white bg-black dark:bg-white text-white dark:text-black rounded">8</button>
+                        <button class="py-2 text-xs font-semibold border border-gray-200 dark:border-gray-800 rounded hover:border-black">8.5</button>
+                        <button class="py-2 text-xs font-semibold border border-gray-200 dark:border-gray-800 rounded hover:border-black">9</button>
+                        <button class="py-2 text-xs font-semibold border border-gray-200 dark:border-gray-800 rounded hover:border-black">10</button>
+                        <button class="py-2 text-xs font-semibold border border-gray-200 dark:border-gray-800 rounded hover:border-black">11</button>
+                        <button class="py-2 text-xs font-semibold border border-gray-200 dark:border-gray-800 rounded hover:border-black">12</button>
+                        <button class="py-2 text-xs font-semibold border border-gray-200 dark:border-gray-800 rounded hover:border-black">13</button>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-sm font-bold uppercase tracking-widest mb-4">Khoảng Giá</h3>
+                    <div class="px-2">
+                        <input class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-primary" type="range"/>
+                        <div class="flex justify-between mt-2 text-sm font-medium text-gray-500">
+                            <span>0₫</span>
+                            <span>5.000.000₫+</span>
+                        </div>
+                    </div>
+                </div>
+                <button class="w-full py-3 bg-gray-100 dark:bg-gray-800 text-black dark:text-white text-sm font-bold uppercase tracking-wider rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
+                    Xóa Bộ Lọc
+                </button>
+            </aside>
+            <!-- Product Grid -->
+            <section class="flex-1">
+                <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-8">
+                    <!-- Card 1 -->
+                    <div class="group relative flex flex-col">
+                        <div class="relative aspect-square bg-[#f3f3f3] dark:bg-[#2a1a1b] rounded-xl overflow-hidden mb-4">
+                            <a href="Product-detail.html">
+                                <img class="w-full h-full object-contain p-8 group-hover:scale-110 transition-transform duration-500" data-alt="Red Nike running sneaker on light background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDZbSwk-HjveHGPvaPJIr9FTdnMBNKy29TcB5cuRS0jseKkFGdwmPVSHsrxaGG_D8pzK1tumyrWAcaSpWwBd4BQDpqFAFVmtqkBnoJVJqozJBD-4OT6crQ-E1rgN0flEeya-pc9k2ByoeS_Vxm32vhlF9KeN7wQOWym3Y37XnvezC9BXR9xii57HYPSxF73NMnul6a3084j1qLVOqLEoLpDOQi7je2x_BA9970ySa0FNVc8UNTY9PjcSryXiWY8mg83PT7WlpYhDoI"/>
+                            </a>
+                            <div class="absolute top-4 left-4 bg-primary text-white text-[10px] font-bold px-2 py-1 rounded">HOT</div>
+                            <button class="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black text-white text-xs font-bold px-6 py-3 rounded-lg opacity-0 group-hover:opacity-100 transition-all transform translate-y-4 group-hover:translate-y-0 w-[80%] whitespace-nowrap">
+                                THÊM NHANH
+                            </button>
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <p class="text-gray-500 text-xs font-semibold uppercase tracking-wider">Nike</p>
+                            <a href="Product-detail.html">
+                                <h3 class="text-base font-bold text-gray-900 dark:text-white leading-tight hover:text-primary transition-colors">Air Zoom Pegasus 39</h3>
+                            </a>
+                            <p class="text-primary font-bold text-lg mt-1">2.880.000₫</p>
+                        </div>
+                    </div>
+                    <!-- Card 2 -->
+                    <div class="group relative flex flex-col">
+                        <div class="relative aspect-square bg-[#f3f3f3] dark:bg-[#2a1a1b] rounded-xl overflow-hidden mb-4">
+                            <a href="Product-detail.html">
+                                <img class="w-full h-full object-contain p-8 group-hover:scale-110 transition-transform duration-500" data-alt="White and grey lifestyle sneaker" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCyg2yO3cGAAGchCy1Qdy0X1XHJH2UGJe7X4DHAKCjXVm_MC-SE0Dv0o373ZBamxFgsMbZyJHOHSX005gCQktpXSwIYDwPcMnqFUAY6DTBmuWmaABGNgR3zE_ybqDQbNyOdA-_pX7nwYopsRgSITG_gBXGgc3S8KAD1gklsqxeDaXngOvNOQB_EGebJAMyHzeT4cwFRue4NhjZJH5CJ66QQnPrGR7ARyEtX-d4N3Mcz5kGUADO6PnCWPqxKcbkdeRVoTGf3_TKRCpc"/>
+                            </a>
+                            <button class="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black text-white text-xs font-bold px-6 py-3 rounded-lg opacity-0 group-hover:opacity-100 transition-all transform translate-y-4 group-hover:translate-y-0 w-[80%] whitespace-nowrap">
+                                THÊM NHANH
+                            </button>
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <p class="text-gray-500 text-xs font-semibold uppercase tracking-wider">Adidas</p>
+                            <a href="Product-detail.html">
+                                <h3 class="text-base font-bold text-gray-900 dark:text-white leading-tight hover:text-primary transition-colors">UltraBoost Light</h3>
+                            </a>
+                            <p class="text-primary font-bold text-lg mt-1">4.560.000₫</p>
+                        </div>
+                    </div>
+                    <!-- Card 3 -->
+                    <div class="group relative flex flex-col">
+                        <div class="relative aspect-square bg-[#f3f3f3] dark:bg-[#2a1a1b] rounded-xl overflow-hidden mb-4">
+                            <a href="Product-detail.html">
+                                <img class="w-full h-full object-contain p-8 group-hover:scale-110 transition-transform duration-500" data-alt="Brown and beige stylish sneaker" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDCDzqpa528sZGfORxOTFX51B0x2rOBEOl0yIezXT_dVUmRHSpieA1Zo8fnqfT4sXlbgOyjZTSx6VzzoVkt6s8ENv2MvEX-MN5mCv8TgBhdwn8cxMYzShgJzrzdBVLGxSFmr4-K7dOqYeA_PIBqJgW3XfS9dCbaYv4WKRnyBQ_Q5hjttGkG_tGFNoAlJjkbmF9Lcun8uhUNVAouJfFIfzWyXrPHbpdWY7NRuG3GFID30szZvVuBV69Zx2vLjctKDiaHeDyWDQC07ag"/>
+                            </a>
+                            <div class="absolute top-4 left-4 bg-black text-white text-[10px] font-bold px-2 py-1 rounded">MỚI</div>
+                            <button class="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black text-white text-xs font-bold px-6 py-3 rounded-lg opacity-0 group-hover:opacity-100 transition-all transform translate-y-4 group-hover:translate-y-0 w-[80%] whitespace-nowrap">
+                                THÊM NHANH
+                            </button>
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <p class="text-gray-500 text-xs font-semibold uppercase tracking-wider">New Balance</p>
+                            <h3 class="text-base font-bold text-gray-900 dark:text-white leading-tight">Fresh Foam x 880v13</h3>
+                            <p class="text-primary font-bold text-lg mt-1">3.360.000₫</p>
+                        </div>
+                    </div>
+                    <!-- Card 4 -->
+                    <div class="group relative flex flex-col">
+                        <div class="relative aspect-square bg-[#f3f3f3] dark:bg-[#2a1a1b] rounded-xl overflow-hidden mb-4">
+                            <img class="w-full h-full object-contain p-8 group-hover:scale-110 transition-transform duration-500" data-alt="Bright colorful high top sneaker" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC4KzbusYcG_NKz09tla5GHDJeb8zN5Ur44sVJQDDMElfVenZ9K50pTFcqOPKY0Hqvv46mo1qkmaMdu__LVpmWOH_dlKU0PO-hcsYtgciuaoViqP3vGB5KE6EhY4u9AZj7GxTvgV7aZb-zasliZMwY-JepArLxjwQAiFM6QG4Hxjn5grirXaod24Eimdhe5YwsuK-pksYktrziQYpmb8PyEbpNzed9Q3U33ClnPev2Ntz0MIcEkhXBojKLsx80Buhq6TK2bNNXfYEI"/>
+                            <button class="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black text-white text-xs font-bold px-6 py-3 rounded-lg opacity-0 group-hover:opacity-100 transition-all transform translate-y-4 group-hover:translate-y-0 w-[80%] whitespace-nowrap">
+                                THÊM NHANH
+                            </button>
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <p class="text-gray-500 text-xs font-semibold uppercase tracking-wider">Jordan</p>
+                            <h3 class="text-base font-bold text-gray-900 dark:text-white leading-tight">Air Jordan 1 Retro</h3>
+                            <p class="text-primary font-bold text-lg mt-1">4.320.000₫</p>
+                        </div>
+                    </div>
+                    <!-- Card 5 -->
+                    <div class="group relative flex flex-col">
+                        <div class="relative aspect-square bg-[#f3f3f3] dark:bg-[#2a1a1b] rounded-xl overflow-hidden mb-4">
+                            <img class="w-full h-full object-contain p-8 group-hover:scale-110 transition-transform duration-500" data-alt="Classic black and white sneaker" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDfo1hiOC0cHQbLLIRsQAvy08RIpBOBKOfHTsm5Sbqqe9UkDwt-AXziXUxugTuZGtiO483lC3ArUvdoP3fgpnjDvkAvITbNTLoL-jRzrtLHbDOK2t9vI3y_DWBHnCPhAendyRm0uFWnleAL2qQT5HoFHzgCk8YJluKmhx85doHdhdx9Udm_Q0AyBYNk7BZotQpGHz69T50sLa5b6dijWQfuEQHLFj46D6h_PAlQU9-P2-HKuriEGLC6phCrFThaHbpd15uM7LvLO_s"/>
+                            <div class="absolute top-4 right-4 text-gray-400 group-hover:text-primary transition-colors">
+                                <span class="material-symbols-outlined fill-current">favorite</span>
+                            </div>
+                            <button class="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black text-white text-xs font-bold px-6 py-3 rounded-lg opacity-0 group-hover:opacity-100 transition-all transform translate-y-4 group-hover:translate-y-0 w-[80%] whitespace-nowrap">
+                                THÊM NHANH
+                            </button>
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <p class="text-gray-500 text-xs font-semibold uppercase tracking-wider">Nike</p>
+                            <h3 class="text-base font-bold text-gray-900 dark:text-white leading-tight">Dunk Low Panda</h3>
+                            <p class="text-primary font-bold text-lg mt-1">2.640.000₫</p>
+                        </div>
+                    </div>
+                    <!-- Card 6 -->
+                    <div class="group relative flex flex-col">
+                        <div class="relative aspect-square bg-[#f3f3f3] dark:bg-[#2a1a1b] rounded-xl overflow-hidden mb-4">
+                            <img class="w-full h-full object-contain p-8 group-hover:scale-110 transition-transform duration-500" data-alt="Grey suede lifestyle sneaker" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB9N8HuJD2I3T3ca1oAICQHI83G0sR9L3BC2oLLaNnz91hQT1462xqsofY7KEJoM66yx9BZa85SYA9Shxo-pO2gLfHir_axFs75ncJxnsgm5X__24DafNuKKcMzpuRoUcU2Piy4KDodSq47VFcXPtM1Epd0PYET9C26076NdtBPhbfAFSr7JSWOdqUr2l_37IyMimxodZCxv4JfMQg9NdWT1HSh5EwtZXJp23HndYxICt-DJ_IUR_dUTQeKCc-_txhmssdiOXuVSoU"/>
+                            <button class="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black text-white text-xs font-bold px-6 py-3 rounded-lg opacity-0 group-hover:opacity-100 transition-all transform translate-y-4 group-hover:translate-y-0 w-[80%] whitespace-nowrap">
+                                THÊM NHANH
+                            </button>
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <p class="text-gray-500 text-xs font-semibold uppercase tracking-wider">Adidas</p>
+                            <h3 class="text-base font-bold text-gray-900 dark:text-white leading-tight">NMD_R1 Shoes</h3>
+                            <p class="text-primary font-bold text-lg mt-1">3.600.000₫</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Pagination -->
+                <div class="mt-16 flex items-center justify-center gap-4">
+                    <button class="flex items-center justify-center w-10 h-10 rounded-lg border border-gray-200 dark:border-gray-800 hover:bg-gray-100 dark:hover:bg-gray-800">
+                        <span class="material-symbols-outlined">chevron_left</span>
+                    </button>
+                    <div class="flex items-center gap-2">
+                        <button class="w-10 h-10 rounded-lg bg-black text-white font-bold text-sm">1</button>
+                        <button class="w-10 h-10 rounded-lg border border-transparent hover:border-gray-200 dark:hover:border-gray-800 font-bold text-sm">2</button>
+                        <button class="w-10 h-10 rounded-lg border border-transparent hover:border-gray-200 dark:hover:border-gray-800 font-bold text-sm">3</button>
+                        <span class="px-2 text-gray-400">...</span>
+                        <button class="w-10 h-10 rounded-lg border border-transparent hover:border-gray-200 dark:hover:border-gray-800 font-bold text-sm">12</button>
+                    </div>
+                    <button class="flex items-center justify-center w-10 h-10 rounded-lg border border-gray-200 dark:border-gray-800 hover:bg-gray-100 dark:hover:bg-gray-800">
+                        <span class="material-symbols-outlined">chevron_right</span>
+                    </button>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-black text-white pt-20 pb-10 px-4 md:px-20 border-t border-white/10">
+        <div class="max-w-[1280px] mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-20">
+            <div class="flex flex-col gap-6">
+                <a class="flex items-center gap-2" href="index.html">
+                    <div class="size-8 text-primary">
+                        <svg fill="currentColor" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M36.7273 44C33.9891 44 31.6043 39.8386 30.3636 33.69C29.123 39.8386 26.7382 44 24 44C21.2618 44 18.877 39.8386 17.6364 33.69C16.3957 39.8386 14.0109 44 11.2727 44C7.25611 44 4 35.0457 4 24C4 12.9543 7.25611 4 11.2727 44C7.25611 44 4 35.0457 4 24C4 12.9543 7.25611 4 11.2727 44C7.25611 44 4 35.0457 4 24C4 12.9543 7.25611 4 11.2727 44C7.25611 44 4 35.0457 4 24C4 12.9543 7.25611 4 11.2727 44C7.25611 44 4 35.0457 4 24C4 12.9543 7.25611 4 11.2727 4C14.0109 4 16.3957 8.16144 17.6364 14.31C18.877 8.16144 21.2618 4 24 4C26.7382 4 29.123 8.16144 30.3636 14.31C31.6043 8.16144 33.9891 4 36.7273 4C40.7439 4 44 12.9543 44 24C44 35.0457 40.7439 44 36.7273 44Z"></path>
+                        </svg>
+                    </div>
+                    <h2 class="text-2xl font-extrabold tracking-tighter uppercase italic">X-Sneaker</h2>
+                </a>
+                <p class="text-gray-400 text-sm leading-relaxed">
+                    Nâng tầm văn hóa đường phố từ năm 2018. Chúng tôi cung cấp những mẫu giày độc quyền và phụ kiện cao cấp cho các tín đồ trên toàn thế giới.
+                </p>
+                <div class="flex gap-4">
+                    <a class="hover:text-primary transition-colors" href="#"><span class="material-symbols-outlined">public</span></a>
+                    <a class="hover:text-primary transition-colors" href="#"><span class="material-symbols-outlined">alternate_email</span></a>
+                    <a class="hover:text-primary transition-colors" href="#"><span class="material-symbols-outlined">podcasts</span></a>
+                </div>
+            </div>
+            <div>
+                <h4 class="font-bold text-lg mb-6 uppercase tracking-tighter italic">Chăm Sóc Khách Hàng</h4>
+                <ul class="flex flex-col gap-3 text-gray-400 text-sm font-medium">
+                    <li><a class="hover:text-white transition-colors" href="#">Trung Tâm Trợ Giúp</a></li>
+                    <li><a class="hover:text-white transition-colors" href="#">Tra Cứu Đơn Hàng</a></li>
+                    <li><a class="hover:text-white transition-colors" href="#">Đổi Trả &amp; Hoàn Tiền</a></li>
+                    <li><a class="hover:text-white transition-colors" href="#">Hướng Dẫn Chọn Size</a></li>
+                    <li><a class="hover:text-white transition-colors" href="#">Thông Tin Vận Chuyển</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-bold text-lg mb-6 uppercase tracking-tighter italic">Về X-Sneaker</h4>
+                <ul class="flex flex-col gap-3 text-gray-400 text-sm font-medium">
+                    <li><a class="hover:text-white transition-colors" href="#">Câu Chuyện Thương Hiệu</a></li>
+                    <li><a class="hover:text-white transition-colors" href="#">Tuyển Dụng</a></li>
+                    <li><a class="hover:text-white transition-colors" href="#">Phát Triển Bền Vững</a></li>
+                    <li><a class="hover:text-white transition-colors" href="#">Cam Kết Chính Hãng</a></li>
+                    <li><a class="hover:text-white transition-colors" href="#">Chính Sách Bảo Mật</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-bold text-lg mb-6 uppercase tracking-tighter italic">Tham Gia X-Crew</h4>
+                <p class="text-gray-400 text-sm mb-4">Đăng ký để nhận thông báo sớm nhất về sản phẩm mới và ưu đãi dành riêng cho thành viên.</p>
+                <div class="flex flex-col gap-3">
+                    <input class="bg-white/10 border-none rounded-lg text-white placeholder-gray-500 focus:ring-primary" placeholder="Địa chỉ Email" type="email" />
+                    <button class="bg-primary hover:bg-red-700 text-white font-bold py-2.5 rounded-lg transition-colors">Đăng Ký Ngay</button>
+                </div>
+            </div>
+        </div>
+        <div class="max-w-[1280px] mx-auto pt-10 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4 text-xs font-bold text-gray-500 uppercase tracking-widest">
+            <p>© 2024 X-Sneaker E-Commerce. All Rights Reserved.</p>
+            <div class="flex gap-8">
+                <span>Điều Khoản Sữ Dụng</span>
+                <span>Cài Đặt Cookie</span>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

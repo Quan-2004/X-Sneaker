@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html class="light" lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>X-Sneaker | Tài Khoản Của Tôi</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet" />
+    <script src="../js/tailwind-config.js"></script>
+    <link rel="stylesheet" href="../css/style.css" />
+    <script src="../js/common.js" defer></script>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-[#1b0e0f] dark:text-white transition-colors duration-300">
+    <!-- Header -->
+    <header class="sticky top-0 z-50 bg-[#000000] border-b border-white/10">
+        <div class="max-w-[1440px] mx-auto px-4 md:px-10 lg:px-20 py-4 flex items-center justify-between">
+            <a class="flex items-center gap-2 text-white shrink-0" href="index.html">
+                <div class="size-8 text-primary">
+                    <svg fill="currentColor" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M36.7273 44C33.9891 44 31.6043 39.8386 30.3636 33.69C29.123 39.8386 26.7382 44 24 44C21.2618 44 18.877 39.8386 17.6364 33.69C16.3957 39.8386 14.0109 44 11.2727 44C7.25611 44 4 35.0457 4 24C4 12.9543 7.25611 4 11.2727 44C7.25611 44 4 35.0457 4 24C4 12.9543 7.25611 4 11.2727 44C7.25611 44 4 35.0457 4 24C4 12.9543 7.25611 4 11.2727 44C7.25611 44 4 35.0457 4 24C4 12.9543 7.25611 4 11.2727 44C7.25611 44 4 35.0457 4 24C4 12.9543 7.25611 4 11.2727 4 11.2727 44C11.2727 4 17.6364 14.31C18.877 8.16144 21.2618 4 24 4C26.7382 4 29.123 8.16144 30.3636 14.31C31.6043 8.16144 33.9891 4 36.7273 4C40.7439 4 44 12.9543 44 24C44 35.0457 40.7439 44 36.7273 44Z"></path>
+                    </svg>
+                </div>
+                <h2 class="text-xl font-extrabold tracking-tighter uppercase italic">X-Sneaker</h2>
+            </a>
+            <nav class="hidden lg:flex items-center gap-10 text-white ml-10">
+                <div class="shop-nav-item relative py-2">
+                    <a class="text-sm font-semibold hover:text-primary transition-colors flex items-center gap-1" href="Product.html">
+                        Cửa hàng <span class="material-symbols-outlined text-[16px]">expand_more</span>
+                    </a>
+                    <div class="mega-menu absolute top-full left-1/2 -translate-x-1/2 pt-4 w-[600px]">
+                        <div class="bg-white text-black shadow-2xl rounded-xl p-8 grid grid-cols-3 gap-8 border border-gray-100">
+                            <div>
+                                <h4 class="font-black text-xs uppercase tracking-widest text-primary mb-4">Nam</h4>
+                                <ul class="space-y-3 text-sm font-medium">
+                                    <li><a class="hover:text-primary transition-colors" href="Product.html">Thời trang</a></li>
+                                    <li><a class="hover:text-primary transition-colors" href="Product.html">Chạy bộ</a></li>
+                                    <li><a class="hover:text-primary transition-colors" href="Product.html">Bóng rổ</a></li>
+                                    <li><a class="hover:text-primary transition-colors" href="Product.html">Tập luyện</a></li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 class="font-black text-xs uppercase tracking-widest text-primary mb-4">Nữ</h4>
+                                <ul class="space-y-3 text-sm font-medium">
+                                    <li><a class="hover:text-primary transition-colors" href="Product.html">Thời trang</a></li>
+                                    <li><a class="hover:text-primary transition-colors" href="Product.html">Chạy bộ</a></li>
+                                    <li><a class="hover:text-primary transition-colors" href="Product.html">Gym &amp; Training</a></li>
+                                    <li><a class="hover:text-primary transition-colors" href="Product.html">Yoga</a></li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 class="font-black text-xs uppercase tracking-widest text-primary mb-4">Phụ kiện</h4>
+                                <ul class="space-y-3 text-sm font-medium">
+                                    <li><a class="hover:text-primary transition-colors" href="Product.html">Tất / Vớ</a></li>
+                                    <li><a class="hover:text-primary transition-colors" href="Product.html">Chăm sóc giày</a></li>
+                                    <li><a class="hover:text-primary transition-colors" href="Product.html">Túi &amp; Balo</a></li>
+                                    <li><a class="hover:text-primary transition-colors" href="Product.html">Dây giày</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <a class="text-sm font-semibold hover:text-primary transition-colors" href="Product.html">Khuyến mãi</a>
+                <a class="text-sm font-semibold hover:text-primary transition-colors" href="Blog-list.html">Tin tức</a>
+                <a class="text-sm font-semibold hover:text-primary transition-colors" href="About-us.html">Giới thiệu</a>
+                <a class="text-sm font-semibold hover:text-primary transition-colors" href="Contact-Us.html">Liên hệ</a>
+            </nav>
+            <div class="flex items-center gap-6 text-white">
+                <button class="hover:text-primary transition-colors flex items-center justify-center">
+                    <span class="material-symbols-outlined">search</span>
+                </button>
+                <a href="Product.html" class="hover:text-primary transition-colors">Khuyến mãi</a>
+                <a href="Account.html" class="hover:text-primary transition-colors flex items-center justify-center">
+                    <span class="material-symbols-outlined">person</span>
+                </a>
+                <button class="hover:text-primary transition-colors flex items-center justify-center">
+                    <span class="material-symbols-outlined">favorite</span>
+                </button>
+                <a href="Cart.html" class="hover:text-primary transition-colors relative flex items-center justify-center">
+                    <span class="material-symbols-outlined">shopping_cart</span>
+                    <span class="absolute -top-2 -right-2 bg-primary text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold text-white border border-black">3</span>
+                </a>
+                <button id="mobile-menu-btn" class="lg:hidden text-white"><span class="material-symbols-outlined">menu</span></button>
+            </div>
+        </div>
+        <!-- Mobile Menu Overlay -->
+        <div id="mobile-menu" class="fixed inset-0 bg-black/95 z-[60] hidden flex-col items-center justify-center text-white transition-opacity duration-300">
+            <button id="close-menu-btn" class="absolute top-6 right-6 text-white p-2">
+                <span class="material-symbols-outlined text-4xl">close</span>
+            </button>
+            <nav class="flex flex-col items-center gap-8 text-xl font-bold uppercase tracking-widest">
+                <a href="Product.html" class="hover:text-primary transition-colors">Cửa hàng</a>
+                <a href="Product.html" class="hover:text-primary transition-colors">Khuyến mãi</a>
+                <a href="Blog-list.html" class="hover:text-primary transition-colors">Tin tức</a>
+                <a href="About-us.html" class="hover:text-primary transition-colors">Giới thiệu</a>
+                <a href="Contact-Us.html" class="hover:text-primary transition-colors">Liên hệ</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="max-w-[1440px] mx-auto px-6 lg:px-20 py-10 flex flex-col md:flex-row gap-10">
+        <!-- Sidebar Navigation -->
+        <aside class="w-full md:w-72 flex flex-col gap-6">
+            <div class="bg-white dark:bg-background-dark border border-gray-200 dark:border-white/10 rounded-xl p-6 shadow-sm">
+                <div class="flex items-center gap-4 mb-8">
+                    <div class="size-12 rounded-full bg-cover bg-center" data-alt="User profile picture placeholder" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDwUS9__7kHgIXmZN4RWePsSInAvaIEIITeFjgGfFd4qklsHSwS6HhVQrjV_TJY67DS4vO1NbB3VXOV7ied6CsTnrzw2Agc2Um-J-T-O_7x3Xcwg3PA2rr8WHiruEbyC3UPvTPfIjwxjxKP5PaBD-MsMTtF8Dv2lGb-G4HiG4KSOieZb6_rE9-9Sl84Qn6Q1W1shVPEMNFGBOfmGx8NxDEw_lRY0C7NYVJybPZa9WdBWZ6kqIWVYQNGs9wBiTH-1Xi7fNfTH3A-V0Q");'></div>
+                    <div>
+                        <h3 class="font-bold text-lg leading-none">Nguyễn Văn A</h3>
+                        <p class="text-xs text-primary font-bold uppercase tracking-wider mt-1">Thành viên VIP</p>
+                    </div>
+                </div>
+                <nav class="flex flex-col gap-1">
+                    <a class="flex items-center gap-3 px-4 py-3 rounded-lg bg-primary text-white font-bold transition-all" href="#">
+                        <span class="material-symbols-outlined">person</span>
+                        <span class="text-sm">Thông tin tài khoản</span>
+                    </a>
+                    <a class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-gray-100 dark:hover:bg-white/5 transition-all text-gray-600 dark:text-gray-300" href="#">
+                        <span class="material-symbols-outlined">package_2</span>
+                        <span class="text-sm">Lịch sử đơn hàng</span>
+                    </a>
+                    <a class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-gray-100 dark:hover:bg-white/5 transition-all text-gray-600 dark:text-gray-300" href="#">
+                        <span class="material-symbols-outlined">favorite</span>
+                        <span class="text-sm">Danh sách yêu thích</span>
+                    </a>
+                    <a class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-gray-100 dark:hover:bg-white/5 transition-all text-gray-600 dark:text-gray-300" href="#">
+                        <span class="material-symbols-outlined">settings</span>
+                        <span class="text-sm">Cài đặt</span>
+                    </a>
+                </nav>
+                <div class="mt-8 pt-6 border-t border-gray-100 dark:border-white/10">
+                    <a class="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-400 hover:text-primary transition-all" href="#">
+                        <span class="material-symbols-outlined">logout</span>
+                        <span class="text-sm font-bold">Đăng xuất</span>
+                    </a>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Dashboard Area -->
+        <section class="flex-1 flex flex-col gap-8">
+            <!-- Welcome Header -->
+            <div class="flex flex-col gap-2">
+                <h1 class="text-4xl font-black tracking-tight text-black dark:text-white">Bảng Điều Khiển</h1>
+                <p class="text-gray-500 dark:text-gray-400">Chào mừng trở lại, A! Bạn có 2 đơn hàng sắp được giao.</p>
+            </div>
+
+            <!-- Stats Overview -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-white dark:bg-background-dark border border-gray-200 dark:border-white/10 p-6 rounded-xl shadow-sm">
+                    <p class="text-sm font-medium text-gray-500 uppercase tracking-wider">Tổng đơn hàng</p>
+                    <p class="text-3xl font-black mt-2">12</p>
+                    <div class="mt-4 text-xs font-bold text-green-600 flex items-center gap-1">
+                        <span class="material-symbols-outlined text-xs">trending_up</span>
+                        +2 tháng này
+                    </div>
+                </div>
+                <div class="bg-white dark:bg-background-dark border border-gray-200 dark:border-white/10 p-6 rounded-xl shadow-sm">
+                    <p class="text-sm font-medium text-gray-500 uppercase tracking-wider">Mục yêu thích</p>
+                    <p class="text-3xl font-black mt-2">5</p>
+                    <div class="mt-4 text-xs font-bold text-primary flex items-center gap-1 cursor-pointer hover:underline">
+                        Xem danh sách
+                    </div>
+                </div>
+                <div class="bg-white dark:bg-background-dark border border-gray-200 dark:border-white/10 p-6 rounded-xl shadow-sm">
+                    <p class="text-sm font-medium text-gray-500 uppercase tracking-wider">Điểm thành viên</p>
+                    <p class="text-3xl font-black mt-2">1,250</p>
+                    <div class="mt-4 text-xs font-bold text-blue-600 flex items-center gap-1">
+                        Hạng: Bạch Kim
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Orders Section -->
+            <div class="bg-white dark:bg-background-dark border border-gray-200 dark:border-white/10 rounded-xl shadow-sm overflow-hidden">
+                <div class="px-6 py-5 border-b border-gray-100 dark:border-white/10 flex justify-between items-center">
+                    <h2 class="text-xl font-bold">Đơn Hàng Gần Đây</h2>
+                    <a class="text-sm font-bold text-primary hover:underline" href="#">Xem tất cả</a>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left">
+                        <thead>
+                            <tr class="bg-gray-50 dark:bg-white/5 text-[10px] uppercase tracking-widest text-gray-400 font-bold">
+                                <th class="px-6 py-4">Mã Đơn</th>
+                                <th class="px-6 py-4">Ngày</th>
+                                <th class="px-6 py-4">Sản Phẩm</th>
+                                <th class="px-6 py-4">Trạng Thái</th>
+                                <th class="px-6 py-4">Tổng Tiền</th>
+                                <th class="px-6 py-4 text-right">Hành Động</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100 dark:divide-white/10">
+                            <!-- Order 1 -->
+                            <tr class="hover:bg-gray-50/50 dark:hover:bg-white/5 transition-colors">
+                                <td class="px-6 py-5 font-bold text-sm">#XS-98421</td>
+                                <td class="px-6 py-5 text-sm text-gray-500">24/10/2023</td>
+                                <td class="px-6 py-5">
+                                    <div class="flex -space-x-2">
+                                        <div class="size-8 rounded-full border-2 border-white dark:border-background-dark bg-cover bg-center" data-alt="Sneaker photo" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCU5oFXoSYykNO9xOkp1_eunCz54oTba29XZyRYL9Tf10b_7-MPMQm3hj70Q9NUGa_XMZHjO_3yrFk35TQYSTQ6HrXlww8-x1wgHKC7JvCPjzGBel7zzgBI3LRrK3fPLUCLru9gc_dCncTfu0qle-GigyCTh47FkVUKmv6k77J8FTrQUWPeCnYu9QlsmjnobwD9T1zRbkOZOkDwA8-3wuSqs_AlZrqSK-mcy8OWLLKwo22mVIH1cvnFnPfREkv1Z2fWjuxrZ8SfgwM');"></div>
+                                        <div class="size-8 rounded-full border-2 border-white dark:border-background-dark bg-cover bg-center" data-alt="Sneaker photo" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBU3DZXhbYeMSHsWDAhfDxmpMEphkRFOvc8D49X_twLU-RKslGvKXLMKn8-bxaMffH5lDARADpyNyZfHRCGo5uSGvGcXiZlbOsyLyNak4E7D_Y0EFuehG9O3uyXgfpueFjRCZ-Rwbc2J_NmzDBaUjWmV_vPoPPTnFEzspheZLxyC_NjWI3l_jASzVfMEiFGD3VKSbhtOODBvZABatHPN8Wl1RuBwDSo6_mJOt_h9Io-3bNaGSwAW0ud6zkAzV045FQ3EZ6dpEiE0b4');"></div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-5">
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-primary/10 text-primary uppercase">Đang xử lý</span>
+                                </td>
+                                <td class="px-6 py-5 font-bold text-sm">7.680.000₫</td>
+                                <td class="px-6 py-5 text-right">
+                                    <button class="bg-primary text-white text-[10px] font-black uppercase px-4 py-2 rounded-lg hover:bg-red-700 transition-colors">Chi Tiết</button>
+                                </td>
+                            </tr>
+                            <!-- Order 2 -->
+                            <tr class="hover:bg-gray-50/50 dark:hover:bg-white/5 transition-colors">
+                                <td class="px-6 py-5 font-bold text-sm">#XS-98415</td>
+                                <td class="px-6 py-5 text-sm text-gray-500">18/10/2023</td>
+                                <td class="px-6 py-5">
+                                    <div class="size-8 rounded-full border-2 border-white dark:border-background-dark bg-cover bg-center" data-alt="Sneaker photo" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuA74G8FOygxf7uL_0Jfzihm2xwlWsTKJRzktxo8e-Xmu5nAvE3qB50I62XhmIMK5cd6UH8pF1dV5uzeZi8RXUENTh869eG3Y3vH4CaF5OHhEToFFet2Y9JxKt8fEPO17dlt6S08VzsMZAsmqIvvfZScKsdlYrmjYDfXeZLhNdCY8qYcADgRCguv_y9-GoiQgjrOchOMgsEPShcuCJIjaDEZOIS7sot6xtq2mGESMR1D3JJzuYv2hqM8hSKQeCBBylsKc5wjO1NaUkw');"></div>
+                                </td>
+                                <td class="px-6 py-5">
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-100 text-blue-700 uppercase">Đã gửi</span>
+                                </td>
+                                <td class="px-6 py-5 font-bold text-sm">4.440.000₫</td>
+                                <td class="px-6 py-5 text-right">
+                                    <button class="bg-primary text-white text-[10px] font-black uppercase px-4 py-2 rounded-lg hover:bg-red-700 transition-colors">Chi Tiết</button>
+                                </td>
+                            </tr>
+                            <!-- Order 3 -->
+                            <tr class="hover:bg-gray-50/50 dark:hover:bg-white/5 transition-colors">
+                                <td class="px-6 py-5 font-bold text-sm">#XS-98390</td>
+                                <td class="px-6 py-5 text-sm text-gray-500">05/10/2023</td>
+                                <td class="px-6 py-5">
+                                    <div class="size-8 rounded-full border-2 border-white dark:border-background-dark bg-cover bg-center" data-alt="Sneaker photo" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuA61T8kIACseL7vMYkqiinhPFqPJFwBlW-vtgH7cvFvU3aFWNXly7LIqPsHMI-rissYwxPYMHmQL8RX16uC3RohXvG9iBkSpZHmarVfsSY-DXzVqufIu2TwOoq9Jv0mI1DpFfUIJA8kn2Kxhxv92YvZ23vuG6JBjgIvj7EYBocptApse8IFuoYbkyc4OX4vMYMVT7p_wVkaW5a884OiRJ8jJxdGehKdmGZeSJXFeX4l5QNdph2HnqUf6c9PRFnRXXz635MhbWrbdhA');"></div>
+                                </td>
+                                <td class="px-6 py-5">
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-green-100 text-green-700 uppercase">Đã giao</span>
+                                </td>
+                                <td class="px-6 py-5 font-bold text-sm">5.040.000₫</td>
+                                <td class="px-6 py-5 text-right">
+                                    <button class="bg-primary text-white text-[10px] font-black uppercase px-4 py-2 rounded-lg hover:bg-red-700 transition-colors">Chi Tiết</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Promotion / Action Banner -->
+            <div class="bg-black text-white p-8 rounded-xl flex flex-col md:flex-row items-center justify-between gap-6 overflow-hidden relative">
+                <div class="relative z-10">
+                    <h3 class="text-2xl font-black uppercase tracking-tighter italic">Giới Thiệu Bạn Bè</h3>
+                    <p class="text-gray-400 mt-1 max-w-sm">Tặng 500k, Nhận 500k. Chia sẻ niềm đam mê với bạn bè của bạn.</p>
+                    <button class="mt-4 px-6 py-3 bg-white text-black font-black uppercase text-xs rounded hover:bg-primary hover:text-white transition-all">Lấy Link Giới Thiệu</button>
+                </div>
+                <div class="absolute right-0 top-0 bottom-0 w-1/3 bg-gradient-to-l from-primary/30 to-transparent pointer-events-none"></div>
+                <span class="material-symbols-outlined text-8xl text-white/5 absolute -right-4 -bottom-4">celebration</span>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-black text-white pt-20 pb-10 px-4 md:px-20 border-t border-white/10">
+        <div class="max-w-[1280px] mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-20">
+            <div class="flex flex-col gap-6">
+                <a class="flex items-center gap-2" href="index.html">
+                    <div class="size-8 text-primary">
+                        <svg fill="currentColor" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M36.7273 44C33.9891 44 31.6043 39.8386 30.3636 33.69C29.123 39.8386 26.7382 44 24 44C21.2618 44 18.877 39.8386 17.6364 33.69C16.3957 39.8386 14.0109 44 11.2727 44C7.25611 44 4 35.0457 4 24C4 12.9543 7.25611 4 11.2727 4C14.0109 4 16.3957 8.16144 17.6364 14.31C18.877 8.16144 21.2618 4 24 4C26.7382 4 29.123 8.16144 30.3636 14.31C31.6043 8.16144 33.9891 4 36.7273 4C40.7439 4 44 12.9543 44 24C44 35.0457 40.7439 44 36.7273 44Z"></path>
+                        </svg>
+                    </div>
+                    <h2 class="text-2xl font-extrabold tracking-tighter uppercase italic">X-Sneaker</h2>
+                </a>
+                <p class="text-gray-400 text-sm leading-relaxed">
+                    Nâng tầm văn hóa đường phố từ năm 2018. Chúng tôi cung cấp những mẫu giày độc quyền và phụ kiện cao cấp cho các tín đồ trên toàn thế giới.
+                </p>
+                <div class="flex gap-4">
+                    <a class="hover:text-primary transition-colors" href="#"><span class="material-symbols-outlined">public</span></a>
+                    <a class="hover:text-primary transition-colors" href="#"><span class="material-symbols-outlined">alternate_email</span></a>
+                    <a class="hover:text-primary transition-colors" href="#"><span class="material-symbols-outlined">podcasts</span></a>
+                </div>
+            </div>
+            <div>
+                <h4 class="font-bold text-lg mb-6 uppercase tracking-tighter italic">Chăm Sóc Khách Hàng</h4>
+                <ul class="flex flex-col gap-3 text-gray-400 text-sm font-medium">
+                    <li><a class="hover:text-white transition-colors" href="#">Trung Tâm Trợ Giúp</a></li>
+                    <li><a class="hover:text-white transition-colors" href="#">Tra Cứu Đơn Hàng</a></li>
+                    <li><a class="hover:text-white transition-colors" href="#">Đổi Trả &amp; Hoàn Tiền</a></li>
+                    <li><a class="hover:text-white transition-colors" href="#">Hướng Dẫn Chọn Size</a></li>
+                    <li><a class="hover:text-white transition-colors" href="#">Thông Tin Vận Chuyển</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-bold text-lg mb-6 uppercase tracking-tighter italic">Về X-Sneaker</h4>
+                <ul class="flex flex-col gap-3 text-gray-400 text-sm font-medium">
+                    <li><a class="hover:text-white transition-colors" href="#">Câu Chuyện Thương Hiệu</a></li>
+                    <li><a class="hover:text-white transition-colors" href="#">Tuyển Dụng</a></li>
+                    <li><a class="hover:text-white transition-colors" href="#">Phát Triển Bền Vững</a></li>
+                    <li><a class="hover:text-white transition-colors" href="#">Cam Kết Chính Hãng</a></li>
+                    <li><a class="hover:text-white transition-colors" href="#">Chính Sách Bảo Mật</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-bold text-lg mb-6 uppercase tracking-tighter italic">Tham Gia X-Crew</h4>
+                <p class="text-gray-400 text-sm mb-4">Đăng ký để nhận thông báo sớm nhất về sản phẩm mới và ưu đãi dành riêng cho thành viên.</p>
+                <div class="flex flex-col gap-3">
+                    <input class="bg-white/10 border-none rounded-lg text-white placeholder-gray-500 focus:ring-primary" placeholder="Địa chỉ Email" type="email" />
+                    <button class="bg-primary hover:bg-red-700 text-white font-bold py-2.5 rounded-lg transition-colors">Đăng Ký Ngay</button>
+                </div>
+            </div>
+        </div>
+        <div class="max-w-[1280px] mx-auto pt-10 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4 text-xs font-bold text-gray-500 uppercase tracking-widest">
+            <p>© 2024 X-Sneaker E-Commerce. All Rights Reserved.</p>
+            <div class="flex gap-8">
+                <span>Điều Khoản Sữ Dụng</span>
+                <span>Cài Đặt Cookie</span>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
