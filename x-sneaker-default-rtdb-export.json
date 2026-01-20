@@ -12,32 +12,6 @@
       "startDate": 1736467200000,
       "subtitle": "Huyền thoại trở lại",
       "title": "Nike Air Jordan Collection"
-    },
-    "banner_002": {
-      "active": true,
-      "buttonText": "Xem ngay",
-      "description": "Bộ sưu tập Yeezy chính hãng giá tốt",
-      "endDate": 1739145600000,
-      "image": "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=1920",
-      "link": "/product?brand=adidas",
-      "order": 2,
-      "position": "hero",
-      "startDate": 1736553600000,
-      "subtitle": "Giảm đến 25%",
-      "title": "Adidas Yeezy Sale"
-    },
-    "banner_003": {
-      "active": true,
-      "buttonText": "Khám phá",
-      "description": "Cập nhật xu hướng sneaker 2026",
-      "endDate": 1740844800000,
-      "image": "https://images.unsplash.com/photo-1460353581641-37baddab0fa2?w=800",
-      "link": "/product?filter=new",
-      "order": 1,
-      "position": "secondary",
-      "startDate": 1737072000000,
-      "subtitle": "Hàng mới về",
-      "title": "New Arrivals"
     }
   },
   "blogs": {
@@ -218,30 +192,8 @@
         }
       ],
       "updatedAt": 1737331200000
-    },
-    "user_002": {
-      "items": [
-        {
-          "addedAt": 1737244800000,
-          "image": "https://images.vans.com/is/image/Vans/D3HY28-HERO",
-          "name": "Vans Old Skool Black/White",
-          "price": 1850000,
-          "productId": "prod_007",
-          "quantity": 2,
-          "size": "39"
-        },
-        {
-          "addedAt": 1737244800000,
-          "image": "https://www.converse.com/dw/image/v2/BCZC_PRD/on/demandware.static/-/Sites-cnv-master-catalog/default/dw9f7c0e9e/images/a_107/M9160_A_107X1.jpg",
-          "name": "Converse Chuck Taylor All Star Classic",
-          "price": 1450000,
-          "productId": "prod_005",
-          "quantity": 1,
-          "size": "38"
-        }
-      ],
-      "updatedAt": 1737244800000
     }
+   
   },
   "categories": {
     "cat_001": {
@@ -433,111 +385,6 @@
       "stock": 45,
       "updatedAt": 1737331200000
     },
-    "prod_002": {
-      "brand": "Adidas",
-      "category": "lifestyle",
-      "colors": [
-        "Trắng/Đen"
-      ],
-      "createdAt": 1705737600000,
-      "description": "Adidas Yeezy Boost 350 V2 - Thiết kế đột phá từ Kanye West, công nghệ đế Boost siêu êm, upper Primeknit co giãn ôm chân. Phối màù Zebra trắng đen độc đáo.",
-      "discount": 17,
-      "featured": true,
-      "gender": "unisex",
-      "images": [
-        "https://images.stockx.com/images/adidas-Yeezy-Boost-350-V2-Zebra-Product.jpg",
-        "https://images.stockx.com/images/adidas-Yeezy-Boost-350-V2-Zebra-2.jpg"
-      ],
-      "isBestSeller": true,
-      "isNew": false,
-      "name": "Adidas Yeezy Boost 350 V2",
-      "originalPrice": 7500000,
-      "price": 6200000,
-      "rating": 4.9,
-      "reviews": 103,
-      "sizes": [
-        38,
-        39,
-        40,
-        41,
-        42,
-        43
-      ],
-      "sold": 156,
-      "stock": 32,
-      "updatedAt": 1737244800000
-    },
-    "prod_003": {
-      "brand": "Nike",
-      "category": "lifestyle",
-      "colors": [
-        "Trắng"
-      ],
-      "createdAt": 1705824000000,
-      "description": "Nike Air Force 1 '07 Triple White - Icon không bao giờ lỗi mốt. Thiết kế cổ điển năm 1982, chất liệu da cao cấp, đế Air êm ái. Màu trắng toàn bộ dễ phối đồ.",
-      "discount": 0,
-      "featured": true,
-      "gender": "unisex",
-      "images": [
-        "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/b7d9211c-26e7-431a-ac24-b0540fb3c00f/air-force-1-07-shoe.png"
-      ],
-      "isBestSeller": true,
-      "isNew": false,
-      "name": "Nike Air Force 1 '07",
-      "originalPrice": 2850000,
-      "price": 2850000,
-      "rating": 4.7,
-      "reviews": 245,
-      "sizes": [
-        36,
-        37,
-        38,
-        39,
-        40,
-        41,
-        42,
-        43,
-        44,
-        45
-      ],
-      "sold": 342,
-      "stock": 78,
-      "updatedAt": 1737158400000
-    },
-    "prod_004": {
-      "brand": "New Balance",
-      "category": "lifestyle",
-      "colors": [
-        "Trắng/Xanh lá"
-      ],
-      "createdAt": 1736553600000,
-      "description": "New Balance 550 - Thiết kế retro basketball thập niên 90, phối màu trắng xanh lá thanh lịch, chất liệu da tổng hợp bền đẹp. Đế cao su chống trơn.",
-      "discount": 16,
-      "featured": false,
-      "gender": "unisex",
-      "images": [
-        "https://nb.scene7.com/is/image/NB/bb550pwg_nb_02_i?$pdpflexf2$"
-      ],
-      "isBestSeller": false,
-      "isNew": true,
-      "name": "New Balance 550 White Green",
-      "originalPrice": 3800000,
-      "price": 3200000,
-      "rating": 4.6,
-      "reviews": 62,
-      "sizes": [
-        38,
-        39,
-        40,
-        41,
-        42,
-        43,
-        44
-      ],
-      "sold": 87,
-      "stock": 54,
-      "updatedAt": 1737331200000
-    },
     "prod_005": {
       "brand": "Converse",
       "category": "lifestyle",
@@ -709,39 +556,6 @@
       "sold": 52,
       "stock": 38,
       "updatedAt": 1737244800000
-    },
-    "prod_010": {
-      "brand": "Nike",
-      "category": "basketball",
-      "colors": [
-        "Đen/Vàng"
-      ],
-      "createdAt": 1736812800000,
-      "description": "Jordan Why Not Zer0.6 - Signature shoe của Russell Westbrook, thiết kế năng động, đệm Zoom Air phản hồi tốt, grip đa hướng cho bóng rổ tốc độ cao.",
-      "discount": 15,
-      "featured": false,
-      "gender": "men",
-      "images": [
-        "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/i1-6f0c6ed1-3bda-4c9b-9c5c-0c1c6c6c6c6c/jordan-why-not-zer0-6-pf-basketball-shoes.png"
-      ],
-      "isBestSeller": false,
-      "isNew": true,
-      "name": "Jordan Why Not Zer0.6 Basketball",
-      "originalPrice": 4650000,
-      "price": 3950000,
-      "rating": 4.6,
-      "reviews": 27,
-      "sizes": [
-        40,
-        41,
-        42,
-        43,
-        44,
-        45
-      ],
-      "sold": 34,
-      "stock": 28,
-      "updatedAt": 1737158400000
     }
   },
   "promotions": {
@@ -880,21 +694,16 @@
     }
   },
   "users": {
-    "dYUURJ6jgZTviNBqJhbh47eG1i53": {
-      "address": {
-        "city": "",
-        "district": "",
-        "street": "",
-        "ward": ""
-      },
-      "avatarUrl": "../image/default-avatar.jpg",
-      "createdAt": 1768893197263,
+    "kfqe1TwgHnfnCEMhLvcVSNMDBzj2": {
+      "createdAt": 1768896053347,
+      "displayName": "quan12",
       "email": "quanpham4298@gmail.com",
-      "fullName": "quan121",
-      "gender": "male",
-      "lastLogin": 1768893197263,
-      "phone": "09876655422",
-      "role": "customer"
+      "emailVerified": false,
+      "lastLogin": 1768896171565,
+      "loyaltyPoints": 0,
+      "photoURL": "../image/default-avatar.jpg",
+      "role": "customer",
+      "uid": "kfqe1TwgHnfnCEMhLvcVSNMDBzj2"
     },
     "user_001": {
       "address": {
@@ -910,30 +719,6 @@
       "lastLogin": 1737331200000,
       "phone": "0901234567",
       "role": "customer"
-    },
-    "user_002": {
-      "address": {
-        "city": "TP. Hồ Chí Minh",
-        "district": "Quận 1",
-        "street": "456 Đường Nguyễn Huệ",
-        "ward": "Phường Bến Thành"
-      },
-      "avatarUrl": "../image/default-avatar.jpg",
-      "createdAt": 1705824000000,
-      "email": "tran.thi.binh@gmail.com",
-      "fullName": "Trần Thị Bình",
-      "lastLogin": 1737244800000,
-      "phone": "0912345678",
-      "role": "customer"
-    },
-    "user_003": {
-      "avatarUrl": "../image/default-avatar.jpg",
-      "createdAt": 1705910400000,
-      "email": "le.hoang.minh@gmail.com",
-      "fullName": "Lê Hoàng Minh",
-      "lastLogin": 1737158400000,
-      "phone": "0923456789",
-      "role": "customer"
     }
   },
   "wishlist": {
@@ -944,21 +729,6 @@
         "prod_009"
       ],
       "updatedAt": 1737331200000
-    },
-    "user_002": {
-      "items": [
-        "prod_001",
-        "prod_006",
-        "prod_010"
-      ],
-      "updatedAt": 1737244800000
-    },
-    "user_003": {
-      "items": [
-        "prod_004",
-        "prod_007"
-      ],
-      "updatedAt": 1737158400000
     }
   }
 }
