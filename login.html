@@ -97,7 +97,7 @@
                         <div class="space-y-4">
                             <div>
                                 <label for="email" class="block text-xs font-bold uppercase tracking-widest text-gray-700 dark:text-gray-300 mb-2">Email Address</label>
-                                <input id="email" name="email" type="email" placeholder="name@example.com" required 
+                                <input id="email" name="email" type="email" placeholder="name@example.com" required autocomplete="email"
                                     class="block w-full rounded-lg border-gray-200 dark:border-white/10 dark:bg-white/5 py-3 px-4 text-gray-900 dark:text-white placeholder-gray-400 focus:border-primary focus:ring-primary sm:text-sm">
                             </div>
 
@@ -107,7 +107,7 @@
                                     <a href="forgot-password.html" class="text-xs font-bold text-primary hover:text-red-700 uppercase tracking-widest">Forgot Password?</a>
                                 </div>
                                 <div class="relative">
-                                    <input id="password" name="password" type="password" placeholder="••••••••" required 
+                                    <input id="password" name="password" type="password" placeholder="••••••••" required autocomplete="current-password"
                                         class="block w-full rounded-lg border-gray-200 dark:border-white/10 dark:bg-white/5 py-3 px-4 text-gray-900 dark:text-white placeholder-gray-400 focus:border-primary focus:ring-primary sm:text-sm">
                                     <button type="button" class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
                                         <span class="material-symbols-outlined text-[20px]">visibility</span>
@@ -216,7 +216,7 @@
 
     <!-- Auth Logic -->
     <script type="module">
-        import { loginUser, loginWithGoogle, loginWithFacebook } from 'js/auth.js';
+        import { loginUser, loginWithGoogle, loginWithFacebook } from './js/auth.js';
 
         // Email Login
         document.getElementById('login-form').addEventListener('submit', async (e) => {
