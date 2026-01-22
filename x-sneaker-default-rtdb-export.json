@@ -16,119 +16,116 @@
   },
   "blogs": {
     "blog_001": {
-      "author": "Admin X-Sneaker",
-      "authorAvatar": "../image/default-avatar.jpg",
-      "category": "Phong cách",
-      "comments": 23,
-      "content": "Giày sneaker trắng được xem là một trong những món đồ kinh điển và dễ phối nhất trong tủ đồ của bất kỳ ai. Dù bạn theo đuổi phong cách nào, từ casual, sporty đến streetwear, một đôi giày trắng luôn là lựa chọn an toàn và sành điệu...",
-      "createdAt": 1736467200000,
-      "excerpt": "Giày sneaker trắng là item cơ bản không thể thiếu trong tủ đồ. Hãy cùng khám phá những cách phối đồ thông minh với đôi giày trắng yêu thích của bạn.",
-      "featured": true,
-      "likes": 189,
-      "published": true,
-      "slug": "cach-phoi-do-voi-giay-sneaker-trang",
-      "tags": [
-        "phối đồ",
-        "sneaker trắng",
-        "phong cách",
-        "thời trang"
-      ],
-      "thumbnail": "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=800",
       "title": "Cách phối đồ với giày sneaker trắng - Bí quyết phong cách tối giản",
-      "updatedAt": 1737244800000,
-      "views": 2456
+      "slug": "cach-phoi-do-voi-giay-sneaker-trang",
+      "excerpt": "Giày sneaker trắng là item cơ bản không thể thiếu trong tủ đồ. Hãy cùng khám phá những cách phối đồ thông minh với đôi giày trắng yêu thích của bạn.",
+      "content": "<p>Giày sneaker trắng được xem là một trong những món đồ kinh điển và dễ phối nhất trong tủ đồ của bất kỳ ai.</p><p>Dù bạn theo đuổi phong cách nào, từ casual, sporty đến streetwear, một đôi giày trắng luôn là lựa chọn an toàn và sành điệu.</p><h2>1. Phối với quần jeans</h2><p>Đây là combo kinh điển và không bao giờ lỗi mốt...</p><h2>2. Style All-White</h2><p>Phong cách toàn trắng mang lại sự sang trọng, thanh lịch...</p>",
+      "author": {
+        "name": "Admin X-Sneaker",
+        "avatar": "https://ui-avatars.com/api/?name=Admin&background=FF3C3C&color=fff"
+      },
+      "thumbnailImage": "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=800",
+      "publishedDate": 1736467200000,
+      "category": "Phong cách",
+      "tags": ["phối đồ", "sneaker trắng", "phong cách", "thời trang"],
+      "views": 2456,
+      "featured": true
     },
     "blog_002": {
-      "author": "Admin X-Sneaker",
-      "authorAvatar": "../image/default-avatar.jpg",
-      "category": "Reviews",
-      "comments": 56,
-      "content": "Trong thế giới sneaker, có những đôi giày không chỉ là sản phẩm thời trang mà còn là biểu tượng văn hóa, nghệ thuật và lịch sử. Hãy cùng nhìn lại top 10 đôi giày iconic nhất...",
-      "createdAt": 1736553600000,
-      "excerpt": "Từ Air Jordan 1 đến Adidas Stan Smith, hãy cùng điểm qua những đôi giày đã làm nên lịch sử và văn hóa sneaker toàn cầu.",
-      "featured": true,
-      "likes": 342,
-      "published": true,
-      "slug": "top-10-doi-giay-sneaker-iconic-nhat-moi-thoi-dai",
-      "tags": [
-        "top 10",
-        "iconic",
-        "lịch sử sneaker",
-        "review"
-      ],
-      "thumbnail": "https://images.unsplash.com/photo-1460353581641-37baddab0fa2?w=800",
       "title": "Top 10 đôi giày sneaker iconic nhất mọi thời đại",
-      "updatedAt": 1737158400000,
-      "views": 3821
+      "slug": "top-10-doi-giay-sneaker-iconic-nhat-moi-thoi-dai",
+      "excerpt": "Từ Air Jordan 1 đến Adidas Stan Smith, hãy cùng điểm qua những đôi giày đã làm nên lịch sử và văn hóa sneaker toàn cầu.",
+      "content": "<p>Trong thế giới sneaker, có những đôi giày không chỉ là sản phẩm thời trang mà còn là biểu tượng văn hóa, nghệ thuật và lịch sử.</p><h2>1. Nike Air Jordan 1 (1985)</h2><p>Được thiết kế bởi Peter Moore, Air Jordan 1 là đôi giày đã làm nên tên tuổi Michael Jordan...</p><h2>2. Adidas Superstar (1969)</h2><p>Từ sân bóng rổ đến văn hóa hip-hop...</p>",
+      "author": {
+        "name": "Admin X-Sneaker",
+        "avatar": "https://ui-avatars.com/api/?name=Admin&background=FF3C3C&color=fff"
+      },
+      "thumbnailImage": "https://images.unsplash.com/photo-1460353581641-37baddab0fa2?w=800",
+      "publishedDate": 1736553600000,
+      "category": "Reviews",
+      "tags": ["top 10", "iconic", "lịch sử sneaker", "review"],
+      "views": 3821,
+      "featured": true
     },
     "blog_003": {
-      "author": "Admin X-Sneaker",
-      "authorAvatar": "../image/default-avatar.jpg",
-      "category": "Hướng dẫn",
-      "comments": 34,
-      "content": "Việc bảo quản và vệ sinh giày sneaker đúng cách không chỉ giúp đôi giày của bạn luôn sạch đẹp mà còn kéo dài tuổi thọ và giữ giá trị. Dưới đây là hướng dẫn chi tiết...",
-      "createdAt": 1736640000000,
-      "excerpt": "Bí quyết giữ giày luôn như mới, tăng tuổi thọ và giữ giá trị. Từ vệ sinh hàng ngày đến bảo quản chuyên sâu.",
-      "featured": false,
-      "likes": 156,
-      "published": true,
-      "slug": "huong-dan-bao-quan-ve-sinh-giay-sneaker",
-      "tags": [
-        "bảo quản",
-        "vệ sinh",
-        "chăm sóc giày",
-        "hướng dẫn"
-      ],
-      "thumbnail": "https://images.unsplash.com/photo-1556906781-9a412961c28c?w=800",
       "title": "Hướng dẫn bảo quản và vệ sinh giày sneaker đúng cách",
-      "updatedAt": 1737072000000,
-      "views": 1987
+      "slug": "huong-dan-bao-quan-ve-sinh-giay-sneaker",
+      "excerpt": "Bí quyết giữ giày luôn như mới, tăng tuổi thọ và giữ giá trị. Từ vệ sinh hàng ngày đến bảo quản chuyên sâu.",
+      "content": "<p>Việc bảo quản và vệ sinh giày sneaker đúng cách không chỉ giúp đôi giày của bạn luôn sạch đẹp mà còn kéo dài tuổi thọ và giữ giá trị.</p><h2>Vệ sinh theo chất liệu</h2><h3>Giày da</h3><p>Sử dụng khăn ẩm và cleaner chuyên dụng...</p><h3>Giày vải</h3><p>Có thể giặt máy với túi lưới...</p>",
+      "author": {
+        "name": "Admin X-Sneaker",
+        "avatar": "https://ui-avatars.com/api/?name=Admin&background=FF3C3C&color=fff"
+      },
+      "thumbnailImage": "https://images.unsplash.com/photo-1556906781-9a412961c28c?w=800",
+      "publishedDate": 1736640000000,
+      "category": "Hướng dẫn",
+      "tags": ["bảo quản", "vệ sinh", "chăm sóc giày", "hướng dẫn"],
+      "views": 1987,
+      "featured": false
     },
     "blog_004": {
-      "author": "Admin X-Sneaker",
-      "authorAvatar": "../image/default-avatar.jpg",
-      "category": "Tin tức",
-      "comments": 87,
-      "content": "Nike và Adidas - hai cái tên đã định hình ngành công nghiệp giày thể thao toàn cầu. Cuộc cạnh tranh giữa họ không chỉ dừng lại ở sản phẩm mà còn là cuộc chiến văn hóa, công nghệ và marketing...",
-      "createdAt": 1736726400000,
-      "excerpt": "So sánh chi tiết hai đế chế sneaker lớn nhất thế giới về công nghệ, thiết kế, marketing và ảnh hưởng văn hóa.",
-      "featured": true,
-      "likes": 398,
-      "published": true,
-      "slug": "nike-vs-adidas-cuoc-chien-cua-nhung-ong-lon",
-      "tags": [
-        "nike",
-        "adidas",
-        "so sánh",
-        "thương hiệu"
-      ],
-      "thumbnail": "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=800",
       "title": "Nike vs Adidas: Cuộc chiến của những ông lớn",
-      "updatedAt": 1737331200000,
-      "views": 4532
+      "slug": "nike-vs-adidas-cuoc-chien-cua-nhung-ong-lon",
+      "excerpt": "So sánh chi tiết hai đế chế sneaker lớn nhất thế giới về công nghệ, thiết kế, marketing và ảnh hưởng văn hóa.",
+      "content": "<p>Nike và Adidas - hai cái tên đã định hình ngành công nghiệp giày thể thao toàn cầu.</p><h2>Lịch sử</h2><p>Nike được thành lập năm 1964 bởi Phil Knight và Bill Bowerman. Adidas có lịch sử lâu đời hơn, từ năm 1949...</p><h2>Công nghệ</h2><p>Nike với Air và React, Adidas với Boost và Primeknit...</p>",
+      "author": {
+        "name": "Admin X-Sneaker",
+        "avatar": "https://ui-avatars.com/api/?name=Admin&background=FF3C3C&color=fff"
+      },
+      "thumbnailImage": "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=800",
+      "publishedDate": 1736726400000,
+      "category": "Tin tức",
+      "tags": ["nike", "adidas", "so sánh", "thương hiệu"],
+      "views": 4532,
+      "featured": true
     },
     "blog_005": {
-      "author": "Admin X-Sneaker",
-      "authorAvatar": "../image/default-avatar.jpg",
-      "category": "Văn hóa",
-      "comments": 45,
-      "content": "Văn hóa sneaker tại Việt Nam đã có sự chuyển mình đáng kể trong những năm gần đây. Từ một sở thích nhỏ của giới trẻ, sneaker đã trở thành một phần quan trọng của ngành thời trang và văn hóa đường phố...",
-      "createdAt": 1736812800000,
-      "excerpt": "Hành trình phát triển của cộng đồng sneakerhead Việt Nam và những xu hướng mới đang lên.",
-      "featured": false,
-      "likes": 187,
-      "published": true,
-      "slug": "sneaker-culture-o-viet-nam",
-      "tags": [
-        "văn hóa",
-        "việt nam",
-        "cộng đồng",
-        "xu hướng"
-      ],
-      "thumbnail": "https://images.unsplash.com/photo-1515955656352-a1fa3ffcd111?w=800",
       "title": "Sneaker culture ở Việt Nam: Từ niche đến mainstream",
-      "updatedAt": 1737244800000,
-      "views": 2134
+      "slug": "sneaker-culture-o-viet-nam",
+      "excerpt": "Hành trình phát triển của cộng đồng sneakerhead Việt Nam và những xu hướng mới đang lên.",
+      "content": "<p>Văn hóa sneaker tại Việt Nam đã có sự chuyển mình đáng kể trong những năm gần đây.</p><p>Từ một sở thích nhỏ của giới trẻ, sneaker đã trở thành một phần quan trọng của ngành thời trang và văn hóa đường phố.</p><h2>Sự phát triển</h2><p>Cộng đồng sneakerhead Việt Nam ngày càng lớn mạnh với nhiều nhóm, forum...</p>",
+      "author": {
+        "name": "Admin X-Sneaker",
+        "avatar": "https://ui-avatars.com/api/?name=Admin&background=FF3C3C&color=fff"
+      },
+      "thumbnailImage": "https://images.unsplash.com/photo-1515955656352-a1fa3ffcd111?w=800",
+      "publishedDate": 1736812800000,
+      "category": "Văn hóa",
+      "tags": ["văn hóa", "việt nam", "cộng đồng", "xu hướng"],
+      "views": 2134,
+      "featured": false
+    }
+  },
+  "contact-submissions": {
+    "1737331200000-abc123": {
+      "name": "Nguyễn Văn A",
+      "email": "nguyenvana@example.com",
+      "phone": "0901234567",
+      "subject": "Liên hệ chung",
+      "message": "Xin chào, tôi muốn hỏi về sản phẩm Nike Air Jordan 1. Cho tôi biết thêm thông tin về màu sắc và size còn hàng.",
+      "submittedAt": 1737331200000,
+      "status": "pending",
+      "replied": false
+    },
+    "1737244800000-def456": {
+      "name": "Trần Thị B",
+      "email": "tranthib@example.com",
+      "phone": "0912345678",
+      "subject": "Liên hệ chung",
+      "message": "Shop có chính sách đổi trả như thế nào? Tôi muốn biết rõ hơn trước khi mua hàng.",
+      "submittedAt": 1737244800000,
+      "status": "replied",
+      "replied": true
+    },
+    "1737158400000-ghi789": {
+      "name": "Lê Văn C",
+      "email": "levanc@example.com",
+      "phone": "",
+      "subject": "Liên hệ chung",
+      "message": "Tôi ở Hà Nội, ship mất bao lâu và phí ship là bao nhiêu ạ?",
+      "submittedAt": 1737158400000,
+      "status": "replied",
+      "replied": true
     }
   },
   "brands": {

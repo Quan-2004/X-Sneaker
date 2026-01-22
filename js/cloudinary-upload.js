@@ -1,10 +1,10 @@
 // Cloudinary Upload Helper for X-Sneaker
 // Handles avatar uploads to Cloudinary
 
+import { cloudinaryConfig } from './firebase-config.js';
+
 const CLOUDINARY_CONFIG = {
-    cloudName: 'dvcebine7',
-    uploadPreset: 'x-sneaker-upload', // Cần tạo trong Cloudinary Dashboard
-    folder: 'Upload-Preset',
+    ...cloudinaryConfig,
     maxFileSize: 2000000, // 2MB
     allowedFormats: ['jpg', 'png', 'jpeg', 'webp']
 };

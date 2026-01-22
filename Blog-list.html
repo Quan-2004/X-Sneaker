@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html class="light" lang="vi">
 <head>
     <meta charset="utf-8" />
@@ -10,17 +10,15 @@
     <script src="js/tailwind-config.js"></script>
     <link rel="stylesheet" href="css/style.css" />
     <script src="js/common.js" defer></script>
-</head>
+    <script type="module" src="js/blog.js"></script>
+    <script type="module" src="js/header-auth.js"></script>
+  </head>
 <body class="bg-background-light dark:bg-background-dark text-[#1b0e0f] dark:text-white transition-colors duration-300">
     <!-- Header -->
     <header class="sticky top-0 z-50 bg-[#000000] border-b border-white/10">
         <div class="max-w-[1440px] mx-auto px-4 md:px-10 lg:px-20 py-4 flex items-center justify-between">
             <a class="flex items-center gap-2 text-white shrink-0" href="index.html">
-                <div class="size-8 text-primary">
-                    <svg fill="currentColor" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M36.7273 44C33.9891 44 31.6043 39.8386 30.3636 33.69C29.123 39.8386 26.7382 44 24 44C21.2618 44 18.877 39.8386 17.6364 33.69C16.3957 39.8386 14.0109 44 11.2727 44C7.25611 44 4 35.0457 4 24C4 12.9543 7.25611 4 11.2727 44C7.25611 44 4 35.0457 4 24C4 12.9543 7.25611 4 11.2727 44C7.25611 44 4 35.0457 4 24C4 12.9543 7.25611 4 11.2727 44C7.25611 44 4 35.0457 4 24C4 12.9543 7.25611 4 11.2727 44C7.25611 44 4 35.0457 4 24C4 12.9543 7.25611 4 11.2727 4C14.0109 4 16.3957 8.16144 17.6364 14.31C18.877 8.16144 21.2618 4 24 4C26.7382 4 29.123 8.16144 30.3636 14.31C31.6043 8.16144 33.9891 4 36.7273 4C40.7439 4 44 12.9543 44 24C44 35.0457 40.7439 44 36.7273 44Z"></path>
-                    </svg>
-                </div>
+                <img src="image/Asset 1@2x.png" alt="X-Sneaker Logo" class="h-8">
                 <h2 class="text-xl font-extrabold tracking-tighter uppercase italic">X-Sneaker</h2>
             </a>
             <nav class="hidden lg:flex items-center gap-10 text-white ml-10">
@@ -112,63 +110,8 @@
         <div class="flex flex-col lg:flex-row gap-12">
             <!-- Blog Main Content -->
             <div class="flex-1">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-12">
-                    <!-- Blog Card 1 -->
-                    <article class="flex flex-col group">
-                        <div class="w-full bg-center bg-no-repeat aspect-[16/10] bg-cover rounded-xl mb-5 overflow-hidden shadow-sm" data-alt="Person cleaning white leather sneakers with brush" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCM8qbjaHXbyv_xHQeYzS8IQ5HEOow7G3YUSup3RyFX_WDLUY3JrEiFPnqXRAFxTZ_KdXH__BD5VQ2UonwMiPwMg_vtBCvEjYkON6UfdIgpphYtJBBMioviWkJYRzhliLQmBJ4P_Znanf2zEKn-WmtOQSgd-5x-c6qSj28Lgwy8cOeM5qiQ06FgZ8PqJu3e2LvchYE2-LWUkXihvb-GQKyhyGsaWJzYS3d0Xrqg_SZHq_etl5n5u7MYGY1oGqQ7fOqswsbCN9zfVz8");'>
-                            <div class="w-full h-full bg-black/0 group-hover:bg-black/10 transition-all duration-300"></div>
-                        </div>
-                        <div class="flex flex-col gap-2">
-                            <span class="text-primary text-xs font-bold tracking-widest uppercase">Chăm Sóc Giày</span>
-                            <h3 class="text-[#1b0e0f] dark:text-white text-2xl font-extrabold leading-tight group-hover:text-primary transition-colors">Cách Vệ Sinh Giày Jordan Da Lộn</h3>
-                            <p class="text-[#6b7280] dark:text-gray-400 text-base leading-relaxed line-clamp-2">Học cách vệ sinh chuyên nghiệp để giữ cho đôi giày da lộn của bạn luôn như mới mà không làm hỏng chất liệu...</p>
-                            <a class="text-primary text-sm font-bold flex items-center gap-1 mt-2 hover:translate-x-1 transition-transform" href="Blog-detail.html">
-                                ĐỌC THÊM <span class="material-symbols-outlined text-sm">arrow_forward</span>
-                            </a>
-                        </div>
-                    </article>
-                    <!-- Blog Card 2 -->
-                    <article class="flex flex-col group">
-                        <div class="w-full bg-center bg-no-repeat aspect-[16/10] bg-cover rounded-xl mb-5 overflow-hidden shadow-sm" data-alt="Collection of limited edition 2024 sneakers" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAbqSJ0JeSX47-9Jon6VpMHOBa45w-Zz6eTAArojkEEeUXj20NRfxzasyWnpxm2PJ0jP5u-Yy2wdVQjulxYFcJ3XpIOTY1LNjXlbDrcydpFnCIymJZAtkFk-ScGCCPMlcWRRqNVJ1dc_50fXIQF6Elfua9dprpYMUQiL3VdC_Zt1q2XmAd5cOVrUqvtOfb9eXSM8O5FyGx2AeZ1KQuFu_KO2hCwJ4_fGDD_xEEDwyEIlSh_nyKhFi1GhyOypIkeZkMKtP34mtWVsy4");'>
-                            <div class="w-full h-full bg-black/0 group-hover:bg-black/10 transition-all duration-300"></div>
-                        </div>
-                        <div class="flex flex-col gap-2">
-                            <span class="text-primary text-xs font-bold tracking-widest uppercase">Xu Hướng</span>
-                            <h3 class="text-[#1b0e0f] dark:text-white text-2xl font-extrabold leading-tight group-hover:text-primary transition-colors">Top 10 Mẫu Giày Đáng Mua Nhất 2024</h3>
-                            <p class="text-[#6b7280] dark:text-gray-400 text-base leading-relaxed line-clamp-2">Chúng tôi tổng hợp những mẫu giày được mong đợi nhất trong năm, từ những màn hợp tác đình đám đến những đôi retro kinh điển...</p>
-                            <a class="text-primary text-sm font-bold flex items-center gap-1 mt-2 hover:translate-x-1 transition-transform" href="Blog-detail.html">
-                                ĐỌC THÊM <span class="material-symbols-outlined text-sm">arrow_forward</span>
-                            </a>
-                        </div>
-                    </article>
-                    <!-- Blog Card 3 -->
-                    <article class="flex flex-col group">
-                        <div class="w-full bg-center bg-no-repeat aspect-[16/10] bg-cover rounded-xl mb-5 overflow-hidden shadow-sm" data-alt="Evolution timeline of Nike Air Max shoes" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBWE--DuVXnWuwyOokH0rY5FE6VaI2hCSi38TtYiJAa8of8bUVeBYezyfrPFv6BBEzVV23YYjdvtJqnhdUJtDj8M5Ew8UUv5B3-Uab5cVRjIuvw6aKbQ5z4Jt4HM8H_JaAZwYO_79_VRnxChRlfzb7ZrKXJ5cZ7lDQ7dHb1k0n2cWWuiaHShs76m0_j7AyzAEuNPATIDnDkAl-xvAF97IbeYxNpmpYXCtxG4tU_EK0-SMzK_Gp2WvWJQp0WeDlWcdJNXzwv7B89zuE");'>
-                            <div class="w-full h-full bg-black/0 group-hover:bg-black/10 transition-all duration-300"></div>
-                        </div>
-                        <div class="flex flex-col gap-2">
-                            <span class="text-primary text-xs font-bold tracking-widest uppercase">Lịch Sử</span>
-                            <h3 class="text-[#1b0e0f] dark:text-white text-2xl font-extrabold leading-tight group-hover:text-primary transition-colors">Sự Tiến Hóa Của Air Max</h3>
-                            <p class="text-[#6b7280] dark:text-gray-400 text-base leading-relaxed line-clamp-2">Khám phá lịch sử phong phú và công nghệ Air đột phá đằng sau một trong những dòng giày thể thao mang tính biểu tượng nhất thế giới...</p>
-                            <a class="text-primary text-sm font-bold flex items-center gap-1 mt-2 hover:translate-x-1 transition-transform" href="Blog-detail.html">
-                                ĐỌC THÊM <span class="material-symbols-outlined text-sm">arrow_forward</span>
-                            </a>
-                        </div>
-                    </article>
-                    <!-- Blog Card 4 -->
-                    <article class="flex flex-col group">
-                        <div class="w-full bg-center bg-no-repeat aspect-[16/10] bg-cover rounded-xl mb-5 overflow-hidden shadow-sm" data-alt="Person using protective spray on white sneakers" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuA-bU7skEf1dQOlkh1LMOFOZ9IahoexEoYlIkiy67G5attkP8xM_Ct7RRBnzqAbz7kLYgtsH_CW_1VHWYWSxAYyJc4EkoyH4wUUyZ8he07l5hLKiQ9mha2jeHvhItYXeKV63YC2Dton7VkkY4-TLoVlS7keMRhWbR0TEz3RH9zI5m94G2FGUUHNJOwnL_NrsSdjOgPFcik_fIMLI1UjrBw5q4Cb2sv6ZNXu2rkqOEa0d71t11ziuQGd3_lYcSpy7ay5LeRmLMf6cvE");'>
-                            <div class="w-full h-full bg-black/0 group-hover:bg-black/10 transition-all duration-300"></div>
-                        </div>
-                        <div class="flex flex-col gap-2">
-                            <span class="text-primary text-xs font-bold tracking-widest uppercase">Bảo Dưỡng</span>
-                            <h3 class="text-[#1b0e0f] dark:text-white text-2xl font-extrabold leading-tight group-hover:text-primary transition-colors">Cách Ngăn Ngừa Ố Vàng Đế Giày</h3>
-                            <p class="text-[#6b7280] dark:text-gray-400 text-base leading-relaxed line-clamp-2">Mọi điều bạn cần biết về quá trình oxy hóa và cách giữ đế giày luôn trong và sạch sẽ trong nhiều năm...</p>
-                            <a class="text-primary text-sm font-bold flex items-center gap-1 mt-2 hover:translate-x-1 transition-transform" href="Blog-detail.html">
-                                ĐỌC THÊM <span class="material-symbols-outlined text-sm">arrow_forward</span>
-                            </a>
-                        </div>
-                    </article>
+                <div id="blogs-container" class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-12">
+                    <!-- Blogs will be loaded by blog.js -->
                 </div>
                 <!-- Pagination -->
                 <div class="flex justify-center items-center gap-3 mt-16 py-8 border-t border-gray-100 dark:border-white/10">
