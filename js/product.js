@@ -1,22 +1,11 @@
 // Product Listing Page Logic for X-Sneaker
 // Handles product loading, filtering, and rendering from Firebase
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
-import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-database.js";
+import { getFirebaseDatabase } from './firebase-config.js';
+import { ref, get } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-database.js";
 
-// Firebase config (same as auth.js)
-const firebaseConfig = {
-    apiKey: "AIzaSyBjCuKcQ5KKlR0gP96mCSPiSxM6l_F4C88",
-    authDomain: "x-sneaker.firebaseapp.com",
-    databaseURL: "https://x-sneaker-default-rtdb.asia-southeast1.firebasedatabase.app",
-    projectId: "x-sneaker",
-    storageBucket: "x-sneaker.firebasestorage.app",
-    messagingSenderId: "1039080363999",
-    appId: "1:1039080363999:web:7e50d81c2cd5f1e67be46f"
-};
-
-const app = initializeApp(firebaseConfig, 'product-app');
-const database = getDatabase(app);
+// Get Firebase database instance from shared config
+const database = getFirebaseDatabase();
 
 // Global state
 let allProducts = [];

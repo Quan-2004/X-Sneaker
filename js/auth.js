@@ -1,9 +1,8 @@
 // Firebase Authentication Module for X-Sneaker
 // Version: 1.0.0
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
+import { getFirebaseAuth, getFirebaseDatabase } from './firebase-config.js';
 import {
-  getAuth,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   signOut,
@@ -11,11 +10,11 @@ import {
   GoogleAuthProvider,
   FacebookAuthProvider,
   signInWithPopup,
+  signInWithCredential,
   sendPasswordResetEmail,
   updateProfile,
 } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-auth.js";
 import {
-  getDatabase,
   ref,
   set,
   get,
@@ -23,23 +22,9 @@ import {
   serverTimestamp,
 } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-database.js";
 
-// Firebase Configuration
-const firebaseConfig = {
-  apiKey: "AIzaSyBk41iuorgnQF0rbCr-BmlVAfMgVeIRVU8",
-  authDomain: "x-sneaker.firebaseapp.com",
-  databaseURL:
-    "https://x-sneaker-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "x-sneaker",
-  storageBucket: "x-sneaker.firebasestorage.app",
-  messagingSenderId: "577198860451",
-  appId: "1:577198860451:web:3cf88ce9496c70e3847716",
-  measurementId: "G-D43H8ELM22",
-};
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const database = getDatabase(app);
+// Get Firebase instances from shared config
+const auth = getFirebaseAuth();
+const database = getFirebaseDatabase();
 
 // Providers
 const googleProvider = new GoogleAuthProvider();
@@ -173,10 +158,8 @@ export async function registerUser(email, password, displayName) {
 
     showToast(`Chào mừng ${displayName}! Đăng ký thành công.`);
 
-    // Redirect to account page
-    setTimeout(() => {
-      window.location.href = "Account.html";
-    }, 1500);
+    // Redirect to account page immediately
+    window.location.href = "Account.html";
   } catch (error) {
     console.error("Registration error:", error);
 
@@ -226,10 +209,8 @@ export async function loginUser(email, password) {
 
     showToast(`Chào mừng trở lại, ${user.displayName || "bạn"}!`);
 
-    // Redirect to account page
-    setTimeout(() => {
-      window.location.href = "Account.html";
-    }, 1500);
+    // Redirect to account page immediately
+    window.location.href = "Account.html";
   } catch (error) {
     console.error("Login error:", error);
 
@@ -261,10 +242,30 @@ export async function loginUser(email, password) {
 }
 
 /**
- * Login with Google
+ * Login with Google (Improved UX - Check status first)
+ * Logic: Try silent sign-in first, then popup if needed
+ * - If Google session exists: Auto login (no popup)
+ * - If not: Show popup
  */
 export async function loginWithGoogle() {
   try {
+    // Check if Google Identity Services is available and we're on HTTPS
+    const isHttps = window.location.protocol === 'https:';
+    
+    if (isHttps && typeof google !== 'undefined' && google.accounts) {
+      console.log('Attempting Google silent sign-in...');
+      
+      // Try to get existing Google session
+      const hasSession = await tryGoogleSilentSignIn();
+      if (hasSession) {
+        return; // Successfully signed in silently
+      }
+    } else {
+      console.log('Google One Tap not available, using standard popup...');
+    }
+
+    // No existing session or not HTTPS - show popup
+    console.log('Google not connected, showing popup...');
     const result = await signInWithPopup(auth, googleProvider);
     const user = result.user;
 
@@ -273,10 +274,8 @@ export async function loginWithGoogle() {
 
     showToast(`Chào mừng ${user.displayName}!`);
 
-    // Redirect
-    setTimeout(() => {
-      window.location.href = "Account.html";
-    }, 1500);
+    // Redirect immediately
+    window.location.href = "Account.html";
   } catch (error) {
     console.error("Google login error:", error);
 
@@ -291,6 +290,10 @@ export async function loginWithGoogle() {
       case "auth/popup-blocked":
         errorMessage = "Popup bị chặn! Vui lòng cho phép popup.";
         break;
+      case "auth/unauthorized-domain":
+        errorMessage = 
+          "Domain chưa được cấu hình! Vui lòng thêm domain vào Firebase Console → Authentication → Authorized domains.";
+        break;
     }
 
     showToast(errorMessage, "error");
@@ -299,10 +302,80 @@ export async function loginWithGoogle() {
 }
 
 /**
- * Login with Facebook
+ * Try Google silent sign-in (Helper function)
+ * @returns {Promise<boolean>} True if signed in successfully
+ */
+async function tryGoogleSilentSignIn() {
+  return new Promise((resolve) => {
+    try {
+      // Initialize Google One Tap
+      google.accounts.id.initialize({
+        client_id: 'YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com',
+        callback: async (response) => {
+          try {
+            // Got Google credential, sign in to Firebase
+            const credential = GoogleAuthProvider.credential(response.credential);
+            const result = await signInWithCredential(auth, credential);
+            const user = result.user;
+
+            await saveUserToDatabase(user);
+            showToast(`Chào mừng ${user.displayName}!`);
+            
+            window.location.href = "Account.html";
+            resolve(true);
+          } catch (error) {
+            console.error('Google One Tap sign-in failed:', error);
+            resolve(false);
+          }
+        },
+        auto_select: true, // Auto-select if only one account
+        cancel_on_tap_outside: false,
+      });
+
+      // Try to display One Tap prompt (silent)
+      google.accounts.id.prompt((notification) => {
+        if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
+          // One Tap not shown, no existing session
+          console.log('Google One Tap not displayed:', notification.getNotDisplayedReason());
+          resolve(false);
+        }
+      });
+    } catch (error) {
+      console.log('Google One Tap initialization failed:', error);
+      resolve(false);
+    }
+  });
+}
+
+/**
+ * Login with Facebook (Improved UX - Check status first)
+ * Logic: Check FB.getLoginStatus() first
+ * - If connected: Auto login (no popup)
+ * - If not connected: Show FB.login() popup
+ * Note: FB.getLoginStatus requires HTTPS, falls back to direct login on HTTP
  */
 export async function loginWithFacebook() {
   try {
+    // Check if we're on HTTPS (required for FB.getLoginStatus)
+    const isHttps = window.location.protocol === 'https:';
+    
+    if (isHttps) {
+      // HTTPS - Use improved flow with status check
+      const loginStatus = await checkFacebookLoginStatus();
+      
+      if (loginStatus.status === 'connected') {
+        // User is already logged in to Facebook - auto login without popup
+        console.log('Facebook already connected, auto-logging in...');
+        await handleFacebookLogin(loginStatus.authResponse.accessToken);
+        return;
+      }
+    } else {
+      // HTTP (development) - FB.getLoginStatus not allowed, skip to direct login
+      console.log('Running on HTTP, skipping Facebook status check...');
+    }
+    
+    // User not connected OR running on HTTP - show login popup
+    console.log('Facebook not connected, showing popup...');
     const result = await signInWithPopup(auth, facebookProvider);
     const user = result.user;
 
@@ -311,10 +384,8 @@ export async function loginWithFacebook() {
 
     showToast(`Chào mừng ${user.displayName}!`);
 
-    // Redirect
-    setTimeout(() => {
-      window.location.href = "Account.html";
-    }, 1500);
+    // Redirect immediately
+    window.location.href = "Account.html";
   } catch (error) {
     console.error("Facebook login error:", error);
 
@@ -333,9 +404,56 @@ export async function loginWithFacebook() {
         errorMessage =
           "Email này đã được sử dụng với phương thức đăng nhập khác!";
         break;
+      case "auth/unauthorized-domain":
+        errorMessage = 
+          "Domain chưa được cấu hình! Vui lòng thêm domain vào Firebase Console → Authentication → Authorized domains.";
+        break;
     }
 
     showToast(errorMessage, "error");
+    throw error;
+  }
+}
+
+/**
+ * Check Facebook login status (Helper function)
+ * @returns {Promise} Facebook login status
+ */
+function checkFacebookLoginStatus() {
+  return new Promise((resolve) => {
+    // Check if Facebook SDK is loaded
+    if (typeof FB === 'undefined') {
+      console.warn('Facebook SDK not loaded');
+      resolve({ status: 'unknown' });
+      return;
+    }
+
+    FB.getLoginStatus((response) => {
+      resolve(response);
+    });
+  });
+}
+
+/**
+ * Handle Facebook login with access token
+ * @param {string} accessToken - Facebook access token
+ */
+async function handleFacebookLogin(accessToken) {
+  try {
+    // Use Firebase's FacebookAuthProvider credential
+    const credential = FacebookAuthProvider.credential(accessToken);
+    const result = await signInWithCredential(auth, credential);
+    const user = result.user;
+
+    // Save to database
+    await saveUserToDatabase(user);
+
+    showToast(`Chào mừng ${user.displayName}!`);
+
+    // Redirect immediately
+    window.location.href = "Account.html";
+  } catch (error) {
+    console.error("Facebook auto-login error:", error);
     throw error;
   }
 }
@@ -355,10 +473,8 @@ export async function resetPassword(email) {
       "Email khôi phục mật khẩu đã được gửi! Vui lòng kiểm tra hộp thư.",
     );
 
-    // Redirect to login after 3 seconds
-    setTimeout(() => {
-      window.location.href = "login.html";
-    }, 3000);
+    // Redirect to login immediately
+    window.location.href = "login.html";
   } catch (error) {
     console.error("Password reset error:", error);
 
@@ -388,10 +504,8 @@ export async function logoutUser() {
     await signOut(auth);
     showToast("Đã đăng xuất thành công!");
 
-    // Redirect to home
-    setTimeout(() => {
-      window.location.href = "index.html";
-    }, 1000);
+    // Redirect to home immediately
+    window.location.href = "index.html";
   } catch (error) {
     console.error("Logout error:", error);
     showToast("Đăng xuất thất bại!", "error");

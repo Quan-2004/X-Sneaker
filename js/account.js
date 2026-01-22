@@ -1,14 +1,12 @@
 // Account Page Logic for X-Sneaker
 // Handles user profile display, editing, and real-time updates
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getFirebaseAuth, getFirebaseDatabase } from './firebase-config.js';
 import { 
-    getAuth, 
     onAuthStateChanged,
     updateProfile as updateAuthProfile
-} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+} from "https://www.gstatic.com/firebasejs/12.8.0/firebase-auth.js";
 import { 
-    getDatabase, 
     ref, 
     onValue,
     update,
@@ -16,25 +14,12 @@ import {
     query,
     orderByChild,
     equalTo
-} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+} from "https://www.gstatic.com/firebasejs/12.8.0/firebase-database.js";
 import { initCloudinaryWidget } from './cloudinary-upload.js';
 
-// Firebase Configuration
-const firebaseConfig = {
-    apiKey: "AIzaSyBk41iuorgnQF0rbCr-BmlVAfMgVeIRVU8",
-    authDomain: "x-sneaker.firebaseapp.com",
-    databaseURL: "https://x-sneaker-default-rtdb.asia-southeast1.firebasedatabase.app",
-    projectId: "x-sneaker",
-    storageBucket: "x-sneaker.firebasestorage.app",
-    messagingSenderId: "577198860451",
-    appId: "1:577198860451:web:3cf88ce9496c70e3847716",
-    measurementId: "G-D43H8ELM22"
-};
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const database = getDatabase(app);
+// Get Firebase instances from shared config
+const auth = getFirebaseAuth();
+const database = getFirebaseDatabase();
 
 // Global State
 let currentUser = null;

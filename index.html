@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html class="light" lang="vi">
   <head>
     <meta charset="utf-8" />
@@ -18,6 +18,8 @@
     <script src="js/common.js" defer></script>
     <script src="js/home.js" defer></script>
     <script type="module" src="js/auth.js"></script>
+    <script type="module" src="js/home-products.js"></script>
+    <script type="module" src="js/header-auth.js"></script>
   </head>
   <body
     class="bg-background-light dark:bg-background-dark text-[#1b0e0f] dark:text-white transition-colors duration-300"
@@ -33,17 +35,7 @@
           class="flex items-center gap-2 text-white shrink-0"
           href="index.html"
         >
-          <div class="size-8 text-primary">
-            <svg
-              fill="currentColor"
-              viewBox="0 0 48 48"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M36.7273 44C33.9891 44 31.6043 39.8386 30.3636 33.69C29.123 39.8386 26.7382 44 24 44C21.2618 44 18.877 39.8386 17.6364 33.69C16.3957 39.8386 14.0109 44 11.2727 44C7.25611 44 4 35.0457 4 24C4 12.9543 7.25611 4 11.2727 4C14.0109 4 16.3957 8.16144 17.6364 14.31C18.877 8.16144 21.2618 4 24 4C26.7382 4 29.123 8.16144 30.3636 14.31C31.6043 8.16144 33.9891 4 36.7273 4C40.7439 4 44 12.9543 44 24C44 35.0457 40.7439 44 36.7273 44Z"
-              ></path>
-            </svg>
-          </div>
+          <img src="image/Asset 1@2x.png" alt="X-Sneaker Logo" class="h-12">
           <h2 class="text-xl font-extrabold tracking-tighter uppercase italic">
             X-Sneaker
           </h2>
@@ -622,7 +614,12 @@
             </div>
           </div>
         </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Flash Sale Products Container (Dynamic from Firebase) -->
+        <div id="flash-sale-products" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <!-- Products will be loaded here by home-products.js -->
+        </div>
+        <!-- Original hardcoded products (backup, will be replaced) -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 hidden">
           <div
             class="group bg-white dark:bg-background-dark rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-all border border-transparent hover:border-primary/20"
           >
@@ -786,6 +783,48 @@
         </div>
       </div>
     </section>
+
+
+<!-- Best Sellers Section - INSERT THIS AFTER FLASH SALE SECTION (around line 784) -->
+<section class="py-20 px-4 md:px-20 bg-white dark:bg-background-dark">
+  <div class="max-w-[1280px] mx-auto">
+    <div class="flex items-center justify-between mb-10">
+      <div class="flex items-center gap-4">
+        <span class="material-symbols-outlined text-primary text-4xl">trending_up</span>
+        <h2 class="text-4xl font-black italic tracking-tighter dark:text-white uppercase">Sản Phẩm Bán Chạy</h2>
+      </div>
+      <a href="Product.html" class="text-primary font-bold text-sm uppercase tracking-wider hover:underline flex items-center gap-2">
+        Xem Tất Cả
+        <span class="material-symbols-outlined text-sm">arrow_forward</span>
+      </a>
+    </div>
+    <div id="best-sellers-products" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <!-- Products will be loaded by home-products.js -->
+    </div>
+  </div>
+</section>
+
+<!-- New Arrivals Section -->
+<section class="py-20 px-4 md:px-20 bg-[#F5F5F5] dark:bg-[#1a0c0c]">
+  <div class="max-w-[1280px] mx-auto">
+    <div class="flex items-center justify-between mb-10">
+      <div class="flex items-center gap-4">
+        <span class="material-symbols-outlined text-primary text-4xl">new_releases</span>
+        <h2 class="text-4xl font-black italic tracking-tighter dark:text-white uppercase">Hàng Mới Về</h2>
+      </div>
+      <a href="Product.html" class="text-primary font-bold text-sm uppercase tracking-wider hover:underline flex items-center gap-2">
+        Xem Tất Cả
+        <span class="material-symbols-outlined text-sm">arrow_forward</span>
+      </a>
+    </div>
+    <div id="new-arrivals-products" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <!-- Products will be loaded by home-products.js -->
+    </div>
+  </div>
+</section>
+
+
+
 
     <section class="py-20 px-4 md:px-20 bg-white dark:bg-background-dark">
       <div class="max-w-[1280px] mx-auto">

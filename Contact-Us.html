@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html class="light" lang="vi">
 <head>
     <meta charset="utf-8" />
@@ -10,17 +10,15 @@
     <script src="js/tailwind-config.js"></script>
     <link rel="stylesheet" href="css/style.css" />
     <script src="js/common.js" defer></script>
-</head>
+    <script type="module" src="js/contact.js"></script>
+    <script type="module" src="js/header-auth.js"></script>
+  </head>
 <body class="bg-background-light dark:bg-background-dark text-[#1b0e0f] dark:text-white transition-colors duration-300">
     <!-- Header -->
     <header class="sticky top-0 z-50 bg-[#000000] border-b border-white/10">
         <div class="max-w-[1440px] mx-auto px-4 md:px-10 lg:px-20 py-4 flex items-center justify-between">
             <a class="flex items-center gap-2 text-white shrink-0" href="index.html">
-                <div class="size-8 text-primary">
-                    <svg fill="currentColor" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M36.7273 44C33.9891 44 31.6043 39.8386 30.3636 33.69C29.123 39.8386 26.7382 44 24 44C21.2618 44 18.877 39.8386 17.6364 33.69C16.3957 39.8386 14.0109 44 11.2727 44C7.25611 44 4 35.0457 4 24C4 12.9543 7.25611 4 11.2727 44C7.25611 4 11.2727 44C7.25611 4 11.2727 44 7.25611 44 4 35.0457 4 24C4 12.9543 7.25611 4 11.2727 4 11.2727 44C11.2727 4 17.6364 14.31C18.877 8.16144 21.2618 4 24 4C26.7382 4 29.123 8.16144 30.3636 14.31C31.6043 8.16144 33.9891 4 36.7273 4C40.7439 4 44 12.9543 44 24C44 35.0457 40.7439 44 36.7273 44Z"></path>
-                    </svg>
-                </div>
+                    <img src="image/Asset 1@2x.png" alt="X-Sneaker Logo" class="h-8">
                 <h2 class="text-xl font-extrabold tracking-tighter uppercase italic">X-Sneaker</h2>
             </a>
             <nav class="hidden lg:flex items-center gap-10 text-white ml-10">
@@ -174,21 +172,27 @@
             <!-- Right Column: Minimalist Contact Form -->
             <div class="bg-gray-50 dark:bg-gray-900/50 p-8 rounded-xl border border-gray-100 dark:border-gray-800">
                 <h3 class="text-2xl font-bold mb-6 text-brand-black dark:text-white">Gửi Tin Nhắn</h3>
-                <form class="space-y-6">
+                <div id="form-error" class="hidden bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 text-red-700 dark:text-red-300 mb-4"></div>
+                <form id="contact-form" class="space-y-6">
                     <div>
-                        <label class="block text-xs font-bold uppercase text-gray-500 mb-2" for="name">Họ Tên</label>
-                        <input class="w-full px-4 py-3 rounded-lg border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none" id="name" placeholder="Nguyễn Văn A" type="text"/>
+                        <label class="block text-xs font-bold uppercase text-gray-500 mb-2" for="name">Họ Tên *</label>
+                        <input class="w-full px-4 py-3 rounded-lg border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none" id="name" name="name" placeholder="Nguyễn Văn A" type="text" required/>
                     </div>
                     <div>
-                        <label class="block text-xs font-bold uppercase text-gray-500 mb-2" for="email">Địa chỉ Email</label>
-                        <input class="w-full px-4 py-3 rounded-lg border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none" id="email" placeholder="example@email.com" type="email"/>
+                        <label class="block text-xs font-bold uppercase text-gray-500 mb-2" for="email">Địa chỉ Email *</label>
+                        <input class="w-full px-4 py-3 rounded-lg border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none" id="email" name="email" placeholder="example@email.com" type="email" required/>
                     </div>
                     <div>
-                        <label class="block text-xs font-bold uppercase text-gray-500 mb-2" for="message">Nội Dung</label>
-                        <textarea class="w-full px-4 py-3 rounded-lg border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none resize-none" id="message" placeholder="Bạn cần hỗ trợ gì..." rows="5"></textarea>
+                        <label class="block text-xs font-bold uppercase text-gray-500 mb-2" for="phone">Số Điện Thoại</label>
+                        <input class="w-full px-4 py-3 rounded-lg border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none" id="phone" name="phone" placeholder="0123456789" type="tel"/>
                     </div>
-                    <button class="w-full bg-primary hover:bg-red-700 text-white font-bold py-4 rounded-lg uppercase tracking-widest transition-all transform active:scale-95 shadow-lg shadow-primary/30" type="submit">
-                        Gửi Tin Nhắn
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-gray-500 mb-2" for="message">Nội Dung *</label>
+                        <textarea class="w-full px-4 py-3 rounded-lg border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none resize-none" id="message" name="message" placeholder="Bạn cần hỗ trợ gì..." rows="5" required></textarea>
+                    </div>
+                    <button class="w-full bg-primary hover:bg-red-700 text-white font-bold py-4 rounded-lg uppercase tracking-widest transition-all transform active:scale-95 shadow-lg shadow-primary/30 flex items-center justify-center gap-2" type="submit">
+                        <span>Gửi Tin Nhắn</span>
+                        <span class="material-symbols-outlined text-sm">send</span>
                     </button>
                     <p class="text-center text-xs text-gray-400 mt-4 italic">Chúng tôi thường phản hồi trong vòng 24 giờ.</p>
                 </form>
