@@ -211,7 +211,7 @@ function renderRelatedProducts(products) {
     container.innerHTML = products.map(product => {
         const mainImage = Array.isArray(product.images) && product.images.length > 0
             ? product.images[0]
-            : 'https://via.placeholder.com/400?text=No+Image';
+            : 'data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'400\' height=\'400\' viewBox=\'0 0 400 400\'%3E%3Crect width=\'400\' height=\'400\' fill=\'%23f3f4f6\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' font-family=\'Arial\' font-size=\'24\' fill=\'%239ca3af\' dominant-baseline=\'middle\' text-anchor=\'middle\'%3ENo Image%3C/text%3E%3C/svg%3E';
         
         return `
             <div class="group cursor-pointer">

@@ -199,7 +199,7 @@ function renderProducts(products) {
     container.innerHTML = paginatedProducts.map(product => {
         const mainImage = Array.isArray(product.images) && product.images.length > 0 
             ? product.images[0] 
-            : 'https://via.placeholder.com/400';
+            : 'image/coming_soon.png';
         
         const discountPercent = product.discount || 0;
         const hasDiscount = discountPercent > 0;
@@ -211,7 +211,7 @@ function renderProducts(products) {
                         <img class="w-full h-full object-contain p-8 group-hover:scale-110 transition-transform duration-500" 
                              src="${mainImage}"
                              alt="${product.name}"
-                             onerror="if(this.src!='image/default-avatar.jpg'){this.src='image/default-avatar.jpg'}"/>
+                             onerror="if(this.src!='image/coming_soon.png'){this.src='image/coming_soon.png'}"/>
                     </a>
                     ${hasDiscount ? `<div class="absolute top-4 left-4 bg-primary text-white text-[10px] font-bold px-2 py-1 rounded">${discountPercent}% OFF</div>` : ''}
                     ${product.isNew ? `<div class="absolute top-4 left-4 bg-black text-white text-[10px] font-bold px-2 py-1 rounded">MỚI</div>` : ''}

@@ -144,7 +144,7 @@ function renderBlog(blog) {
                 <img src="${blog.thumbnailImage}" 
                      alt="${blog.title}"
                      class="w-full h-full object-cover"
-                     onerror="this.src='https://via.placeholder.com/1200x600?text=Blog+Image'"/>
+                     onerror="this.src='image/coming_soon.png'"/>
             </div>
         `;
         
@@ -191,7 +191,7 @@ function renderRelatedBlogs(blogs) {
                 <a href="Blog-detail.html?id=${blog.id}" class="group">
                     <div class="bg-white dark:bg-background-dark rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-all border border-transparent hover:border-primary/20">
                         <div class="aspect-video bg-gray-100 overflow-hidden">
-                            <img src="${blog.thumbnailImage || 'https://via.placeholder.com/400x300'}" 
+                            <img src="${blog.thumbnailImage || 'image/coming_soon.png'}" 
                                  alt="${blog.title}"
                                  class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"/>
                         </div>

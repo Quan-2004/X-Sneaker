@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html class="light" lang="vi">
 <head>
     <meta charset="utf-8" />
@@ -19,7 +19,7 @@
     <header class="sticky top-0 z-50 bg-[#000000] border-b border-white/10">
         <div class="max-w-[1440px] mx-auto px-4 md:px-10 lg:px-20 py-4 flex items-center justify-between">
             <a class="flex items-center gap-2 text-white shrink-0" href="index.html">
-                    <img src="image/Logo_X_Sneaker.png" alt="X-Sneaker Logo" class="h-8">
+                    <img src="image/Logo_X_Sneaker.png" alt="X-Sneaker Logo" class="h-12">
                 <h2 class="text-xl font-extrabold tracking-tighter uppercase italic">X-Sneaker</h2>
             </a>
             <nav class="hidden lg:flex items-center gap-10 text-white ml-10">
@@ -70,9 +70,9 @@
                 <a href="Account.html" class="hover:text-primary transition-colors flex items-center justify-center">
                     <span class="material-symbols-outlined">person</span>
                 </a>
-                <button class="hover:text-primary transition-colors flex items-center justify-center">
+                <a href="Account.html?tab=wishlist" class="hover:text-primary transition-colors flex items-center justify-center">
                     <span class="material-symbols-outlined">favorite</span>
-                </button>
+                </a>
                 <a href="Cart.html" class="hover:text-primary transition-colors relative flex items-center justify-center">
                     <span class="material-symbols-outlined">shopping_cart</span>
                     <span class="absolute -top-2 -right-2 bg-primary text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold text-white border border-black">3</span>
@@ -113,31 +113,7 @@
                         <!-- Items will be rendered here by JS -->
                     </div>
                 </div>
-                <!-- Shipping Form -->
-                <div class="bg-white dark:bg-[#2d1a1b] p-8 rounded-xl border border-[#f3e7e8] dark:border-[#3a2526]">
-                    <h3 class="text-xl font-bold mb-6 flex items-center gap-2">
-                        <span class="material-symbols-outlined text-primary">local_shipping</span>
-                        Thông Tin Vận Chuyển
-                    </h3>
-                    <form class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div class="flex flex-col gap-1 md:col-span-2">
-                            <label class="text-xs font-bold uppercase tracking-wider text-[#974e52]">Họ Tên</label>
-                            <input class="form-input rounded-lg border-[#f3e7e8] dark:border-[#3a2526] bg-background-light dark:bg-background-dark focus:ring-primary focus:border-primary w-full" placeholder="Nguyễn Văn A" type="text"/>
-                        </div>
-                        <div class="flex flex-col gap-1 md:col-span-2">
-                            <label class="text-xs font-bold uppercase tracking-wider text-[#974e52]">Địa Chỉ</label>
-                            <input class="form-input rounded-lg border-[#f3e7e8] dark:border-[#3a2526] bg-background-light dark:bg-background-dark focus:ring-primary focus:border-primary w-full" placeholder="123 Đường Hype" type="text"/>
-                        </div>
-                        <div class="flex flex-col gap-1">
-                            <label class="text-xs font-bold uppercase tracking-wider text-[#974e52]">Thành Phố</label>
-                            <input class="form-input rounded-lg border-[#f3e7e8] dark:border-[#3a2526] bg-background-light dark:bg-background-dark focus:ring-primary focus:border-primary w-full" placeholder="TP.HCM" type="text"/>
-                        </div>
-                        <div class="flex flex-col gap-1">
-                            <label class="text-xs font-bold uppercase tracking-wider text-[#974e52]">Mã Bưu Điện</label>
-                            <input class="form-input rounded-lg border-[#f3e7e8] dark:border-[#3a2526] bg-background-light dark:bg-background-dark focus:ring-primary focus:border-primary w-full" placeholder="700000" type="text"/>
-                        </div>
-                    </form>
-                </div>
+                <!-- Shipping Form removed - moved to Checkout page -->
             </div>
             <!-- Right Column: Summary -->
             <div class="lg:col-span-1">
@@ -161,10 +137,10 @@
                         <span>Tổng Cộng</span>
                         <span class="text-primary" id="cart-total">4.406.400₫</span>
                     </div>
-                    <button class="w-full bg-primary hover:bg-[#c1141d] text-white font-extrabold py-4 rounded-xl transition-all shadow-lg shadow-primary/20 flex items-center justify-center gap-2 mb-4">
-                        <span>THANH TOÁN</span>
+                    <a href="Checkout.html" class="w-full bg-primary hover:bg-[#c1141d] text-white font-extrabold py-4 rounded-xl transition-all shadow-lg shadow-primary/20 flex items-center justify-center gap-2 mb-4">
+                        <span>TIẾN HÀNH THANH TOÁN</span>
                         <span class="material-symbols-outlined">arrow_forward</span>
-                    </button>
+                    </a>
                     <div class="space-y-4 text-center">
                         <p class="text-xs text-[#974e52] flex items-center justify-center gap-2">
                             <span class="material-symbols-outlined text-sm">lock</span>
@@ -194,11 +170,7 @@
         <div class="max-w-[1280px] mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-20">
             <div class="flex flex-col gap-6">
                 <a class="flex items-center gap-2" href="index.html">
-                    <div class="size-8 text-primary">
-                        <svg fill="currentColor" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M36.7273 44C33.9891 44 31.6043 39.8386 30.3636 33.69C29.123 39.8386 26.7382 44 24 44C21.2618 44 18.877 39.8386 17.6364 33.69C16.3957 39.8386 14.0109 44 11.2727 44C7.25611 44 4 35.0457 4 24C4 12.9543 7.25611 4 11.2727 44C7.25611 44 4 35.0457 4 24C4 12.9543 7.25611 4 11.2727 44C7.25611 44 4 35.0457 4 24C4 12.9543 7.25611 4 11.2727 44C7.25611 44 4 35.0457 4 24C4 12.9543 7.25611 4 11.2727 4C14.0109 4 16.3957 8.16144 17.6364 14.31C18.877 8.16144 21.2618 4 24 4C26.7382 4 29.123 8.16144 30.3636 14.31C31.6043 8.16144 33.9891 4 36.7273 4C40.7439 4 44 12.9543 44 24C44 35.0457 40.7439 44 36.7273 44Z"></path>
-                        </svg>
-                    </div>
+                    <img src="image/Logo_X_Sneaker.png" alt="X-Sneaker Logo" class="h-8">
                     <h2 class="text-2xl font-extrabold tracking-tighter uppercase italic">X-Sneaker</h2>
                 </a>
                 <p class="text-gray-400 text-sm leading-relaxed">
@@ -249,3 +221,4 @@
     </footer>
 </body>
 </html>
+

@@ -54,7 +54,7 @@ function renderBlogs(blogs) {
     }
     
     container.innerHTML = blogs.map(blog => {
-        const thumbnail = blog.thumbnailImage || 'https://via.placeholder.com/600x400?text=Blog+Image';
+        const thumbnail = blog.thumbnailImage || 'image/coming_soon.png';
         const publishedDate = blog.publishedDate ? formatDate(blog.publishedDate) : 'N/A';
         const excerpt = blog.excerpt || 'Đọc thêm để khám phá...';
         
@@ -65,7 +65,7 @@ function renderBlogs(blogs) {
                         <img src="${thumbnail}" 
                              alt="${blog.title}"
                              class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                             onerror="this.src='https://via.placeholder.com/600x400?text=Blog+Image'"/>
+                             onerror="this.src='image/coming_soon.png'"/>
                     </div>
                 </a>
                 <div class="p-6">

@@ -50,11 +50,23 @@ function initAccountPage() {
             loadUserWishlist(user.uid);
             setupEventListeners();
             setupTabNavigation(); // Setup tabs
+            checkUrlForTab(); // Check URL for tab param
         } else {
             console.log('User not authenticated, redirecting...');
             window.location.href = 'login.html';
         }
     });
+}
+
+function checkUrlForTab() {
+    const params = new URLSearchParams(window.location.search);
+    const tabName = params.get('tab');
+    if (tabName) {
+        const tabButton = document.querySelector(`.nav-tab[data-tab="${tabName}"]`);
+        if (tabButton) {
+            tabButton.click();
+        }
+    }
 }
 
 // ============================================================================

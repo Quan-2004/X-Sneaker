@@ -134,7 +134,7 @@ function renderFlashSale(products) {
     container.innerHTML = products.map(product => {
         const mainImage = Array.isArray(product.images) && product.images.length > 0
             ? product.images[0]
-            : 'https://via.placeholder.com/400?text=No+Image';
+            : 'image/coming_soon.png';
         
         const discountPercent = product.discount || 0;
         const originalPrice = product.originalPrice || (product.price / (1 - discountPercent / 100));
@@ -149,7 +149,7 @@ function renderFlashSale(products) {
                         <img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                              src="${mainImage}"
                              alt="${product.name}"
-                             onerror="this.src='https://via.placeholder.com/400?text=No+Image'"/>
+                             onerror="this.src='image/coming_soon.png'"/>
                     </a>
                 </div>
                 <div class="p-5">
@@ -194,7 +194,7 @@ function renderBestSellers(products) {
     container.innerHTML = products.map(product => {
         const mainImage = Array.isArray(product.images) && product.images.length > 0
             ? product.images[0]
-            : 'https://via.placeholder.com/400?text=No+Image';
+            : 'image/coming_soon.png';
 
         return `
             <div class="group relative flex flex-col">
@@ -203,7 +203,7 @@ function renderBestSellers(products) {
                         <img class="w-full h-full object-contain p-8 group-hover:scale-110 transition-transform duration-500"
                              src="${mainImage}"
                              alt="${product.name}"
-                             onerror="this.src='https://via.placeholder.com/400?text=No+Image'"/>
+                             onerror="this.src='image/coming_soon.png'"/>
                     </a>
                     ${product.isNew ? '<div class="absolute top-4 left-4 bg-black text-white text-[10px] font-bold px-2 py-1 rounded">MỚI</div>' : ''}
                     ${product.isBestSeller ? '<div class="absolute top-4 right-4 bg-green-600 text-white text-[10px] font-bold px-2 py-1 rounded">BÁN CHẠY</div>' : ''}
@@ -247,7 +247,7 @@ function renderNewArrivals(products) {
     container.innerHTML = products.map(product => {
         const mainImage = Array.isArray(product.images) && product.images.length > 0
             ? product.images[0]
-            : 'https://via.placeholder.com/400?text=No+Image';
+            : 'image/coming_soon.png';
 
         return `
             <div class="group relative flex flex-col">
@@ -256,7 +256,7 @@ function renderNewArrivals(products) {
                         <img class="w-full h-full object-contain p-8 group-hover:scale-110 transition-transform duration-500"
                              src="${mainImage}"
                              alt="${product.name}"
-                             onerror="this.src='https://via.placeholder.com/400?text=No+Image'"/>
+                             onerror="this.src='image/coming_soon.png'"/>
                     </a>
                     <div class="absolute top-4 left-4 bg-primary text-white text-[10px] font-bold px-2 py-1 rounded">MỚI</div>
                     <button class="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black text-white text-xs font-bold px-6 py-3 rounded-lg opacity-0 group-hover:opacity-100 transition-all transform translate-y-4 group-hover:translate-y-0 w-[80%] whitespace-nowrap">
