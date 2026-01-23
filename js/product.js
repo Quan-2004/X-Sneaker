@@ -17,8 +17,11 @@ let currentFilters = {
     genders: [],
     sizes: [],
     priceMin: 0,
-    priceMax: 999999999
+    priceMax: 10000000 // 10 million VND
 };
+let currentPage = 1;
+let itemsPerPage = 12;
+let currentSort = 'popular'; // popular, price-asc, price-desc, newest
 
 // ============================================================================
 // DATA LOADING
@@ -131,7 +134,26 @@ function applyFilters() {
         p.price <= currentFilters.priceMax
     );
 
+    // Apply sorting
+    filtered = applySort(filtered);
+    
     return filtered;
+}
+
+function applySort(products) {
+    const sorted = [...products];
+    
+    switch(currentSort) {
+        case 'price-asc':
+            return sorted.sort((a, b) => a.price - b.price);
+        case 'price-desc':
+            return sorted.sort((a, b) => b.price - a.price);
+        case 'newest':
+            return sorted.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+        case 'popular':
+        default:
+            return sorted.sort((a, b) => (b.sold || 0) - (a.sold || 0));
+    }
 }
 
 function updateFilterFromCheckbox(type, value, isChecked) {
@@ -163,10 +185,18 @@ function renderProducts(products) {
                 <p class="text-gray-400 mt-2">Thử điều chỉnh bộ lọc của bạn</p>
             </div>
         `;
+        // Hide pagination
+        renderPagination(0);
         return;
     }
 
-    container.innerHTML = products.map(product => {
+    // Calculate pagination
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    const paginatedProducts = products.slice(startIndex, endIndex);
+    
+    // Render paginated products
+    container.innerHTML = paginatedProducts.map(product => {
         const mainImage = Array.isArray(product.images) && product.images.length > 0 
             ? product.images[0] 
             : 'https://via.placeholder.com/400';
@@ -179,9 +209,9 @@ function renderProducts(products) {
                 <div class="relative aspect-square bg-[#f3f3f3] dark:bg-[#2a1a1b] rounded-xl overflow-hidden mb-4">
                     <a href="Product-detail.html?id=${product.id}">
                         <img class="w-full h-full object-contain p-8 group-hover:scale-110 transition-transform duration-500" 
-                             src="${mainImage}" 
+                             src="${mainImage}"
                              alt="${product.name}"
-                             onerror="this.src='https://via.placeholder.com/400?text=No+Image'"/>
+                             onerror="if(this.src!='image/default-avatar.jpg'){this.src='image/default-avatar.jpg'}"/>
                     </a>
                     ${hasDiscount ? `<div class="absolute top-4 left-4 bg-primary text-white text-[10px] font-bold px-2 py-1 rounded">${discountPercent}% OFF</div>` : ''}
                     ${product.isNew ? `<div class="absolute top-4 left-4 bg-black text-white text-[10px] font-bold px-2 py-1 rounded">MỚI</div>` : ''}
@@ -202,6 +232,9 @@ function renderProducts(products) {
             </div>
         `;
     }).join('');
+    
+    // Render pagination controls
+    renderPagination(products.length);
 }
 
 function renderLoadingSkeleton() {
@@ -279,27 +312,6 @@ function setupFilterListeners() {
         });
     });
 
-    // Size filters
-    document.querySelectorAll('button[data-filter="size"]').forEach(button => {
-        button.addEventListener('click', (e) => {
-            const size = e.target.dataset.size;
-            const isActive = e.target.classList.contains('border-primary');
-            
-            if (isActive) {
-                e.target.classList.remove('border-primary', 'bg-primary/5', 'text-primary', 'font-bold');
-                e.target.classList.add('border-gray-200', 'dark:border-gray-800');
-                currentFilters.sizes = currentFilters.sizes.filter(s => s !== size);
-            } else {
-                e.target.classList.add('border-primary', 'bg-primary/5', 'text-primary', 'font-bold');
-                e.target.classList.remove('border-gray-200', 'dark:border-gray-800');
-                currentFilters.sizes.push(size);
-            }
-            
-            const filtered = applyFilters();
-            renderProducts(filtered);
-        });
-    });
-
     // Clear filters button
     const clearBtn = document.querySelector('button[data-action="clear-filters"]');
     if (clearBtn) {
@@ -307,11 +319,19 @@ function setupFilterListeners() {
             // Reset all checkboxes
             document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
             
-            // Reset size buttons
-            document.querySelectorAll('button[data-filter="size"]').forEach(btn => {
-                btn.classList.remove('border-primary', 'bg-primary/5', 'text-primary', 'font-bold');
-                btn.classList.add('border-gray-200', 'dark:border-gray-800');
-            });
+            // Reset dual range sliders
+            const priceMin = document.getElementById('price-min');
+            const priceMax = document.getElementById('price-max');
+            const priceDisplay = document.getElementById('price-display');
+            const priceRangeTrack = document.getElementById('price-range-track');
+            
+            if (priceMin) priceMin.value = 0;
+            if (priceMax) priceMax.value = 10000000;
+            if (priceDisplay) priceDisplay.textContent = '0₫ - 10.000.000₫';
+            if (priceRangeTrack) {
+                priceRangeTrack.style.left = '0%';
+                priceRangeTrack.style.right = '0%';
+            }
 
             // Reset filters
             currentFilters = {
@@ -320,12 +340,200 @@ function setupFilterListeners() {
                 genders: [],
                 sizes: [],
                 priceMin: 0,
-                priceMax: 999999999
+                priceMax: 10000000
             };
 
             renderProducts(allProducts);
         });
     }
+
+    // Dual Range Price Slider
+    const priceMin = document.getElementById('price-min');
+    const priceMax = document.getElementById('price-max');
+    const priceDisplay = document.getElementById('price-display');
+    const priceRangeTrack = document.getElementById('price-range-track');
+    
+    if (priceMin && priceMax && priceDisplay && priceRangeTrack) {
+        const maxPrice = 10000000; // 10 million
+        
+        function updatePriceRange() {
+            let minVal = parseInt(priceMin.value);
+            let maxVal = parseInt(priceMax.value);
+            
+            // Prevent min from exceeding max
+            if (minVal > maxVal - 100000) {
+                minVal = maxVal - 100000;
+                priceMin.value = minVal;
+            }
+            
+            // Update filters
+            currentFilters.priceMin = minVal;
+            currentFilters.priceMax = maxVal;
+            
+            // Update display
+            priceDisplay.textContent = `${formatPrice(minVal)} - ${formatPrice(maxVal)}`;
+            
+            // Update visual track
+            const percentMin = (minVal / maxPrice) * 100;
+            const percentMax = (maxVal / maxPrice) * 100;
+            priceRangeTrack.style.left = percentMin + '%';
+            priceRangeTrack.style.right = (100 - percentMax) + '%';
+            
+            // Apply filter
+            const filtered = applyFilters();
+            renderProducts(filtered);
+        }
+        
+        priceMin.addEventListener('input', updatePriceRange);
+        priceMax.addEventListener('input', updatePriceRange);
+        
+        // Set initial state
+        updatePriceRange();
+    }
+
+    // Sort dropdown
+    setupSortDropdown();
+
+    // Pagination
+    setupPagination();
+}
+
+function setupSortDropdown() {
+    const sortButton = document.querySelector('.relative.inline-block button');
+    if (!sortButton) return;
+    
+    // Create dropdown menu
+    const dropdown = document.createElement('div');
+    dropdown.className = 'absolute right-0 mt-2 w-56 bg-white dark:bg-background-dark border border-gray-200 dark:border-gray-800 rounded-lg shadow-lg z-10 hidden';
+    dropdown.innerHTML = `
+        <button data-sort="popular" class="w-full px-4 py-3 text-left text-sm hover:bg-gray-50 dark:hover:bg-gray-800 font-medium">
+            Phổ biến nhất
+        </button>
+        <button data-sort="price-asc" class="w-full px-4 py-3 text-left text-sm hover:bg-gray-50 dark:hover:bg-gray-800 font-medium">
+            Giá: Thấp đến Cao
+        </button>
+        <button data-sort="price-desc" class="w-full px-4 py-3 text-left text-sm hover:bg-gray-50 dark:hover:bg-gray-800 font-medium">
+            Giá: Cao đến Thấp
+        </button>
+        <button data-sort="newest" class="w-full px-4 py-3 text-left text-sm hover:bg-gray-50 dark:hover:bg-gray-800 font-medium">
+            Mới nhất
+        </button>
+    `;
+    
+    sortButton.parentElement.appendChild(dropdown);
+    
+    // Toggle dropdown
+    sortButton.addEventListener('click', (e) => {
+        e.stopPropagation();
+        dropdown.classList.toggle('hidden');
+    });
+    
+    // Close dropdown when clicking outside
+    document.addEventListener('click', () => {
+        dropdown.classList.add('hidden');
+    });
+    
+    // Handle sort selection
+    dropdown.querySelectorAll('[data-sort]').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            currentSort = e.target.dataset.sort;
+            
+            // Update button text
+            sortButton.childNodes[0].textContent = e.target.textContent.trim() + ' ';
+            
+            // Hide dropdown
+            dropdown.classList.add('hidden');
+            
+            // Re-render with new sort
+            const filtered = applyFilters();
+            renderProducts(filtered);
+        });
+    });
+}
+
+function setupPagination() {
+    // Initial render will show pagination
+    // Pagination is rendered dynamically in renderProducts
+}
+
+function renderPagination(totalItems) {
+    const paginationContainer = document.querySelector('.mt-16.flex.items-center');
+    if (!paginationContainer) return;
+    
+    const totalPages = Math.ceil(totalItems / itemsPerPage);
+    
+    if (totalPages <= 1) {
+        paginationContainer.style.display = 'none';
+        return;
+    }
+    
+    paginationContainer.style.display = 'flex';
+    
+    let paginationHTML = `
+        <button class="pagination-prev flex items-center justify-center w-10 h-10 rounded-lg border border-gray-200 dark:border-gray-800 hover:bg-gray-100 dark:hover:bg-gray-800 ${currentPage === 1 ? 'opacity-50 cursor-not-allowed' : ''}">
+            <span class="material-symbols-outlined">chevron_left</span>
+        </button>
+        <div class="flex items-center gap-2">
+    `;
+    
+    // Show first page
+    paginationHTML += `<button class="pagination-num w-10 h-10 rounded-lg font-bold text-sm ${currentPage === 1 ? 'bg-black text-white' : 'border border-transparent hover:border-gray-200 dark:hover:border-gray-800'}" data-page="1">1</button>`;
+    
+    if (currentPage > 3) {
+        paginationHTML += `<span class="px-2 text-gray-400">...</span>`;
+    }
+    
+    // Show pages around current
+    for (let i = Math.max(2, currentPage - 1); i <= Math.min(totalPages - 1, currentPage + 1); i++) {
+        paginationHTML += `<button class="pagination-num w-10 h-10 rounded-lg font-bold text-sm ${currentPage === i ? 'bg-black text-white' : 'border border-transparent hover:border-gray-200 dark:hover:border-gray-800'}" data-page="${i}">${i}</button>`;
+    }
+    
+    if (currentPage < totalPages - 2) {
+        paginationHTML += `<span class="px-2 text-gray-400">...</span>`;
+    }
+    
+    // Show last page
+    if (totalPages > 1) {
+        paginationHTML += `<button class="pagination-num w-10 h-10 rounded-lg font-bold text-sm ${currentPage === totalPages ? 'bg-black text-white' : 'border border-transparent hover:border-gray-200 dark:hover:border-gray-800'}" data-page="${totalPages}">${totalPages}</button>`;
+    }
+    
+    paginationHTML += `
+        </div>
+        <button class="pagination-next flex items-center justify-center w-10 h-10 rounded-lg border border-gray-200 dark:border-gray-800 hover:bg-gray-100 dark:hover:bg-gray-800 ${currentPage === totalPages ? 'opacity-50 cursor-not-allowed' : ''}">
+            <span class="material-symbols-outlined">chevron_right</span>
+        </button>
+    `;
+    
+    paginationContainer.innerHTML = paginationHTML;
+    
+    // Add event listeners
+    paginationContainer.querySelector('.pagination-prev').addEventListener('click', () => {
+        if (currentPage > 1) {
+            currentPage--;
+            const filtered = applyFilters();
+            renderProducts(filtered);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    });
+    
+    paginationContainer.querySelector('.pagination-next').addEventListener('click', () => {
+        if (currentPage < totalPages) {
+            currentPage++;
+            const filtered = applyFilters();
+            renderProducts(filtered);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    });
+    
+    paginationContainer.querySelectorAll('.pagination-num').forEach(btn => {
+        btn.addEventListener('click', () => {
+            currentPage = parseInt(btn.dataset.page);
+            const filtered = applyFilters();
+            renderProducts(filtered);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    });
 }
 
 // Run on page load

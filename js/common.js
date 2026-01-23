@@ -128,6 +128,7 @@ document.addEventListener('DOMContentLoaded', () => {
             cart.push({ ...product, quantity: 1 });
         }
 
+
         saveCart(cart);
         showToast(`Đã thêm <b>${product.name}</b> vào giỏ!`);
     }
@@ -141,6 +142,43 @@ document.addEventListener('DOMContentLoaded', () => {
     window.parsePrice = function(priceString) {
         // Remove non-digits
         return parseInt(priceString.replace(/\D/g, '')) || 0;
+    }
+
+    // --- 6. WISHLIST LOGIC ---
+    
+    // Get Wishlist
+    window.getWishlist = function() {
+        return JSON.parse(localStorage.getItem('wishlist')) || [];
+    }
+
+    // Save Wishlist
+    window.saveWishlist = function(wishlist) {
+        localStorage.setItem('wishlist', JSON.stringify(wishlist));
+    }
+
+    // Add to Wishlist
+    window.addToWishlist = function(product) {
+        let wishlist = getWishlist();
+        const existingIndex = wishlist.findIndex(item => item.id === product.id);
+
+        if (existingIndex >= 0) {
+            // Already in wishlist, remove it
+            wishlist.splice(existingIndex, 1);
+            showToast(`Đã xóa <b>${product.name}</b> khỏi danh sách yêu thích`);
+        } else {
+            // Add to wishlist
+            wishlist.push(product);
+            showToast(`Đã thêm <b>${product.name}</b> vào danh sách yêu thích`);
+        }
+
+        saveWishlist(wishlist);
+        return existingIndex < 0; // Return true if added, false if removed
+    }
+
+    // Check if product is in wishlist
+    window.isInWishlist = function(productId) {
+        const wishlist = getWishlist();
+        return wishlist.some(item => item.id === productId);
     }
 
     // Initialize
