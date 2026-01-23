@@ -37,7 +37,6 @@ export function createPaymentUrl(amount, orderInfo) {
     vnp_Params['vnp_CreateDate'] = createDate;
 
     // 1. Sắp xếp tham số theo alphabet
-    // Mấu chốt: VNPay yêu cầu encode URI Component và nối bằng &
     const sortedKeys = Object.keys(vnp_Params).sort();
     
     let signData = "";
@@ -45,11 +44,17 @@ export function createPaymentUrl(amount, orderInfo) {
 
     sortedKeys.forEach((key, index) => {
         const value = vnp_Params[key];
+        
+        // Skip empty/null values to match VNPay standard
+        if(value === null || value === undefined || value === "") {
+             return;
+        }
+
         // Encode chính xác từng phần tử
         const encodedKey = encodeURIComponent(key);
         const encodedValue = encodeURIComponent(value);
 
-        if (index > 0) {
+        if (queryParams.length > 0) {
             signData += "&";
             queryParams += "&";
         }
@@ -57,6 +62,13 @@ export function createPaymentUrl(amount, orderInfo) {
         signData += encodedKey + "=" + encodedValue;
         queryParams += encodedKey + "=" + encodedValue;
     });
+
+    // DEBUG: In ra để kiểm tra
+    console.log("---------------- VNPay Debug ----------------");
+    console.log("TmnCode:", vnp_TmnCode);
+    console.log("HashSecret:", vnp_HashSecret);
+    console.log("Sign Data (Raw):", signData);
+    console.log("---------------------------------------------");
 
     // 2. Tạo Secure Hash (HMAC SHA512)
     if (typeof CryptoJS === 'undefined') {
@@ -66,6 +78,8 @@ export function createPaymentUrl(amount, orderInfo) {
     }
     
     const secureHash = CryptoJS.HmacSHA512(signData, vnp_HashSecret).toString();
+
+    console.log("Secure Hash Generated:", secureHash);
 
     // 3. Thêm vnp_SecureHash vào URL cuối cùng
     queryParams += "&vnp_SecureHash=" + secureHash;
