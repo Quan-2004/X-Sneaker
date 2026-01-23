@@ -134,7 +134,7 @@ export async function getUserData(uid) {
 /**
  * Register new user with email and password
  */
-export async function registerUser(email, password, displayName) {
+export async function registerUser(email, password, displayName, gender = '') {
   const submitButton = document.querySelector('button[type="submit"]');
 
   try {
@@ -153,8 +153,8 @@ export async function registerUser(email, password, displayName) {
       displayName: displayName,
     });
 
-    // Save to database
-    await saveUserToDatabase(user, { displayName });
+    // Save to database with gender
+    await saveUserToDatabase(user, { displayName, gender });
 
     showToast(`Chào mừng ${displayName}! Đăng ký thành công.`);
 

@@ -32,7 +32,7 @@
     <header class="sticky top-0 z-50 bg-[#000000]/80 backdrop-blur-md border-b border-white/10 glass">
         <div class="max-w-[1440px] mx-auto px-4 md:px-10 lg:px-20 py-4 flex items-center justify-between">
             <a class="flex items-center gap-2 text-white shrink-0" href="index.html">
-                    <img src="image/Asset 1@2x.png" alt="X-Sneaker Logo" class="h-8">
+                    <img src="image/Logo_X_Sneaker.png" alt="X-Sneaker Logo" class="h-8">
                 <h2 class="text-xl font-extrabold tracking-tighter uppercase italic">X-Sneaker</h2>
             </a>
             <nav class="hidden lg:flex items-center gap-10 text-white ml-10">
@@ -133,6 +133,17 @@
                                     <input id="confirm-password" name="confirm-password" type="password" placeholder="••••••••" required autocomplete="new-password"
                                         class="block w-full rounded-lg border-gray-200 dark:border-white/10 dark:bg-white/5 py-3 px-4 text-gray-900 dark:text-white placeholder-gray-400 focus:border-primary focus:ring-primary sm:text-sm">
                                 </div>
+                            </div>
+                            
+                            <div>
+                                <label for="gender" class="block text-xs font-bold uppercase tracking-widest text-gray-700 dark:text-gray-300 mb-2">Gender (Optional)</label>
+                                <select id="gender" name="gender"
+                                    class="block w-full rounded-lg border-gray-200 dark:border-white/10 dark:bg-white/5 py-3 px-4 text-gray-900 dark:text-white focus:border-primary focus:ring-primary sm:text-sm">
+                                    <option value="">Prefer not to say</option>
+                                    <option value="male">Male</option>
+                                    <option value="female">Female</option>
+                                    <option value="other">Other</option>
+                                </select>
                             </div>
                         </div>
 
@@ -245,6 +256,7 @@
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
             const confirmPassword = document.getElementById('confirm-password').value;
+            const gender = document.getElementById('gender').value;
 
             if (password !== confirmPassword) {
                 if(window.showToast) window.showToast('Mật khẩu nhập lại không khớp!');
@@ -253,7 +265,7 @@
             }
             
             try {
-                await registerUser(email, password, fullName);
+                await registerUser(email, password, fullName, gender);
             } catch (error) {
                 // Handled in auth.js
             }
