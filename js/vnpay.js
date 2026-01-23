@@ -28,10 +28,11 @@ export function createPaymentUrl(amount, orderInfo) {
     vnp_Params['vnp_TmnCode'] = vnp_TmnCode;
     vnp_Params['vnp_Locale'] = 'vn';
     vnp_Params['vnp_CurrCode'] = 'VND';
-    vnp_Params['vnp_TxnRef'] = orderId;
+    vnp_Params['vnp_TxnRef'] = String(orderId);
     vnp_Params['vnp_OrderInfo'] = orderInfo;
     vnp_Params['vnp_OrderType'] = 'other';
-    vnp_Params['vnp_Amount'] = amount * 100;
+    // QUAN TRỌNG: Amount phải là số nguyên (nhân 100), không có thập phân
+    vnp_Params['vnp_Amount'] = String(Math.floor(amount * 100)); 
     vnp_Params['vnp_ReturnUrl'] = vnp_ReturnUrl;
     vnp_Params['vnp_IpAddr'] = '127.0.0.1'; // IP demo
     vnp_Params['vnp_CreateDate'] = createDate;
@@ -43,14 +44,17 @@ export function createPaymentUrl(amount, orderInfo) {
     let queryParams = "";
 
     sortedKeys.forEach((key, index) => {
-        const value = vnp_Params[key];
+        let value = vnp_Params[key];
         
-        // Skip empty/null values to match VNPay standard
+        // Skip empty/null values
         if(value === null || value === undefined || value === "") {
              return;
         }
+        
+        // Convert to string consistently
+        value = String(value);
 
-        // Encode chính xác từng phần tử
+        // Encode chính xác từng phần tử theo chuẩn URI
         const encodedKey = encodeURIComponent(key);
         const encodedValue = encodeURIComponent(value);
 
@@ -65,9 +69,10 @@ export function createPaymentUrl(amount, orderInfo) {
 
     // DEBUG: In ra để kiểm tra
     console.log("---------------- VNPay Debug ----------------");
-    console.log("TmnCode:", vnp_TmnCode);
-    console.log("HashSecret:", vnp_HashSecret);
-    console.log("Sign Data (Raw):", signData);
+    console.log("CreateDate:", createDate);
+    console.log("Params:", vnp_Params);
+    console.log("Sign Data (String to Hash):", signData);
+    console.log("HashSecret Used:", vnp_HashSecret);
     console.log("---------------------------------------------");
 
     // 2. Tạo Secure Hash (HMAC SHA512)
