@@ -1,7 +1,10 @@
 /**
  * Checkout Logic
- * Handles cart summary display and order placement
+ * Handles cart summary display and order placement (COD & VNPay)
  */
+
+import { createPaymentUrl } from './vnpay.js';
+import { initAuthStateObserver, getUserData } from './auth.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     const checkoutItemsContainer = document.getElementById('checkout-items');
@@ -10,14 +13,46 @@ document.addEventListener('DOMContentLoaded', () => {
     const totalEl = document.getElementById('checkout-total');
     const checkoutForm = document.getElementById('checkout-form');
 
+    // Auto-fill User Data
+    // Auto-fill User Data
+    initAuthStateObserver(async (user) => {
+        if (user) {
+            const userData = await getUserData(user.uid);
+            if (userData) {
+                if (document.getElementById('fullname')) document.getElementById('fullname').value = userData.displayName || '';
+                
+                // Fix: Key name is 'phone', not 'phoneNumber'
+                if (document.getElementById('phone')) document.getElementById('phone').value = userData.phone || userData.phoneNumber || '';
+                
+                if (document.getElementById('email')) document.getElementById('email').value = userData.email || '';
+
+                // Fix: Address is an object {street, ward, district, city}, not array or string
+                const addr = userData.address;
+                if (addr && typeof addr === 'object') {
+                    // Fill City
+                    if (document.getElementById('city')) document.getElementById('city').value = addr.city || '';
+                    
+                    // Fill Address (Street + Ward + District)
+                    if (document.getElementById('address')) {
+                        const addressParts = [addr.street, addr.ward, addr.district].filter(Boolean);
+                        document.getElementById('address').value = addressParts.join(', ');
+                    }
+                } else if (userData.addresses && userData.addresses.length > 0) {
+                     // Fallback for legacy array format if exists
+                     if (document.getElementById('address')) document.getElementById('address').value = userData.addresses[0].fullAddress || '';
+                } 
+            }
+        }
+    });
+
     const TAX_RATE = 0.08;
+    let _currentTotal = 0; // Biến lưu tổng tiền để dùng cho thanh toán
 
     // --- 1. Load Cart Summary ---
     function loadOrderSummary() {
         const cart = window.getCart ? window.getCart() : [];
         
         if (!cart || cart.length === 0) {
-            // If empty, redirect to cart or home
              window.location.href = 'Cart.html';
              return;
         }
@@ -49,11 +84,11 @@ document.addEventListener('DOMContentLoaded', () => {
         let subtotal = 0;
         cart.forEach(item => subtotal += item.price * item.quantity);
         const tax = subtotal * TAX_RATE;
-        const total = subtotal + tax;
+        _currentTotal = subtotal + tax;
 
         if (subtotalEl) subtotalEl.textContent = window.formatPrice(subtotal);
         if (taxEl) taxEl.textContent = window.formatPrice(tax);
-        if (totalEl) totalEl.textContent = window.formatPrice(total);
+        if (totalEl) totalEl.textContent = window.formatPrice(_currentTotal);
     }
 
     // --- 2. Handle Order Submission ---
@@ -61,19 +96,22 @@ document.addEventListener('DOMContentLoaded', () => {
         checkoutForm.addEventListener('submit', async (e) => {
             e.preventDefault();
 
-            // Validate inputs (Basic HTML5 validation handles most, but we can check specific fields if needed)
+            // Validate inputs
             const fullname = document.getElementById('fullname').value;
             const email = document.getElementById('email').value;
             const phone = document.getElementById('phone').value;
             const address = document.getElementById('address').value;
             const city = document.getElementById('city').value;
+            
+            // Get selected payment method
+            const paymentMethod = document.querySelector('input[name="payment-method"]:checked').value;
 
             if (!fullname || !email || !phone || !address || !city) {
                 window.showToast('Vui lòng điền đầy đủ thông tin bắt buộc!', 'error');
                 return;
             }
 
-            // Simulate Processing
+            // UI Loading State
             const submitBtn = checkoutForm.querySelector('button[type="submit"]');
             const originalBtnContent = submitBtn.innerHTML;
             
@@ -81,23 +119,43 @@ document.addEventListener('DOMContentLoaded', () => {
             submitBtn.innerHTML = `<span class="material-symbols-outlined animate-spin">progress_activity</span> Đang xử lý...`;
 
             try {
-                // Simulate API delay
-                await new Promise(resolve => setTimeout(resolve, 2000));
+                // XỬ LÝ THANH TOÁN
+                if (paymentMethod === 'vnpay') {
+                    // 1. THANH TOÁN VNPAY
+                    window.showToast('Đang chuyển hướng sang VNPay...', 'info');
+                    
+                    // Tạo nội dung đơn hàng: "Thanh toan don hang X-Sneaker [Phone]"
+                    const orderInfo = `Thanh toan X-Sneaker ${phone}`;
+                    
+                    // Tạo URL và chuyển hướng
+                    const vnpUrl = createPaymentUrl(_currentTotal, orderInfo);
+                    
+                    if (vnpUrl) {
+                        // Lưu thông tin đơn hàng tạm vào session storage để xử lý khi quay lại nếu cần
+                        // (Ở đây demo đơn giản là chuyển hướng luôn)
+                        setTimeout(() => {
+                            window.location.href = vnpUrl;
+                        }, 1000);
+                    } else {
+                        throw new Error("Không thể tạo URL thanh toán");
+                    }
 
-                // Process Order
-                // 1. Clear Cart
-                localStorage.removeItem('cart');
-                
-                // 2. Clear Wishlist?? No, keep wishlist.
-                
-                // 3. Show Success
-                submitBtn.innerHTML = `<span class="material-symbols-outlined">check</span> Thành công!`;
-                window.showToast('Đặt hàng thành công! Cảm ơn bạn đã mua sắm.');
+                } else {
+                    // 2. THANH TOÁN COD (Mặc định)
+                    await new Promise(resolve => setTimeout(resolve, 2000)); // Fake delay
 
-                // 4. Redirect
-                setTimeout(() => {
-                    window.location.href = 'index.html'; // Or separate Success page
-                }, 1500);
+                    // Clear Cart
+                    localStorage.removeItem('cart');
+                    
+                    // Show Success
+                    submitBtn.innerHTML = `<span class="material-symbols-outlined">check</span> Thành công!`;
+                    window.showToast('Đặt hàng thành công! Cảm ơn bạn đã mua sắm.');
+
+                    // Redirect
+                    setTimeout(() => {
+                         window.location.href = 'index.html?orderSuccess=true';
+                    }, 1500);
+                }
 
             } catch (error) {
                 console.error('Checkout error:', error);
@@ -111,3 +169,4 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialize
     loadOrderSummary();
 });
+

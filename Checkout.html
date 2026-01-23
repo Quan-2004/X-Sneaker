@@ -9,7 +9,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet" />
     <script src="js/tailwind-config.js"></script>
     <link rel="stylesheet" href="css/style.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
     <script src="js/common.js" defer></script>
+    <script src="js/vnpay.js" defer type="module"></script>
     <script type="module" src="js/auth.js"></script>
     <script type="module" src="js/checkout.js"></script>
     <script type="module" src="js/header-auth.js"></script>
@@ -139,6 +141,37 @@
                                 <label class="text-xs font-bold uppercase tracking-wider text-[#974e52]">Ghi chú</label>
                                 <input id="note" class="form-input rounded-lg border-[#f3e7e8] dark:border-[#3a2526] bg-background-light dark:bg-background-dark focus:ring-primary focus:border-primary w-full" placeholder="Ghi chú thêm về đơn hàng" type="text"/>
                             </div>
+                        </div>
+                    </div>
+
+                    <!-- Payment Method -->
+                    <div class="bg-white dark:bg-[#2d1a1b] p-8 rounded-xl border border-[#f3e7e8] dark:border-[#3a2526] mt-8">
+                        <h3 class="text-xl font-bold mb-6 flex items-center gap-2">
+                            <span class="material-symbols-outlined text-primary">payments</span>
+                            Phương Thức Thanh Toán
+                        </h3>
+                        <div class="space-y-4">
+                            <label class="flex items-center gap-4 p-4 border border-[#f3e7e8] dark:border-[#3a2526] rounded-xl cursor-pointer hover:border-primary transition-colors">
+                                <input type="radio" name="payment-method" value="cod" class="text-primary focus:ring-primary w-5 h-5" checked>
+                                <div class="flex items-center gap-3">
+                                    <span class="material-symbols-outlined text-3xl text-gray-500">local_shipping</span>
+                                    <div>
+                                        <p class="font-bold">Thanh toán khi nhận hàng (COD)</p>
+                                        <p class="text-xs text-gray-500">Thanh toán tiền mặt khi giao hàng</p>
+                                    </div>
+                                </div>
+                            </label>
+
+                            <label class="flex items-center gap-4 p-4 border border-[#f3e7e8] dark:border-[#3a2526] rounded-xl cursor-pointer hover:border-primary transition-colors">
+                                <input type="radio" name="payment-method" value="vnpay" class="text-primary focus:ring-primary w-5 h-5">
+                                <div class="flex items-center gap-3">
+                                    <img src="https://vnpay.vn/s1/statics.vnpay.vn/2023/6/0oxhzjmxbksr1686814746087.png" alt="VNPay Logo" class="h-8 object-contain">
+                                    <div>
+                                        <p class="font-bold">Thanh toán qua VNPAY</p>
+                                        <p class="text-xs text-gray-500">Quét mã QR, Thẻ ATM, Ví điện tử</p>
+                                    </div>
+                                </div>
+                            </label>
                         </div>
                     </div>
                 </div>
