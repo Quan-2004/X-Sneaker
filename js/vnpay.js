@@ -22,7 +22,6 @@ export function createPaymentUrl(amount, orderInfo) {
     const orderId = date.getTime(); // Mã đơn hàng unique theo thời gian
     
     // Các tham số bắt buộc của VNPay
-    // Số tiền cần nhân 100 theo quy định VNPay (VND)
     const vnp_Params = {};
     vnp_Params['vnp_Version'] = '2.1.0';
     vnp_Params['vnp_Command'] = 'pay';
@@ -37,54 +36,46 @@ export function createPaymentUrl(amount, orderInfo) {
     vnp_Params['vnp_IpAddr'] = '127.0.0.1'; // IP demo
     vnp_Params['vnp_CreateDate'] = createDate;
 
-    // 1. Sắp xếp tham số theo alphabet (bắt buộc để tạo checksum đúng)
-    const sortedParams = sortObject(vnp_Params);
+    // 1. Sắp xếp tham số theo alphabet
+    // Mấu chốt: VNPay yêu cầu encode URI Component và nối bằng &
+    const sortedKeys = Object.keys(vnp_Params).sort();
+    
+    let signData = "";
+    let queryParams = "";
 
-    // 2. Tạo chuỗi query string và chuỗi hash data
-    // Dạng: key1=value1&key2=value2...
-    const signData = new URLSearchParams(sortedParams).toString();
+    sortedKeys.forEach((key, index) => {
+        const value = vnp_Params[key];
+        // Encode chính xác từng phần tử
+        const encodedKey = encodeURIComponent(key);
+        const encodedValue = encodeURIComponent(value);
 
-    // 3. Tạo Secure Hash (HMAC SHA512)
-    // Yêu cầu thư viện crypto-js được load ở Checkout.html
+        if (index > 0) {
+            signData += "&";
+            queryParams += "&";
+        }
+
+        signData += encodedKey + "=" + encodedValue;
+        queryParams += encodedKey + "=" + encodedValue;
+    });
+
+    // 2. Tạo Secure Hash (HMAC SHA512)
     if (typeof CryptoJS === 'undefined') {
         console.error("CryptoJS chưa được load!");
         alert("Lỗi hệ thống thanh toán: Thiếu thư viện bảo mật.");
         return null;
     }
     
-    // const secureHash = CryptoJS.HmacSHA512(signData, vnp_HashSecret).toString();
     const secureHash = CryptoJS.HmacSHA512(signData, vnp_HashSecret).toString();
 
-    // 4. Tạo URL cuối cùng
-    // Thêm vnp_SecureHash vào query string
-    sortedParams['vnp_SecureHash'] = secureHash;
-    const finalQueryString = new URLSearchParams(sortedParams).toString();
+    // 3. Thêm vnp_SecureHash vào URL cuối cùng
+    queryParams += "&vnp_SecureHash=" + secureHash;
 
-    return `${vnp_Url}?${finalQueryString}`;
+    return `${vnp_Url}?${queryParams}`;
 }
 
 // --- Helper Functions ---
 
-function sortObject(obj) {
-    const sorted = {};
-    const keys = [];
 
-    for (const key in obj) {
-        if (obj.hasOwnProperty(key)) {
-            keys.push(key);
-        }
-    }
-
-    keys.sort();
-
-    for (let i = 0; i < keys.length; i++) {
-        // Không encode ở đây để tránh double encoding khi dùng URLSearchParams
-        // URLSearchParams sẽ tự động encode
-        sorted[keys[i]] = obj[keys[i]]; 
-    }
-
-    return sorted;
-}
 
 function dateFormat(date) {
     const year = date.getFullYear();

@@ -6,6 +6,9 @@
  * - Hiển thị thông báo (Toast)
  */
 
+// Fix ReferenceError: timer is not defined (from external/cached scripts)
+window.timer = null;
+
 // --- 1. Quản lý Giỏ hàng ---
 
 // Lấy giỏ hàng từ LocalStorage
