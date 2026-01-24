@@ -1,20 +1,19 @@
 /**
- * VNPay Payment Helper (Client-side Sandbox Demo)
- * WARNING: This implementation exposes the Secret Key and is for educational/demo purposes ONLY.
- * In a real production environment, URL creation/signing MUST be done on the backend.
+ * VNPay Payment Helper
+ * Adapted from payment.html logic
  */
 
-// VNPay Sandbox Configuration
-const vnp_TmnCode = "EQ14MGSD"; // Mã Website Sandbox
-const vnp_HashSecret = "GIMD867RIQWZQQVDWIPGH2E8WPFK9PLO"; // Secret Key Sandbox
-const vnp_Url = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html"; // URL thanh toán Sandbox
+// Configuration from payment.html
+const vnp_TmnCode = "2Q01AVYB";
+const vnp_HashSecret = "U3I3A1Q4G3Z3MNNJ2NODFKA7G3CBU27P";
+const vnp_Url = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
 
-// Xử lý Return URL: Đảm bảo không lỗi khi chạy file:// hoặc không có origin
+// Return URL determination
 let vnp_ReturnUrl = "";
 if (window.location.origin && window.location.origin !== "null") {
-    vnp_ReturnUrl = window.location.origin + window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/')) + "/index.html";
+    // Default redirect to index.html after payment, can be changed
+    vnp_ReturnUrl = window.location.origin + "/index.html"; 
 } else {
-    // Fallback cho môi trường dev/file không có server
     vnp_ReturnUrl = "http://localhost:5500/index.html";
 }
 
@@ -25,85 +24,68 @@ if (window.location.origin && window.location.origin !== "null") {
  * @returns {string} - URL thanh toán
  */
 export function createPaymentUrl(amount, orderInfo) {
+    // Generate Order ID / TxnRef
     const date = new Date();
     const createDate = dateFormat(date);
-    const orderId = date.getTime(); // Mã đơn hàng unique theo thời gian
-    
-    // Các tham số bắt buộc của VNPay
-    const vnp_Params = {};
-    vnp_Params['vnp_Version'] = '2.1.0';
-    vnp_Params['vnp_Command'] = 'pay';
-    vnp_Params['vnp_TmnCode'] = vnp_TmnCode;
-    vnp_Params['vnp_Locale'] = 'vn';
-    vnp_Params['vnp_CurrCode'] = 'VND';
-    vnp_Params['vnp_TxnRef'] = String(orderId);
-    vnp_Params['vnp_OrderInfo'] = orderInfo;
-    vnp_Params['vnp_OrderType'] = 'other';
-    // QUAN TRỌNG: Amount phải là số nguyên (nhân 100), không có thập phân
-    vnp_Params['vnp_Amount'] = String(Math.floor(amount * 100)); 
-    vnp_Params['vnp_ReturnUrl'] = vnp_ReturnUrl;
-    vnp_Params['vnp_IpAddr'] = '127.0.0.1'; // IP demo
-    vnp_Params['vnp_CreateDate'] = createDate;
+    const orderId = date.getTime(); 
+    const txnRef = String(orderId).slice(-8).toUpperCase(); // Using logic similar to payment.html (slice 8 chars) or full timestamp
 
-    // 1. Sắp xếp tham số theo alphabet (theo key)
-    const sortedKeys = Object.keys(vnp_Params).sort();
-    
-    let signData = "";
-    let queryParams = "";
+    const vnp_Params = {
+        vnp_Version: '2.1.0',
+        vnp_Command: 'pay',
+        vnp_TmnCode: vnp_TmnCode,
+        vnp_Locale: 'vn',
+        vnp_CurrCode: 'VND',
+        vnp_TxnRef: String(orderId), // payment.html uses 8 chars, but full timestamp is safer for collision
+        vnp_OrderInfo: orderInfo,
+        vnp_OrderType: 'other',
+        vnp_Amount: Math.round(amount * 100), // payment.html uses Math.round
+        vnp_ReturnUrl: vnp_ReturnUrl,
+        vnp_IpAddr: '127.0.0.1', // Default IP
+        vnp_CreateDate: createDate
+    };
 
-    sortedKeys.forEach((key) => {
-        let value = vnp_Params[key];
-        
-        // Skip empty/null values
-        if(value === null || value === undefined || value === "") {
-             return;
+    // 1. Sort parameters alphabetically
+    // payment.html logic:
+    const sortedParams = {};
+    Object.keys(vnp_Params).sort().forEach(key => {
+        if (vnp_Params[key] !== '' && vnp_Params[key] !== null && vnp_Params[key] !== undefined) {
+             sortedParams[key] = vnp_Params[key];
         }
-        
-        // Convert to string consistently
-        value = String(value);
-
-        // Encode theo chuẩn VNPAY (giống form-urlencoded)
-        // Spaces should be +, not %20
-        const encodedKey = encodeURIComponent(key).replace(/%20/g, "+");
-        const encodedValue = encodeURIComponent(value).replace(/%20/g, "+");
-
-        if (queryParams.length > 0) {
-            signData += "&";
-            queryParams += "&";
-        }
-
-        signData += encodedKey + "=" + encodedValue;
-        queryParams += encodedKey + "=" + encodedValue;
     });
 
-    // DEBUG: In ra để kiểm tra
-    console.log("---------------- VNPay Debug ----------------");
+    // 2. Create sign data string (Cleaner map/join logic from payment.html)
+    const signData = Object.keys(sortedParams)
+        .map(key => `${key}=${encodeURIComponent(sortedParams[key]).replace(/%20/g, '+')}`)
+        .join('&');
+
+    // Debug
+    console.log("---------------- VNPay Debug (Adapted from payment.html) ----------------");
     console.log("vnp_TmnCode:", vnp_TmnCode);
     console.log("vnp_ReturnUrl:", vnp_ReturnUrl);
-    console.log("CreateDate:", createDate);
-    console.log("Sign Data (Raw Query String):", signData);
-    console.log("HashSecret:", vnp_HashSecret);
-    
-    // 2. Tạo Secure Hash (HMAC SHA512)
+    console.log("signData:", signData);
+    console.log("vnp_HashSecret:", vnp_HashSecret);
+
+    // 3. Create Secure Hash
     if (typeof CryptoJS === 'undefined') {
         console.error("CryptoJS chưa được load!");
-        alert("Lỗi hệ thống thanh toán: Thiếu thư viện bảo mật (CryptoJS).");
+        alert("Lỗi: Thiếu thư viện CryptoJS");
         return null;
     }
-    
-    // Hash chuỗi signData (đã encode)
+
     const secureHash = CryptoJS.HmacSHA512(signData, vnp_HashSecret).toString();
+    console.log("secureHash:", secureHash);
+    console.log("-------------------------------------------------------------------------");
 
-    console.log("Secure Hash:", secureHash);
-    console.log("---------------------------------------------");
+    // 4. Create Final URL
+    // payment.html construction:
+    // const paymentUrl = vnp_Url + '?' + Object.keys(sortedParams).map(...).join('&') + "&vnp_SecureHash=" + vnp_SecureHash;
+    
+    // We can reuse signData for the query params part since it's the same encoding
+    const paymentUrl = `${vnp_Url}?${signData}&vnp_SecureHash=${secureHash}`;
 
-    // 3. Thêm vnp_SecureHash vào URL cuối cùng
-    queryParams += "&vnp_SecureHash=" + secureHash;
-
-    return `${vnp_Url}?${queryParams}`;
+    return paymentUrl;
 }
-
-// --- Helper Functions ---
 
 function dateFormat(date) {
     const year = date.getFullYear();
