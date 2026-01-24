@@ -6,7 +6,7 @@
 
 // VNPay Sandbox Configuration
 const vnp_TmnCode = "EQ14MGSD"; // Mã Website Sandbox
-const vnp_HashSecret = "Q72JV4SGW41QBEGY8CKCYD8TEOLL7OYT"; // Secret Key Sandbox
+const vnp_HashSecret = "0QA7IJUD2YGKYQ5VRKEY7MZPO0NZYPES"; // Secret Key Sandbox
 const vnp_Url = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html"; // URL thanh toán Sandbox
 const vnp_ReturnUrl = window.location.origin + window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/')) + "/index.html";
 
