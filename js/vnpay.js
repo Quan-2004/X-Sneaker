@@ -8,7 +8,15 @@
 const vnp_TmnCode = "EQ14MGSD"; // Mã Website Sandbox
 const vnp_HashSecret = "GIMD867RIQWZQQVDWIPGH2E8WPFK9PLO"; // Secret Key Sandbox
 const vnp_Url = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html"; // URL thanh toán Sandbox
-const vnp_ReturnUrl = window.location.origin + window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/')) + "/index.html";
+
+// Xử lý Return URL: Đảm bảo không lỗi khi chạy file:// hoặc không có origin
+let vnp_ReturnUrl = "";
+if (window.location.origin && window.location.origin !== "null") {
+    vnp_ReturnUrl = window.location.origin + window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/')) + "/index.html";
+} else {
+    // Fallback cho môi trường dev/file không có server
+    vnp_ReturnUrl = "http://localhost:5500/index.html";
+}
 
 /**
  * Tạo URL thanh toán VNPay
@@ -37,13 +45,13 @@ export function createPaymentUrl(amount, orderInfo) {
     vnp_Params['vnp_IpAddr'] = '127.0.0.1'; // IP demo
     vnp_Params['vnp_CreateDate'] = createDate;
 
-    // 1. Sắp xếp tham số theo alphabet
+    // 1. Sắp xếp tham số theo alphabet (theo key)
     const sortedKeys = Object.keys(vnp_Params).sort();
     
     let signData = "";
     let queryParams = "";
 
-    sortedKeys.forEach((key, index) => {
+    sortedKeys.forEach((key) => {
         let value = vnp_Params[key];
         
         // Skip empty/null values
@@ -54,9 +62,10 @@ export function createPaymentUrl(amount, orderInfo) {
         // Convert to string consistently
         value = String(value);
 
-        // Encode chính xác từng phần tử theo chuẩn URI
-        const encodedKey = encodeURIComponent(key);
-        const encodedValue = encodeURIComponent(value);
+        // Encode theo chuẩn VNPAY (giống form-urlencoded)
+        // Spaces should be +, not %20
+        const encodedKey = encodeURIComponent(key).replace(/%20/g, "+");
+        const encodedValue = encodeURIComponent(value).replace(/%20/g, "+");
 
         if (queryParams.length > 0) {
             signData += "&";
@@ -69,22 +78,24 @@ export function createPaymentUrl(amount, orderInfo) {
 
     // DEBUG: In ra để kiểm tra
     console.log("---------------- VNPay Debug ----------------");
+    console.log("vnp_TmnCode:", vnp_TmnCode);
+    console.log("vnp_ReturnUrl:", vnp_ReturnUrl);
     console.log("CreateDate:", createDate);
-    console.log("Params:", vnp_Params);
-    console.log("Sign Data (String to Hash):", signData);
-    console.log("HashSecret Used:", vnp_HashSecret);
-    console.log("---------------------------------------------");
-
+    console.log("Sign Data (Raw Query String):", signData);
+    console.log("HashSecret:", vnp_HashSecret);
+    
     // 2. Tạo Secure Hash (HMAC SHA512)
     if (typeof CryptoJS === 'undefined') {
         console.error("CryptoJS chưa được load!");
-        alert("Lỗi hệ thống thanh toán: Thiếu thư viện bảo mật.");
+        alert("Lỗi hệ thống thanh toán: Thiếu thư viện bảo mật (CryptoJS).");
         return null;
     }
     
+    // Hash chuỗi signData (đã encode)
     const secureHash = CryptoJS.HmacSHA512(signData, vnp_HashSecret).toString();
 
-    console.log("Secure Hash Generated:", secureHash);
+    console.log("Secure Hash:", secureHash);
+    console.log("---------------------------------------------");
 
     // 3. Thêm vnp_SecureHash vào URL cuối cùng
     queryParams += "&vnp_SecureHash=" + secureHash;
@@ -93,8 +104,6 @@ export function createPaymentUrl(amount, orderInfo) {
 }
 
 // --- Helper Functions ---
-
-
 
 function dateFormat(date) {
     const year = date.getFullYear();
