@@ -13,6 +13,36 @@ document.addEventListener('DOMContentLoaded', () => {
     const totalEl = document.getElementById('checkout-total');
     const checkoutForm = document.getElementById('checkout-form');
 
+    // --- VNPAY RETURN HANDLING ---
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.has('vnp_ResponseCode')) {
+        const responseCode = urlParams.get('vnp_ResponseCode');
+        const amount = parseInt(urlParams.get('vnp_Amount')) / 100;
+        
+        if (responseCode === '00') {
+            // Payment Success
+            window.showToast(`Thanh toán thành công: ${window.formatPrice(amount)}`, 'success');
+            
+            // Clear Cart
+            if (window.clearCart) {
+                window.clearCart();
+            } else {
+                localStorage.removeItem('cart');
+            }
+
+            // Redirect to Home with Success Flag
+            setTimeout(() => {
+                window.location.href = 'index.html?orderSuccess=true';
+            }, 2000);
+            return; // Stop further execution
+        } else {
+            // Payment Failed
+            window.showToast('Thanh toán thất bại hoặc bị hủy!', 'error');
+            // Clean URL
+            window.history.replaceState({}, document.title, window.location.pathname);
+        }
+    }
+
     // Auto-fill User Data
     // Auto-fill User Data
     initAuthStateObserver(async (user) => {

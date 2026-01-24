@@ -3,18 +3,18 @@
  * Adapted from payment.html logic
  */
 
-// Configuration from payment.html
-const vnp_TmnCode = "2Q01AVYB";
-const vnp_HashSecret = "U3I3A1Q4G3Z3MNNJ2NODFKA7G3CBU27P";
+// Configuration - VNPAY Sandbox Environment
+const vnp_TmnCode = "EQ14MGSD";
+const vnp_HashSecret = "O96H0H94BWKO5XMN0WEGIKHPKAQKFSUZ";
 const vnp_Url = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
 
 // Return URL determination
 let vnp_ReturnUrl = "";
 if (window.location.origin && window.location.origin !== "null") {
-    // Default redirect to index.html after payment, can be changed
-    vnp_ReturnUrl = window.location.origin + "/index.html"; 
+    // Redirect back to Checkout.html to handle result
+    vnp_ReturnUrl = window.location.origin + "/Checkout.html"; 
 } else {
-    vnp_ReturnUrl = "http://localhost:5500/index.html";
+    vnp_ReturnUrl = "http://localhost:5500/Checkout.html";
 }
 
 /**
@@ -36,12 +36,12 @@ export function createPaymentUrl(amount, orderInfo) {
         vnp_TmnCode: vnp_TmnCode,
         vnp_Locale: 'vn',
         vnp_CurrCode: 'VND',
-        vnp_TxnRef: String(orderId), // payment.html uses 8 chars, but full timestamp is safer for collision
+        vnp_TxnRef: String(orderId),
         vnp_OrderInfo: orderInfo,
         vnp_OrderType: 'other',
-        vnp_Amount: Math.round(amount * 100), // payment.html uses Math.round
+        vnp_Amount: Math.round(amount * 100),
         vnp_ReturnUrl: vnp_ReturnUrl,
-        vnp_IpAddr: '127.0.0.1', // Default IP
+        vnp_IpAddr: '13.160.92.202',
         vnp_CreateDate: createDate
     };
 
@@ -54,15 +54,25 @@ export function createPaymentUrl(amount, orderInfo) {
         }
     });
 
-    // 2. Create sign data string (Cleaner map/join logic from payment.html)
+    // 2. Create sign data string - RAW VALUES (không encode cho checksum)
     const signData = Object.keys(sortedParams)
-        .map(key => `${key}=${encodeURIComponent(sortedParams[key]).replace(/%20/g, '+')}`)
+        .map(key => `${key}=${sortedParams[key]}`)
+        .join('&');
+
+    // 2b. Create query string - ENCODED VALUES (dùng cho URL)
+    const queryString = Object.keys(sortedParams)
+        .map(key => {
+            const value = sortedParams[key];
+            return `${encodeURIComponent(key)}=${encodeURIComponent(value)}`;
+        })
         .join('&');
 
     // Debug
-    console.log("---------------- VNPay Debug (Adapted from payment.html) ----------------");
+    console.log("---------------- VNPay Debug ----------------");
     console.log("vnp_TmnCode:", vnp_TmnCode);
     console.log("vnp_ReturnUrl:", vnp_ReturnUrl);
+    console.log("vnp_Amount:", sortedParams.vnp_Amount);
+    console.log("vnp_TxnRef:", sortedParams.vnp_TxnRef);
     console.log("signData:", signData);
     console.log("vnp_HashSecret:", vnp_HashSecret);
 
@@ -75,14 +85,10 @@ export function createPaymentUrl(amount, orderInfo) {
 
     const secureHash = CryptoJS.HmacSHA512(signData, vnp_HashSecret).toString();
     console.log("secureHash:", secureHash);
-    console.log("-------------------------------------------------------------------------");
+    console.log("---------------------------------------------");
 
-    // 4. Create Final URL
-    // payment.html construction:
-    // const paymentUrl = vnp_Url + '?' + Object.keys(sortedParams).map(...).join('&') + "&vnp_SecureHash=" + vnp_SecureHash;
-    
-    // We can reuse signData for the query params part since it's the same encoding
-    const paymentUrl = `${vnp_Url}?${signData}&vnp_SecureHash=${secureHash}`;
+    // 4. Create Final URL - Dùng queryString đã encode
+    const paymentUrl = `${vnp_Url}?${queryString}&vnp_SecureHash=${secureHash}`;
 
     return paymentUrl;
 }
