@@ -87,19 +87,28 @@ async function saveUserToDatabase(user, additionalData = {}) {
     if (!snapshot.exists()) {
       // New user - create full profile
       userData.createdAt = serverTimestamp();
-      userData.role = "customer";
+      userData.role = user.email === 'quantrixsneaker251@gmail.com' ? "admin" : "customer";
+      userData.isAdmin = user.email === 'quantrixsneaker251@gmail.com'; // Redundancy for safety
       userData.addresses = [];
       userData.wishlist = [];
       userData.loyaltyPoints = 0;
       await set(userRef, userData);
     } else {
       // Existing user - update login time and basic info
-      await update(userRef, {
+      const updates = {
         lastLogin: serverTimestamp(),
         displayName: userData.displayName,
         photoURL: userData.photoURL,
-        emailVerified: userData.emailVerified,
-      });
+        emailVerified: userData.emailVerified
+      };
+
+      // Force admin role for specific email even if existing
+      if (user.email === 'quantrixsneaker251@gmail.com') {
+        updates.role = 'admin';
+        updates.isAdmin = true;
+      }
+
+      await update(userRef, updates);
     }
 
     return userData;
@@ -209,8 +218,12 @@ export async function loginUser(email, password) {
 
     showToast(`Chào mừng trở lại, ${user.displayName || "bạn"}!`);
 
-    // Redirect to account page immediately
-    window.location.href = "Account.html";
+    // Redirect based on role/email
+    if (user.email === 'quantrixsneaker251@gmail.com') {
+      window.location.href = "admin.html";
+    } else {
+      window.location.href = "Account.html";
+    }
   } catch (error) {
     console.error("Login error:", error);
 
@@ -275,7 +288,11 @@ export async function loginWithGoogle() {
     showToast(`Chào mừng ${user.displayName}!`);
 
     // Redirect immediately
-    window.location.href = "Account.html";
+    if (user.email === 'quantrixsneaker251@gmail.com') {
+      window.location.href = "admin.html";
+    } else {
+      window.location.href = "Account.html";
+    }
   } catch (error) {
     console.error("Google login error:", error);
 
@@ -321,7 +338,11 @@ async function tryGoogleSilentSignIn() {
             await saveUserToDatabase(user);
             showToast(`Chào mừng ${user.displayName}!`);
             
-            window.location.href = "Account.html";
+            if (user.email === 'quantrixsneaker251@gmail.com') {
+              window.location.href = "admin.html";
+            } else {
+              window.location.href = "Account.html";
+            }
             resolve(true);
           } catch (error) {
             console.error('Google One Tap sign-in failed:', error);
@@ -385,7 +406,11 @@ export async function loginWithFacebook() {
     showToast(`Chào mừng ${user.displayName}!`);
 
     // Redirect immediately
-    window.location.href = "Account.html";
+    if (user.email === 'quantrixsneaker251@gmail.com') {
+      window.location.href = "admin.html";
+    } else {
+      window.location.href = "Account.html";
+    }
   } catch (error) {
     console.error("Facebook login error:", error);
 
@@ -451,7 +476,11 @@ async function handleFacebookLogin(accessToken) {
     showToast(`Chào mừng ${user.displayName}!`);
 
     // Redirect immediately
-    window.location.href = "Account.html";
+    if (user.email === 'quantrixsneaker251@gmail.com') {
+      window.location.href = "admin.html";
+    } else {
+      window.location.href = "Account.html";
+    }
   } catch (error) {
     console.error("Facebook auto-login error:", error);
     throw error;

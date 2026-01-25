@@ -3,7 +3,7 @@
  * Handles cart summary display and order placement (COD & VNPay)
  */
 
-import { createPaymentUrl } from './vnpay.js';
+
 import { initAuthStateObserver, getUserData } from './auth.js';
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -13,35 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const totalEl = document.getElementById('checkout-total');
     const checkoutForm = document.getElementById('checkout-form');
 
-    // --- VNPAY RETURN HANDLING ---
-    const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.has('vnp_ResponseCode')) {
-        const responseCode = urlParams.get('vnp_ResponseCode');
-        const amount = parseInt(urlParams.get('vnp_Amount')) / 100;
-        
-        if (responseCode === '00') {
-            // Payment Success
-            window.showToast(`Thanh toán thành công: ${window.formatPrice(amount)}`, 'success');
-            
-            // Clear Cart
-            if (window.clearCart) {
-                window.clearCart();
-            } else {
-                localStorage.removeItem('cart');
-            }
-
-            // Redirect to Home with Success Flag
-            setTimeout(() => {
-                window.location.href = 'index.html?orderSuccess=true';
-            }, 2000);
-            return; // Stop further execution
-        } else {
-            // Payment Failed
-            window.showToast('Thanh toán thất bại hoặc bị hủy!', 'error');
-            // Clean URL
-            window.history.replaceState({}, document.title, window.location.pathname);
-        }
-    }
+    // --- VNPAY RETURN HANDLING - REMOVED ---
 
     // Auto-fill User Data
     // Auto-fill User Data
@@ -150,27 +122,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             try {
                 // XỬ LÝ THANH TOÁN
-                if (paymentMethod === 'vnpay') {
-                    // 1. THANH TOÁN VNPAY
-                    window.showToast('Đang chuyển hướng sang VNPay...', 'info');
-                    
-                    // Tạo nội dung đơn hàng: "Thanh toan don hang X-Sneaker [Phone]"
-                    const orderInfo = `Thanh toan X-Sneaker ${phone}`;
-                    
-                    // Tạo URL và chuyển hướng
-                    const vnpUrl = createPaymentUrl(_currentTotal, orderInfo);
-                    
-                    if (vnpUrl) {
-                        // Lưu thông tin đơn hàng tạm vào session storage để xử lý khi quay lại nếu cần
-                        // (Ở đây demo đơn giản là chuyển hướng luôn)
-                        setTimeout(() => {
-                            window.location.href = vnpUrl;
-                        }, 1000);
-                    } else {
-                        throw new Error("Không thể tạo URL thanh toán");
-                    }
 
-                } else {
                     // 2. THANH TOÁN COD (Mặc định)
                     await new Promise(resolve => setTimeout(resolve, 2000)); // Fake delay
 
@@ -185,7 +137,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     setTimeout(() => {
                          window.location.href = 'index.html?orderSuccess=true';
                     }, 1500);
-                }
 
             } catch (error) {
                 console.error('Checkout error:', error);

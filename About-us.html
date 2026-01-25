@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="css/style.css" />
     <script src="js/common.js" defer></script>
     <script type="module" src="js/header-auth.js"></script>
+    <script type="module" src="js/cms-frontend.js"></script>
   </head>
 <body class="bg-background-light dark:bg-background-dark text-[#1b0e0f] dark:text-white transition-colors duration-300">
     <!-- Header -->
@@ -96,12 +97,12 @@
         <!-- Hero Section -->
         <section class="py-12 lg:py-16">
             <div class="@container">
-                <div class="relative min-h-[500px] flex flex-col items-center justify-center text-center p-8 rounded-2xl overflow-hidden bg-cover bg-center" data-alt="Interior of a modern sneaker warehouse with rows of boxes" style='background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7)), url("https://lh3.googleusercontent.com/aida-public/AB6AXuCHOrqovxmdvMDjA1HSVVeU-7BaZhFQANPvEIV_ANVt2kfnV_6GEv9GvqBvqayemfG4ZAFFQl8aH8rbHKwtv9E91EoRcr2et2cBYZRL99ajLRMtcB6u28-IIKCuRbLccoy3XWaRlakm_Bc8PKXtEJsS63Dv7D-shc08ScGMJ4Gjx3014Ph6WPoADMK7D3FYWu7gkJu-VVNjN_IsPZJOGl7LQ_xNf5W_dcGUqcCdvKeqgJ5bcdeF0ZdMGzNe7e8s57gC6bj8yiPSnvI");'>
+                <div id="about-hero" class="relative min-h-[500px] flex flex-col items-center justify-center text-center p-8 rounded-2xl overflow-hidden bg-cover bg-center" data-alt="Interior of a modern sneaker warehouse with rows of boxes" style='background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7)), url("https://lh3.googleusercontent.com/aida-public/AB6AXuCHOrqovxmdvMDjA1HSVVeU-7BaZhFQANPvEIV_ANVt2kfnV_6GEv9GvqBvqayemfG4ZAFFQl8aH8rbHKwtv9E91EoRcr2et2cBYZRL99ajLRMtcB6u28-IIKCuRbLccoy3XWaRlakm_Bc8PKXtEJsS63Dv7D-shc08ScGMJ4Gjx3014Ph6WPoADMK7D3FYWu7gkJu-VVNjN_IsPZJOGl7LQ_xNf5W_dcGUqcCdvKeqgJ5bcdeF0ZdMGzNe7e8s57gC6bj8yiPSnvI");'>
                     <div class="max-w-3xl space-y-6">
-                        <h1 class="text-white text-5xl md:text-7xl font-black leading-none tracking-tighter uppercase">
+                        <h1 id="about-title" class="text-white text-5xl md:text-7xl font-black leading-none tracking-tighter uppercase">
                             Our Story
                         </h1>
-                        <p class="text-white/90 text-lg md:text-xl font-medium leading-relaxed max-w-2xl mx-auto">
+                        <p id="about-subtitle" class="text-white/90 text-lg md:text-xl font-medium leading-relaxed max-w-2xl mx-auto">
                             Redefining sneaker culture since 2015. Explore our journey from a creative studio to a global destination for enthusiasts, fueled by passion and the perfect pair of kicks.
                         </p>
                         <button class="mt-4 bg-primary text-white px-8 py-4 rounded-lg font-bold uppercase tracking-widest hover:scale-105 transition-transform duration-300">
@@ -118,7 +119,7 @@
                 <h3 class="text-4xl md:text-5xl font-black text-[#1b0e0f] dark:text-white leading-tight">
                     What We Stand For
                 </h3>
-                <p class="text-gray-500 dark:text-gray-400 text-lg max-w-2xl">
+                <p id="about-story" class="text-gray-500 dark:text-gray-400 text-lg max-w-2xl">
                     Our core principles guide everything we do at X-Sneaker, from sourcing limited drops to fostering a vibrant global community.
                 </p>
             </div>
@@ -129,7 +130,7 @@
                         <span class="material-symbols-outlined text-3xl">rocket_launch</span>
                     </div>
                     <h4 class="text-xl font-bold mb-3">Mission</h4>
-                    <p class="text-gray-500 dark:text-gray-400 leading-relaxed">
+                    <p id="about-mission-text" class="text-gray-500 dark:text-gray-400 leading-relaxed">
                         Pushing the boundaries of sneaker culture and accessibility, making high-heat grails reachable for everyone.
                     </p>
                 </div>
@@ -139,7 +140,7 @@
                         <span class="material-symbols-outlined text-3xl">verified</span>
                     </div>
                     <h4 class="text-xl font-bold mb-3">Quality</h4>
-                    <p class="text-gray-500 dark:text-gray-400 leading-relaxed">
+                    <p id="about-quality-text" class="text-gray-500 dark:text-gray-400 leading-relaxed">
                         Hand-picked inventory with rigorous multi-step authentication processes to ensure 100% legitimacy on every pair.
                     </p>
                 </div>
@@ -149,7 +150,7 @@
                         <span class="material-symbols-outlined text-3xl">groups</span>
                     </div>
                     <h4 class="text-xl font-bold mb-3">Community</h4>
-                    <p class="text-gray-500 dark:text-gray-400 leading-relaxed">
+                    <p id="about-community-text" class="text-gray-500 dark:text-gray-400 leading-relaxed">
                         A dedicated hub for collectors and sneaker enthusiasts worldwide. We don't just sell shoes, we celebrate the culture.
                     </p>
                 </div>

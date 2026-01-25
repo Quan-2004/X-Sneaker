@@ -1,0 +1,1312 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>X-Sneaker Admin | Order Management</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            DEFAULT: "#e71823",
+                            50: "#fdedee",
+                            100: "#fbdadd",
+                            200: "#f7b6bb",
+                            300: "#f1868e",
+                            400: "#eb4d58",
+                            500: "#e71823",
+                            600: "#c70e18",
+                            700: "#a70a13",
+                            800: "#8b0e15",
+                            900: "#731015",
+                            950: "#410407",
+                        },
+                        background: {
+                            light: "#f8f9fa",
+                            dark: "#0f0506", // Darker, richer
+                        },
+                        card: {
+                            dark: "#1a0b0d", // Slightly lighter than background
+                        },
+                        border: {
+                            dark: "#3d1f21",
+                        },
+                    },
+                    fontFamily: {
+                        display: ["Plus Jakarta Sans", "sans-serif"],
+                        sans: ["Plus Jakarta Sans", "sans-serif"],
+                    },
+                    boxShadow: {
+                        'glow': '0 0 20px -5px rgba(231, 24, 35, 0.3)',
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        body {
+            font-family: "Plus Jakarta Sans", sans-serif;
+        }
+        .material-symbols-rounded {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+        .dark ::-webkit-scrollbar-thumb {
+            background: #334155;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        .dark ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+        
+        .glass {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+        .dark .glass {
+            background: rgba(26, 11, 13, 0.7);
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-800 dark:text-slate-200 min-h-screen flex antialiased selection:bg-primary/20 selection:text-primary">
+    
+    <!-- Sidebar -->
+    <aside class="w-72 fixed inset-y-0 left-0 bg-white dark:bg-card-dark border-r border-slate-200 dark:border-border-dark flex flex-col z-50 transition-all duration-300 ease-in-out">
+        <!-- Logo -->
+        <div class="h-20 flex items-center px-8 border-b border-dashed border-slate-200 dark:border-border-dark">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-rose-600 flex items-center justify-center text-white shadow-glow">
+                    <span class="material-symbols-rounded text-2xl">scooter</span>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold tracking-tight text-slate-900 dark:text-white leading-none">X-Sneaker</h1>
+                    <p class="text-[11px] uppercase tracking-wider text-primary font-bold mt-1">Admin Dashboard</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <div class="flex-1 overflow-y-auto py-6 px-4 space-y-1">
+            <div class="px-4 mb-2 text-xs font-bold text-slate-400 uppercase tracking-wider">Main Menu</div>
+            
+            <a href="#" data-tab="dashboard" class="nav-link flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-white/5 hover:text-primary dark:hover:text-primary rounded-xl transition-all group">
+                <span class="material-symbols-rounded text-[22px] group-hover:scale-110 transition-transform">dashboard</span>
+                <span class="text-sm font-semibold">Dashboard</span>
+            </a>
+            
+            <a href="#" data-tab="orders" class="nav-link flex items-center gap-3 px-4 py-3 bg-primary/10 text-primary rounded-xl transition-all relative overflow-hidden">
+                <div class="absolute inset-y-0 left-0 w-1 bg-primary rounded-r-full"></div>
+                <span class="material-symbols-rounded text-[22px]">shopping_bag</span>
+                <span class="text-sm font-bold">Orders</span>
+            </a>
+            
+            <a href="#" data-tab="inventory" class="nav-link flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-white/5 hover:text-primary dark:hover:text-primary rounded-xl transition-all group">
+                <span class="material-symbols-rounded text-[22px] group-hover:scale-110 transition-transform">inventory_2</span>
+                <span class="text-sm font-semibold">Inventory</span>
+            </a>
+            
+            <a href="#" data-tab="customers" class="nav-link flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-white/5 hover:text-primary dark:hover:text-primary rounded-xl transition-all group">
+                <span class="material-symbols-rounded text-[22px] group-hover:scale-110 transition-transform">group</span>
+                <span class="text-sm font-semibold">Customers</span>
+            </a>
+            
+            <div class="px-4 mt-8 mb-2 text-xs font-bold text-slate-400 uppercase tracking-wider">Analytics</div>
+            
+            <a href="#" data-tab="reports" class="nav-link flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-white/5 hover:text-primary dark:hover:text-primary rounded-xl transition-all group">
+                <span class="material-symbols-rounded text-[22px] group-hover:scale-110 transition-transform">analytics</span>
+                <span class="text-sm font-semibold">Reports</span>
+            </a>
+
+            <div class="px-4 mt-8 mb-2 text-xs font-bold text-slate-400 uppercase tracking-wider">System</div>
+
+            <a href="#" data-tab="settings" class="nav-link flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-white/5 hover:text-primary dark:hover:text-primary rounded-xl transition-all group">
+                <span class="material-symbols-rounded text-[22px] group-hover:scale-110 transition-transform">settings</span>
+                <span class="text-sm font-semibold">Settings</span>
+            </a>
+        </div>
+
+        <!-- Footer Profile -->
+        <div class="p-4 border-t border-slate-200 dark:border-border-dark">
+            <a href="#" class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-50 dark:hover:bg-white/5 transition-colors">
+                <div class="h-10 w-10 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden border-2 border-white dark:border-card-dark shadow-sm">
+                    <img src="https://ui-avatars.com/api/?name=Admin+User&background=eb4d58&color=fff" alt="Admin" class="h-full w-full object-cover">
+                </div>
+                <div class="flex-1 min-w-0">
+                    <p class="text-sm font-bold text-slate-900 dark:text-white truncate">Alex Rivera</p>
+                    <p class="text-xs text-slate-500 truncate">alex@xsneaker.com</p>
+                </div>
+                <span class="material-symbols-rounded text-slate-400">logout</span>
+            </a>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 ml-72 flex flex-col min-h-screen transition-all duration-300">
+        
+        <!-- Header -->
+        <header class="h-20 flex items-center justify-between px-8 bg-white/80 dark:bg-card-dark/80 backdrop-blur-md border-b border-slate-200 dark:border-border-dark sticky top-0 z-40 transition-all">
+            <div class="flex items-center gap-4 flex-1 max-w-xl">
+                <div class="relative w-full group">
+                    <span class="material-symbols-rounded absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary transition-colors">search</span>
+                    <input type="text" 
+                        class="w-full pl-12 pr-4 py-2.5 bg-slate-100 dark:bg-background-dark border-none rounded-xl text-sm font-medium focus:ring-2 focus:ring-primary/50 text-slate-900 dark:text-white placeholder:text-slate-500 transition-all" 
+                        placeholder="Search orders, customers, or products...">
+                </div>
+            </div>
+
+            <div class="flex items-center gap-4">
+                <button class="relative p-2.5 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/5 hover:text-primary dark:hover:text-primary rounded-xl transition-all">
+                    <span class="material-symbols-rounded">notifications</span>
+                    <span class="absolute top-2.5 right-2.5 w-2.5 h-2.5 bg-primary rounded-full border-2 border-white dark:border-card-dark"></span>
+                </button>
+                <button class="p-2.5 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/5 hover:text-primary dark:hover:text-primary rounded-xl transition-all">
+                    <span class="material-symbols-rounded">dark_mode</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Page Content -->
+        <div id="page-content" class="p-8 space-y-8">
+            <!-- Content will be loaded here dynamically -->
+        </div>
+    </main>
+
+    <!-- JavaScript -->
+    <script>
+        // Tab content definitions
+        const tabContents = {
+            dashboard: `
+            <!-- Page Header -->
+            <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+                <div>
+                    <h2 class="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">Dashboard</h2>
+                    <div class="flex items-center gap-2 mt-2 text-sm text-slate-500 dark:text-slate-400">
+                        <span class="text-primary font-semibold">Dashboard</span>
+                        <span class="material-symbols-rounded text-[14px]">chevron_right</span>
+                        <span>Overview</span>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3">
+                    <select class="px-4 py-2.5 bg-white dark:bg-card-dark border border-slate-200 dark:border-border-dark rounded-xl text-sm font-semibold focus:ring-primary focus:border-primary text-slate-700 dark:text-slate-300">
+                        <option>Last 7 days</option>
+                        <option>Last 30 days</option>
+                        <option>Last 90 days</option>
+                        <option>This year</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Stats Overview -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                <div class="bg-white dark:bg-card-dark p-6 rounded-2xl border border-slate-100 dark:border-border-dark shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
+                    <div class="absolute right-0 top-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                        <span class="material-symbols-rounded text-6xl text-primary">attach_money</span>
+                    </div>
+                    <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">Total Revenue</p>
+                    <div class="flex items-baseline gap-2 mt-2">
+                        <h3 class="text-3xl font-extrabold text-slate-900 dark:text-white">$45,231</h3>
+                        <span class="text-xs font-bold text-emerald-500 flex items-center">
+                            <span class="material-symbols-rounded text-[14px]">trending_up</span> 12%
+                        </span>
+                    </div>
+                </div>
+
+                <div class="bg-white dark:bg-card-dark p-6 rounded-2xl border border-slate-100 dark:border-border-dark shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
+                    <div class="absolute right-0 top-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                        <span class="material-symbols-rounded text-6xl text-blue-500">shopping_cart</span>
+                    </div>
+                    <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">Total Orders</p>
+                    <div class="flex items-baseline gap-2 mt-2">
+                        <h3 class="text-3xl font-extrabold text-slate-900 dark:text-white">1,234</h3>
+                        <span class="text-xs font-bold text-emerald-500 flex items-center">
+                            <span class="material-symbols-rounded text-[14px]">trending_up</span> 8%
+                        </span>
+                    </div>
+                </div>
+
+                <div class="bg-white dark:bg-card-dark p-6 rounded-2xl border border-slate-100 dark:border-border-dark shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
+                    <div class="absolute right-0 top-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                        <span class="material-symbols-rounded text-6xl text-emerald-500">group</span>
+                    </div>
+                    <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">New Customers</p>
+                    <div class="flex items-baseline gap-2 mt-2">
+                        <h3 class="text-3xl font-extrabold text-slate-900 dark:text-white">432</h3>
+                        <span class="text-xs font-bold text-emerald-500 flex items-center">
+                            <span class="material-symbols-rounded text-[14px]">trending_up</span> 15%
+                        </span>
+                    </div>
+                </div>
+
+                <div class="bg-white dark:bg-card-dark p-6 rounded-2xl border border-slate-100 dark:border-border-dark shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
+                    <div class="absolute right-0 top-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                        <span class="material-symbols-rounded text-6xl text-yellow-500">inventory_2</span>
+                    </div>
+                    <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">Products</p>
+                    <div class="flex items-baseline gap-2 mt-2">
+                        <h3 class="text-3xl font-extrabold text-slate-900 dark:text-white">156</h3>
+                        <span class="text-xs font-bold text-slate-500 flex items-center">
+                            +12 new
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Section -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div class="bg-white dark:bg-card-dark p-6 rounded-2xl border border-slate-200 dark:border-border-dark">
+                    <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-4">Revenue Overview</h3>
+                    <div class="h-64 flex items-center justify-center text-slate-400">
+                        <span class="material-symbols-rounded text-6xl opacity-20">monitoring</span>
+                    </div>
+                </div>
+
+                <div class="bg-white dark:bg-card-dark p-6 rounded-2xl border border-slate-200 dark:border-border-dark">
+                    <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-4">Top Products</h3>
+                    <div class="space-y-4">
+                        <div class="flex items-center gap-4">
+                            <div class="h-12 w-12 rounded-lg bg-slate-100 dark:bg-slate-800"></div>
+                            <div class="flex-1">
+                                <p class="text-sm font-semibold text-slate-900 dark:text-white">Nike Air Max 270</p>
+                                <p class="text-xs text-slate-500">245 sold</p>
+                            </div>
+                            <span class="text-sm font-bold text-slate-900 dark:text-white">$12,450</span>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <div class="h-12 w-12 rounded-lg bg-slate-100 dark:bg-slate-800"></div>
+                            <div class="flex-1">
+                                <p class="text-sm font-semibold text-slate-900 dark:text-white">Adidas Ultraboost</p>
+                                <p class="text-xs text-slate-500">198 sold</p>
+                            </div>
+                            <span class="text-sm font-bold text-slate-900 dark:text-white">$9,870</span>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <div class="h-12 w-12 rounded-lg bg-slate-100 dark:bg-slate-800"></div>
+                            <div class="flex-1">
+                                <p class="text-sm font-semibold text-slate-900 dark:text-white">Puma RS-X</p>
+                                <p class="text-xs text-slate-500">156 sold</p>
+                            </div>
+                            <span class="text-sm font-bold text-slate-900 dark:text-white">$7,320</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="bg-white dark:bg-card-dark rounded-2xl border border-slate-200 dark:border-border-dark p-6">
+                <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-4">Recent Activity</h3>
+                <div class="space-y-4">
+                    <div class="flex items-start gap-4 pb-4 border-b border-slate-100 dark:border-border-dark">
+                        <div class="w-10 h-10 rounded-full bg-emerald-100 dark:bg-emerald-500/10 flex items-center justify-center">
+                            <span class="material-symbols-rounded text-emerald-600 dark:text-emerald-400 text-[20px]">shopping_bag</span>
+                        </div>
+                        <div class="flex-1">
+                            <p class="text-sm font-semibold text-slate-900 dark:text-white">New order #XS-9842</p>
+                            <p class="text-xs text-slate-500 mt-1">Marcus V. ordered Nike Air Max 270</p>
+                        </div>
+                        <span class="text-xs text-slate-400">2 min ago</span>
+                    </div>
+                    <div class="flex items-start gap-4 pb-4 border-b border-slate-100 dark:border-border-dark">
+                        <div class="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-500/10 flex items-center justify-center">
+                            <span class="material-symbols-rounded text-blue-600 dark:text-blue-400 text-[20px]">person_add</span>
+                        </div>
+                        <div class="flex-1">
+                            <p class="text-sm font-semibold text-slate-900 dark:text-white">New customer registered</p>
+                            <p class="text-xs text-slate-500 mt-1">Sarah J. joined the platform</p>
+                        </div>
+                        <span class="text-xs text-slate-400">15 min ago</span>
+                    </div>
+                    <div class="flex items-start gap-4">
+                        <div class="w-10 h-10 rounded-full bg-yellow-100 dark:bg-yellow-500/10 flex items-center justify-center">
+                            <span class="material-symbols-rounded text-yellow-600 dark:text-yellow-400 text-[20px]">inventory</span>
+                        </div>
+                        <div class="flex-1">
+                            <p class="text-sm font-semibold text-slate-900 dark:text-white">Low stock alert</p>
+                            <p class="text-xs text-slate-500 mt-1">Adidas Ultraboost - Only 5 left</p>
+                        </div>
+                        <span class="text-xs text-slate-400">1 hour ago</span>
+                    </div>
+                </div>
+            </div>
+            `,
+
+            orders: `
+            <!-- Page Header -->
+            <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+                <div>
+                    <h2 class="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">Order Management</h2>
+                    <div class="flex items-center gap-2 mt-2 text-sm text-slate-500 dark:text-slate-400">
+                        <span>Dashboard</span>
+                        <span class="material-symbols-rounded text-[14px]">chevron_right</span>
+                        <span class="text-primary font-semibold">Orders</span>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3">
+                    <button class="flex items-center gap-2 px-5 py-2.5 bg-white dark:bg-card-dark border border-slate-200 dark:border-border-dark rounded-xl text-sm font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-white/5 hover:border-slate-300 dark:hover:border-slate-600 transition-all">
+                        <span class="material-symbols-rounded text-[20px]">download</span>
+                        Export CSV
+                    </button>
+                    <button class="flex items-center gap-2 px-5 py-2.5 bg-primary hover:bg-primary-600 text-white rounded-xl text-sm font-bold shadow-lg shadow-primary/25 hover:shadow-primary/40 active:scale-95 transition-all">
+                        <span class="material-symbols-rounded text-[20px]">add</span>
+                        Create Order
+                    </button>
+                </div>
+            </div>
+
+            <!-- Stats Overview -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                <div class="bg-white dark:bg-card-dark p-6 rounded-2xl border border-slate-100 dark:border-border-dark shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
+                    <div class="absolute right-0 top-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                        <span class="material-symbols-rounded text-6xl text-yellow-500">pending</span>
+                    </div>
+                    <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">Processing</p>
+                    <div class="flex items-baseline gap-2 mt-2">
+                        <h3 class="text-3xl font-extrabold text-slate-900 dark:text-white">24</h3>
+                        <span class="text-xs font-bold text-emerald-500 flex items-center">
+                            <span class="material-symbols-rounded text-[14px]">trending_up</span> 12%
+                        </span>
+                    </div>
+                </div>
+
+                <div class="bg-white dark:bg-card-dark p-6 rounded-2xl border border-slate-100 dark:border-border-dark shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
+                    <div class="absolute right-0 top-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                        <span class="material-symbols-rounded text-6xl text-blue-500">local_shipping</span>
+                    </div>
+                    <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">Shipped</p>
+                     <div class="flex items-baseline gap-2 mt-2">
+                        <h3 class="text-3xl font-extrabold text-slate-900 dark:text-white">42</h3>
+                         <span class="text-xs font-bold text-emerald-500 flex items-center">
+                            <span class="material-symbols-rounded text-[14px]">trending_up</span> 4%
+                        </span>
+                    </div>
+                </div>
+
+                <div class="bg-white dark:bg-card-dark p-6 rounded-2xl border border-slate-100 dark:border-border-dark shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
+                    <div class="absolute right-0 top-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                        <span class="material-symbols-rounded text-6xl text-emerald-500">check_circle</span>
+                    </div>
+                    <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">Delivered</p>
+                     <div class="flex items-baseline gap-2 mt-2">
+                        <h3 class="text-3xl font-extrabold text-slate-900 dark:text-white">542</h3>
+                         <span class="text-xs font-bold text-emerald-500 flex items-center">
+                            <span class="material-symbols-rounded text-[14px]">trending_up</span> 28%
+                        </span>
+                    </div>
+                </div>
+
+                <div class="bg-white dark:bg-card-dark p-6 rounded-2xl border border-slate-100 dark:border-border-dark shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
+                    <div class="absolute right-0 top-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                        <span class="material-symbols-rounded text-6xl text-primary">cancel</span>
+                    </div>
+                    <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">Cancelled</p>
+                     <div class="flex items-baseline gap-2 mt-2">
+                        <h3 class="text-3xl font-extrabold text-slate-900 dark:text-white">12</h3>
+                         <span class="text-xs font-bold text-rose-500 flex items-center">
+                            <span class="material-symbols-rounded text-[14px]">trending_down</span> 2%
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Content Area -->
+            <div class="bg-white dark:bg-card-dark border border-slate-200 dark:border-border-dark rounded-2xl overflow-hidden shadow-sm">
+                
+                <!-- Filters Toolbar -->
+                <div class="p-6 border-b border-slate-100 dark:border-border-dark flex flex-wrap items-center gap-4">
+                    <div class="flex items-center gap-2 p-1 bg-slate-100 dark:bg-background-dark rounded-xl">
+                        <button class="px-4 py-2 bg-white dark:bg-card-dark text-slate-900 dark:text-white text-sm font-bold rounded-lg shadow-sm transition-all">All Orders</button>
+                        <button class="px-4 py-2 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white text-sm font-medium rounded-lg transition-all">Processing</button>
+                        <button class="px-4 py-2 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white text-sm font-medium rounded-lg transition-all">Shipped</button>
+                        <button class="px-4 py-2 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white text-sm font-medium rounded-lg transition-all">Delivered</button>
+                    </div>
+
+                    <div class="ml-auto flex items-center gap-3">
+                        <div class="relative">
+                            <span class="material-symbols-rounded absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-[18px]">filter_list</span>
+                            <select class="pl-10 pr-8 py-2.5 bg-slate-50 dark:bg-background-dark/50 border border-slate-200 dark:border-border-dark rounded-xl text-sm font-semibold focus:ring-primary focus:border-primary text-slate-700 dark:text-slate-300 appearance-none cursor-pointer">
+                                <option>Newest First</option>
+                                <option>Oldest First</option>
+                                <option>Highest Total</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Table -->
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-slate-50/50 dark:bg-white/[0.02] border-b border-slate-200 dark:border-border-dark">
+                                <th class="px-6 py-5 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Order ID</th>
+                                <th class="px-6 py-5 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Date/Time</th>
+                                <th class="px-6 py-5 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Customer</th>
+                                <th class="px-6 py-5 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Payment</th>
+                                <th class="px-6 py-5 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Total</th>
+                                <th class="px-6 py-5 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Status</th>
+                                <th class="px-6 py-5 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100 dark:divide-border-dark">
+                            <tr class="group hover:bg-slate-50/80 dark:hover:bg-white/[0.02] transition-colors">
+                                <td class="px-6 py-4">
+                                    <span class="text-primary font-bold hover:underline cursor-pointer">#XS-9842</span>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="flex flex-col">
+                                        <span class="text-sm font-semibold text-slate-700 dark:text-slate-300">Oct 24, 2023</span>
+                                        <span class="text-xs text-slate-400">14:20 PM</span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center gap-3">
+                                        <div class="h-9 w-9 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-xs font-bold text-slate-500 border border-slate-200 dark:border-slate-700">
+                                            MV
+                                        </div>
+                                        <div>
+                                            <p class="text-sm font-semibold text-slate-900 dark:text-white">Marcus V.</p>
+                                            <p class="text-xs text-slate-500">premium user</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
+                                        <span class="material-symbols-rounded text-[18px] text-slate-400">credit_card</span>
+                                        Credit Card
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 text-sm font-bold text-slate-900 dark:text-white">$180.00</td>
+                                <td class="px-6 py-4">
+                                    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-emerald-100 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/20">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                                        Delivered
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 text-right">
+                                    <div class="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <button class="p-2 text-slate-400 hover:text-primary hover:bg-slate-100 dark:hover:bg-white/5 rounded-lg transition-all" title="View Details">
+                                            <span class="material-symbols-rounded text-[20px]">visibility</span>
+                                        </button>
+                                        <button class="p-2 text-slate-400 hover:text-primary hover:bg-slate-100 dark:hover:bg-white/5 rounded-lg transition-all" title="Edit Status">
+                                            <span class="material-symbols-rounded text-[20px]">edit_square</span>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            
+                             <tr class="group hover:bg-slate-50/80 dark:hover:bg-white/[0.02] transition-colors">
+                                <td class="px-6 py-4">
+                                    <span class="text-primary font-bold hover:underline cursor-pointer">#XS-9841</span>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="flex flex-col">
+                                        <span class="text-sm font-semibold text-slate-700 dark:text-slate-300">Oct 24, 2023</span>
+                                        <span class="text-xs text-slate-400">12:15 PM</span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center gap-3">
+                                        <div class="h-9 w-9 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-xs font-bold text-slate-500 border border-slate-200 dark:border-slate-700">
+                                            SJ
+                                        </div>
+                                        <div>
+                                            <p class="text-sm font-semibold text-slate-900 dark:text-white">Sarah J.</p>
+                                            <p class="text-xs text-slate-500">customer</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
+                                        <span class="material-symbols-rounded text-[18px] text-blue-500">payments</span>
+                                        PayPal
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 text-sm font-bold text-slate-900 dark:text-white">$210.50</td>
+                                <td class="px-6 py-4">
+                                    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-yellow-100 dark:bg-yellow-500/10 text-yellow-600 dark:text-yellow-500 border border-yellow-200 dark:border-yellow-500/20">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-yellow-500 animate-pulse"></span>
+                                        Processing
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 text-right">
+                                    <div class="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <button class="p-2 text-slate-400 hover:text-primary hover:bg-slate-100 dark:hover:bg-white/5 rounded-lg transition-all" title="View Details">
+                                            <span class="material-symbols-rounded text-[20px]">visibility</span>
+                                        </button>
+                                        <button class="p-2 text-slate-400 hover:text-primary hover:bg-slate-100 dark:hover:bg-white/5 rounded-lg transition-all" title="Edit Status">
+                                            <span class="material-symbols-rounded text-[20px]">edit_square</span>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Pagination -->
+                <div class="px-6 py-4 border-t border-slate-100 dark:border-border-dark flex items-center justify-between">
+                    <p class="text-sm text-slate-500 font-medium">Showing <span class="text-slate-900 dark:text-white font-bold">1-10</span> of <span class="text-slate-900 dark:text-white font-bold">124</span> results</p>
+                    <div class="flex items-center gap-2">
+                        <button class="p-2 rounded-lg border border-slate-200 dark:border-border-dark text-slate-400 hover:bg-slate-50 dark:hover:bg-white/5 disabled:opacity-50 transition-all" disabled>
+                            <span class="material-symbols-rounded text-[18px]">chevron_left</span>
+                        </button>
+                        <button class="w-9 h-9 rounded-lg bg-primary text-white text-sm font-bold shadow-lg shadow-primary/20">1</button>
+                        <button class="w-9 h-9 rounded-lg hover:bg-slate-50 dark:hover:bg-white/5 text-slate-600 dark:text-slate-400 text-sm font-medium transition-all">2</button>
+                        <button class="w-9 h-9 rounded-lg hover:bg-slate-50 dark:hover:bg-white/5 text-slate-600 dark:text-slate-400 text-sm font-medium transition-all">3</button>
+                        <span class="text-slate-400 px-1">...</span>
+                        <button class="w-9 h-9 rounded-lg hover:bg-slate-50 dark:hover:bg-white/5 text-slate-600 dark:text-slate-400 text-sm font-medium transition-all">12</button>
+                        <button class="p-2 rounded-lg border border-slate-200 dark:border-border-dark text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-white/5 hover:text-primary transition-all">
+                            <span class="material-symbols-rounded text-[18px]">chevron_right</span>
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+            `,
+
+            inventory: `
+            <!-- Page Header -->
+            <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+                <div>
+                    <h2 class="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">Inventory Management</h2>
+                    <div class="flex items-center gap-2 mt-2 text-sm text-slate-500 dark:text-slate-400">
+                        <span>Dashboard</span>
+                        <span class="material-symbols-rounded text-[14px]">chevron_right</span>
+                        <span class="text-primary font-semibold">Inventory</span>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3">
+                    <button class="flex items-center gap-2 px-5 py-2.5 bg-white dark:bg-card-dark border border-slate-200 dark:border-border-dark rounded-xl text-sm font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-white/5 transition-all">
+                        <span class="material-symbols-rounded text-[20px]">upload</span>
+                        Import CSV
+                    </button>
+                    <button class="flex items-center gap-2 px-5 py-2.5 bg-primary hover:bg-primary-600 text-white rounded-xl text-sm font-bold shadow-lg shadow-primary/25 hover:shadow-primary/40 active:scale-95 transition-all">
+                        <span class="material-symbols-rounded text-[20px]">add</span>
+                        Add Product
+                    </button>
+                </div>
+            </div>
+
+            <!-- Stats Overview -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                <div class="bg-white dark:bg-card-dark p-6 rounded-2xl border border-slate-100 dark:border-border-dark shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
+                    <div class="absolute right-0 top-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                        <span class="material-symbols-rounded text-6xl text-blue-500">inventory_2</span>
+                    </div>
+                    <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">Total Products</p>
+                    <div class="flex items-baseline gap-2 mt-2">
+                        <h3 class="text-3xl font-extrabold text-slate-900 dark:text-white">156</h3>
+                    </div>
+                </div>
+
+                <div class="bg-white dark:bg-card-dark p-6 rounded-2xl border border-slate-100 dark:border-border-dark shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
+                    <div class="absolute right-0 top-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                        <span class="material-symbols-rounded text-6xl text-emerald-500">check_circle</span>
+                    </div>
+                    <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">In Stock</p>
+                    <div class="flex items-baseline gap-2 mt-2">
+                        <h3 class="text-3xl font-extrabold text-slate-900 dark:text-white">142</h3>
+                    </div>
+                </div>
+
+                <div class="bg-white dark:bg-card-dark p-6 rounded-2xl border border-slate-100 dark:border-border-dark shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
+                    <div class="absolute right-0 top-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                        <span class="material-symbols-rounded text-6xl text-yellow-500">warning</span>
+                    </div>
+                    <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">Low Stock</p>
+                    <div class="flex items-baseline gap-2 mt-2">
+                        <h3 class="text-3xl font-extrabold text-slate-900 dark:text-white">9</h3>
+                    </div>
+                </div>
+
+                <div class="bg-white dark:bg-card-dark p-6 rounded-2xl border border-slate-100 dark:border-border-dark shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
+                    <div class="absolute right-0 top-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                        <span class="material-symbols-rounded text-6xl text-primary">cancel</span>
+                    </div>
+                    <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">Out of Stock</p>
+                    <div class="flex items-baseline gap-2 mt-2">
+                        <h3 class="text-3xl font-extrabold text-slate-900 dark:text-white">5</h3>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Products Table -->
+            <div class="bg-white dark:bg-card-dark border border-slate-200 dark:border-border-dark rounded-2xl overflow-hidden shadow-sm">
+                <!-- Filters -->
+                <div class="p-6 border-b border-slate-100 dark:border-border-dark flex flex-wrap items-center gap-4">
+                    <div class="flex items-center gap-2 p-1 bg-slate-100 dark:bg-background-dark rounded-xl">
+                        <button class="px-4 py-2 bg-white dark:bg-card-dark text-slate-900 dark:text-white text-sm font-bold rounded-lg shadow-sm transition-all">All Products</button>
+                        <button class="px-4 py-2 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white text-sm font-medium rounded-lg transition-all">Nike</button>
+                        <button class="px-4 py-2 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white text-sm font-medium rounded-lg transition-all">Adidas</button>
+                        <button class="px-4 py-2 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white text-sm font-medium rounded-lg transition-all">Puma</button>
+                    </div>
+
+                    <div class="ml-auto flex items-center gap-3">
+                        <div class="relative">
+                            <span class="material-symbols-rounded absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-[18px]">search</span>
+                            <input type="text" placeholder="Search products..." class="pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-background-dark/50 border border-slate-200 dark:border-border-dark rounded-xl text-sm font-semibold focus:ring-primary focus:border-primary text-slate-700 dark:text-slate-300">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Table -->
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-slate-50/50 dark:bg-white/[0.02] border-b border-slate-200 dark:border-border-dark">
+                                <th class="px-6 py-5 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Product</th>
+                                <th class="px-6 py-5 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">SKU</th>
+                                <th class="px-6 py-5 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Category</th>
+                                <th class="px-6 py-5 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Price</th>
+                                <th class="px-6 py-5 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Stock</th>
+                                <th class="px-6 py-5 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Status</th>
+                                <th class="px-6 py-5 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100 dark:divide-border-dark">
+                            <tr class="group hover:bg-slate-50/80 dark:hover:bg-white/[0.02] transition-colors">
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center gap-3">
+                                        <div class="h-12 w-12 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center overflow-hidden">
+                                            <span class="material-symbols-rounded text-slate-400">image</span>
+                                        </div>
+                                        <div>
+                                            <p class="text-sm font-semibold text-slate-900 dark:text-white">Nike Air Max 270</p>
+                                            <p class="text-xs text-slate-500">Men's Running Shoes</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 text-sm text-slate-600 dark:text-slate-400 font-mono">NK-AM270-BK</td>
+                                <td class="px-6 py-4 text-sm text-slate-600 dark:text-slate-400">Running</td>
+                                <td class="px-6 py-4 text-sm font-bold text-slate-900 dark:text-white">$150.00</td>
+                                <td class="px-6 py-4 text-sm font-semibold text-slate-900 dark:text-white">45</td>
+                                <td class="px-6 py-4">
+                                    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-emerald-100 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/20">
+                                        In Stock
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 text-right">
+                                    <div class="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <button class="p-2 text-slate-400 hover:text-primary hover:bg-slate-100 dark:hover:bg-white/5 rounded-lg transition-all">
+                                            <span class="material-symbols-rounded text-[20px]">edit</span>
+                                        </button>
+                                        <button class="p-2 text-slate-400 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-500/10 rounded-lg transition-all">
+                                            <span class="material-symbols-rounded text-[20px]">delete</span>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr class="group hover:bg-slate-50/80 dark:hover:bg-white/[0.02] transition-colors">
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center gap-3">
+                                        <div class="h-12 w-12 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center overflow-hidden">
+                                            <span class="material-symbols-rounded text-slate-400">image</span>
+                                        </div>
+                                        <div>
+                                            <p class="text-sm font-semibold text-slate-900 dark:text-white">Adidas Ultraboost</p>
+                                            <p class="text-xs text-slate-500">Men's Running Shoes</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 text-sm text-slate-600 dark:text-slate-400 font-mono">AD-UB-WH</td>
+                                <td class="px-6 py-4 text-sm text-slate-600 dark:text-slate-400">Running</td>
+                                <td class="px-6 py-4 text-sm font-bold text-slate-900 dark:text-white">$180.00</td>
+                                <td class="px-6 py-4 text-sm font-semibold text-yellow-600 dark:text-yellow-400">5</td>
+                                <td class="px-6 py-4">
+                                    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-yellow-100 dark:bg-yellow-500/10 text-yellow-600 dark:text-yellow-400 border border-yellow-200 dark:border-yellow-500/20">
+                                        Low Stock
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 text-right">
+                                    <div class="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <button class="p-2 text-slate-400 hover:text-primary hover:bg-slate-100 dark:hover:bg-white/5 rounded-lg transition-all">
+                                            <span class="material-symbols-rounded text-[20px]">edit</span>
+                                        </button>
+                                        <button class="p-2 text-slate-400 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-500/10 rounded-lg transition-all">
+                                            <span class="material-symbols-rounded text-[20px]">delete</span>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Pagination -->
+                <div class="px-6 py-4 border-t border-slate-100 dark:border-border-dark flex items-center justify-between">
+                    <p class="text-sm text-slate-500 font-medium">Showing <span class="text-slate-900 dark:text-white font-bold">1-10</span> of <span class="text-slate-900 dark:text-white font-bold">156</span> results</p>
+                    <div class="flex items-center gap-2">
+                        <button class="p-2 rounded-lg border border-slate-200 dark:border-border-dark text-slate-400 hover:bg-slate-50 dark:hover:bg-white/5 disabled:opacity-50 transition-all" disabled>
+                            <span class="material-symbols-rounded text-[18px]">chevron_left</span>
+                        </button>
+                        <button class="w-9 h-9 rounded-lg bg-primary text-white text-sm font-bold shadow-lg shadow-primary/20">1</button>
+                        <button class="w-9 h-9 rounded-lg hover:bg-slate-50 dark:hover:bg-white/5 text-slate-600 dark:text-slate-400 text-sm font-medium transition-all">2</button>
+                        <button class="p-2 rounded-lg border border-slate-200 dark:border-border-dark text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-white/5 hover:text-primary transition-all">
+                            <span class="material-symbols-rounded text-[18px]">chevron_right</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            `,
+
+            customers: `
+            <!-- Page Header -->
+            <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+                <div>
+                    <h2 class="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">Customer Management</h2>
+                    <div class="flex items-center gap-2 mt-2 text-sm text-slate-500 dark:text-slate-400">
+                        <span>Dashboard</span>
+                        <span class="material-symbols-rounded text-[14px]">chevron_right</span>
+                        <span class="text-primary font-semibold">Customers</span>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3">
+                    <button class="flex items-center gap-2 px-5 py-2.5 bg-white dark:bg-card-dark border border-slate-200 dark:border-border-dark rounded-xl text-sm font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-white/5 transition-all">
+                        <span class="material-symbols-rounded text-[20px]">mail</span>
+                        Send Email
+                    </button>
+                    <button class="flex items-center gap-2 px-5 py-2.5 bg-primary hover:bg-primary-600 text-white rounded-xl text-sm font-bold shadow-lg shadow-primary/25 hover:shadow-primary/40 active:scale-95 transition-all">
+                        <span class="material-symbols-rounded text-[20px]">add</span>
+                        Add Customer
+                    </button>
+                </div>
+            </div>
+
+            <!-- Stats Overview -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                <div class="bg-white dark:bg-card-dark p-6 rounded-2xl border border-slate-100 dark:border-border-dark shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
+                    <div class="absolute right-0 top-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                        <span class="material-symbols-rounded text-6xl text-blue-500">group</span>
+                    </div>
+                    <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">Total Customers</p>
+                    <div class="flex items-baseline gap-2 mt-2">
+                        <h3 class="text-3xl font-extrabold text-slate-900 dark:text-white">2,458</h3>
+                    </div>
+                </div>
+
+                <div class="bg-white dark:bg-card-dark p-6 rounded-2xl border border-slate-100 dark:border-border-dark shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
+                    <div class="absolute right-0 top-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                        <span class="material-symbols-rounded text-6xl text-emerald-500">person_add</span>
+                    </div>
+                    <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">New This Month</p>
+                    <div class="flex items-baseline gap-2 mt-2">
+                        <h3 class="text-3xl font-extrabold text-slate-900 dark:text-white">142</h3>
+                        <span class="text-xs font-bold text-emerald-500 flex items-center">
+                            <span class="material-symbols-rounded text-[14px]">trending_up</span> 18%
+                        </span>
+                    </div>
+                </div>
+
+                <div class="bg-white dark:bg-card-dark p-6 rounded-2xl border border-slate-100 dark:border-border-dark shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
+                    <div class="absolute right-0 top-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                        <span class="material-symbols-rounded text-6xl text-yellow-500">workspace_premium</span>
+                    </div>
+                    <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">Premium Members</p>
+                    <div class="flex items-baseline gap-2 mt-2">
+                        <h3 class="text-3xl font-extrabold text-slate-900 dark:text-white">342</h3>
+                    </div>
+                </div>
+
+                <div class="bg-white dark:bg-card-dark p-6 rounded-2xl border border-slate-100 dark:border-border-dark shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
+                    <div class="absolute right-0 top-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                        <span class="material-symbols-rounded text-6xl text-primary">local_activity</span>
+                    </div>
+                    <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">Active Today</p>
+                    <div class="flex items-baseline gap-2 mt-2">
+                        <h3 class="text-3xl font-extrabold text-slate-900 dark:text-white">89</h3>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Customers Table -->
+            <div class="bg-white dark:bg-card-dark border border-slate-200 dark:border-border-dark rounded-2xl overflow-hidden shadow-sm">
+                <!-- Filters -->
+                <div class="p-6 border-b border-slate-100 dark:border-border-dark flex flex-wrap items-center gap-4">
+                    <div class="flex items-center gap-2 p-1 bg-slate-100 dark:bg-background-dark rounded-xl">
+                        <button class="px-4 py-2 bg-white dark:bg-card-dark text-slate-900 dark:text-white text-sm font-bold rounded-lg shadow-sm transition-all">All Customers</button>
+                        <button class="px-4 py-2 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white text-sm font-medium rounded-lg transition-all">Premium</button>
+                        <button class="px-4 py-2 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white text-sm font-medium rounded-lg transition-all">Regular</button>
+                    </div>
+
+                    <div class="ml-auto flex items-center gap-3">
+                        <div class="relative">
+                            <span class="material-symbols-rounded absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-[18px]">search</span>
+                            <input type="text" placeholder="Search customers..." class="pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-background-dark/50 border border-slate-200 dark:border-border-dark rounded-xl text-sm font-semibold focus:ring-primary focus:border-primary text-slate-700 dark:text-slate-300">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Table -->
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-slate-50/50 dark:bg-white/[0.02] border-b border-slate-200 dark:border-border-dark">
+                                <th class="px-6 py-5 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Customer</th>
+                                <th class="px-6 py-5 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Email</th>
+                                <th class="px-6 py-5 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Orders</th>
+                                <th class="px-6 py-5 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Total Spent</th>
+                                <th class="px-6 py-5 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Status</th>
+                                <th class="px-6 py-5 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Joined</th>
+                                <th class="px-6 py-5 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100 dark:divide-border-dark">
+                            <tr class="group hover:bg-slate-50/80 dark:hover:bg-white/[0.02] transition-colors">
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center gap-3">
+                                        <div class="h-10 w-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-xs font-bold text-slate-500 border border-slate-200 dark:border-slate-700">
+                                            MV
+                                        </div>
+                                        <div>
+                                            <p class="text-sm font-semibold text-slate-900 dark:text-white">Marcus Valdez</p>
+                                            <p class="text-xs text-slate-500">ID: #CUS-1234</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 text-sm text-slate-600 dark:text-slate-400">marcus.v@email.com</td>
+                                <td class="px-6 py-4 text-sm font-semibold text-slate-900 dark:text-white">24</td>
+                                <td class="px-6 py-4 text-sm font-bold text-slate-900 dark:text-white">$3,240</td>
+                                <td class="px-6 py-4">
+                                    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-yellow-100 dark:bg-yellow-500/10 text-yellow-600 dark:text-yellow-400 border border-yellow-200 dark:border-yellow-500/20">
+                                        Premium
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 text-sm text-slate-600 dark:text-slate-400">Jan 15, 2024</td>
+                                <td class="px-6 py-4 text-right">
+                                    <div class="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <button class="p-2 text-slate-400 hover:text-primary hover:bg-slate-100 dark:hover:bg-white/5 rounded-lg transition-all">
+                                            <span class="material-symbols-rounded text-[20px]">visibility</span>
+                                        </button>
+                                        <button class="p-2 text-slate-400 hover:text-primary hover:bg-slate-100 dark:hover:bg-white/5 rounded-lg transition-all">
+                                            <span class="material-symbols-rounded text-[20px]">edit</span>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr class="group hover:bg-slate-50/80 dark:hover:bg-white/[0.02] transition-colors">
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center gap-3">
+                                        <div class="h-10 w-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-xs font-bold text-slate-500 border border-slate-200 dark:border-slate-700">
+                                            SJ
+                                        </div>
+                                        <div>
+                                            <p class="text-sm font-semibold text-slate-900 dark:text-white">Sarah Johnson</p>
+                                            <p class="text-xs text-slate-500">ID: #CUS-1235</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 text-sm text-slate-600 dark:text-slate-400">sarah.j@email.com</td>
+                                <td class="px-6 py-4 text-sm font-semibold text-slate-900 dark:text-white">8</td>
+                                <td class="px-6 py-4 text-sm font-bold text-slate-900 dark:text-white">$1,120</td>
+                                <td class="px-6 py-4">
+                                    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-slate-100 dark:bg-slate-500/10 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-500/20">
+                                        Regular
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 text-sm text-slate-600 dark:text-slate-400">Mar 22, 2024</td>
+                                <td class="px-6 py-4 text-right">
+                                    <div class="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <button class="p-2 text-slate-400 hover:text-primary hover:bg-slate-100 dark:hover:bg-white/5 rounded-lg transition-all">
+                                            <span class="material-symbols-rounded text-[20px]">visibility</span>
+                                        </button>
+                                        <button class="p-2 text-slate-400 hover:text-primary hover:bg-slate-100 dark:hover:bg-white/5 rounded-lg transition-all">
+                                            <span class="material-symbols-rounded text-[20px]">edit</span>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Pagination -->
+                <div class="px-6 py-4 border-t border-slate-100 dark:border-border-dark flex items-center justify-between">
+                    <p class="text-sm text-slate-500 font-medium">Showing <span class="text-slate-900 dark:text-white font-bold">1-10</span> of <span class="text-slate-900 dark:text-white font-bold">2,458</span> results</p>
+                    <div class="flex items-center gap-2">
+                        <button class="p-2 rounded-lg border border-slate-200 dark:border-border-dark text-slate-400 hover:bg-slate-50 dark:hover:bg-white/5 disabled:opacity-50 transition-all" disabled>
+                            <span class="material-symbols-rounded text-[18px]">chevron_left</span>
+                        </button>
+                        <button class="w-9 h-9 rounded-lg bg-primary text-white text-sm font-bold shadow-lg shadow-primary/20">1</button>
+                        <button class="w-9 h-9 rounded-lg hover:bg-slate-50 dark:hover:bg-white/5 text-slate-600 dark:text-slate-400 text-sm font-medium transition-all">2</button>
+                        <button class="p-2 rounded-lg border border-slate-200 dark:border-border-dark text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-white/5 hover:text-primary transition-all">
+                            <span class="material-symbols-rounded text-[18px]">chevron_right</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            `,
+
+            reports: `
+            <!-- Page Header -->
+            <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+                <div>
+                    <h2 class="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">Reports & Analytics</h2>
+                    <div class="flex items-center gap-2 mt-2 text-sm text-slate-500 dark:text-slate-400">
+                        <span>Dashboard</span>
+                        <span class="material-symbols-rounded text-[14px]">chevron_right</span>
+                        <span class="text-primary font-semibold">Reports</span>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3">
+                    <select class="px-4 py-2.5 bg-white dark:bg-card-dark border border-slate-200 dark:border-border-dark rounded-xl text-sm font-semibold focus:ring-primary focus:border-primary text-slate-700 dark:text-slate-300">
+                        <option>Last 30 days</option>
+                        <option>Last 90 days</option>
+                        <option>This year</option>
+                        <option>All time</option>
+                    </select>
+                    <button class="flex items-center gap-2 px-5 py-2.5 bg-primary hover:bg-primary-600 text-white rounded-xl text-sm font-bold shadow-lg shadow-primary/25 hover:shadow-primary/40 active:scale-95 transition-all">
+                        <span class="material-symbols-rounded text-[20px]">download</span>
+                        Export Report
+                    </button>
+                </div>
+            </div>
+
+            <!-- Key Metrics -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-white dark:bg-card-dark p-6 rounded-2xl border border-slate-100 dark:border-border-dark shadow-sm hover:shadow-md transition-shadow">
+                    <div class="flex items-center justify-between mb-4">
+                        <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">Total Revenue</p>
+                        <span class="material-symbols-rounded text-primary">attach_money</span>
+                    </div>
+                    <h3 class="text-3xl font-extrabold text-slate-900 dark:text-white mb-2">$124,563</h3>
+                    <div class="flex items-center gap-2 text-sm">
+                        <span class="text-emerald-500 font-bold flex items-center">
+                            <span class="material-symbols-rounded text-[14px]">trending_up</span> 23.5%
+                        </span>
+                        <span class="text-slate-500">vs last period</span>
+                    </div>
+                </div>
+
+                <div class="bg-white dark:bg-card-dark p-6 rounded-2xl border border-slate-100 dark:border-border-dark shadow-sm hover:shadow-md transition-shadow">
+                    <div class="flex items-center justify-between mb-4">
+                        <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">Average Order Value</p>
+                        <span class="material-symbols-rounded text-blue-500">shopping_cart</span>
+                    </div>
+                    <h3 class="text-3xl font-extrabold text-slate-900 dark:text-white mb-2">$185.50</h3>
+                    <div class="flex items-center gap-2 text-sm">
+                        <span class="text-emerald-500 font-bold flex items-center">
+                            <span class="material-symbols-rounded text-[14px]">trending_up</span> 8.2%
+                        </span>
+                        <span class="text-slate-500">vs last period</span>
+                    </div>
+                </div>
+
+                <div class="bg-white dark:bg-card-dark p-6 rounded-2xl border border-slate-100 dark:border-border-dark shadow-sm hover:shadow-md transition-shadow">
+                    <div class="flex items-center justify-between mb-4">
+                        <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">Conversion Rate</p>
+                        <span class="material-symbols-rounded text-emerald-500">percent</span>
+                    </div>
+                    <h3 class="text-3xl font-extrabold text-slate-900 dark:text-white mb-2">4.8%</h3>
+                    <div class="flex items-center gap-2 text-sm">
+                        <span class="text-emerald-500 font-bold flex items-center">
+                            <span class="material-symbols-rounded text-[14px]">trending_up</span> 1.2%
+                        </span>
+                        <span class="text-slate-500">vs last period</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div class="bg-white dark:bg-card-dark p-6 rounded-2xl border border-slate-200 dark:border-border-dark">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-lg font-bold text-slate-900 dark:text-white">Sales Trends</h3>
+                        <select class="px-3 py-1.5 bg-slate-50 dark:bg-background-dark/50 border border-slate-200 dark:border-border-dark rounded-lg text-xs font-semibold text-slate-700 dark:text-slate-300">
+                            <option>Daily</option>
+                            <option>Weekly</option>
+                            <option>Monthly</option>
+                        </select>
+                    </div>
+                    <div class="h-64 flex items-center justify-center text-slate-400">
+                        <div class="text-center">
+                            <span class="material-symbols-rounded text-6xl opacity-20">monitoring</span>
+                            <p class="text-sm mt-2">Chart visualization will be here</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white dark:bg-card-dark p-6 rounded-2xl border border-slate-200 dark:border-border-dark">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-lg font-bold text-slate-900 dark:text-white">Category Performance</h3>
+                    </div>
+                    <div class="space-y-4">
+                        <div>
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-sm font-semibold text-slate-700 dark:text-slate-300">Running Shoes</span>
+                                <span class="text-sm font-bold text-slate-900 dark:text-white">$45,230</span>
+                            </div>
+                            <div class="h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                                <div class="h-full bg-primary rounded-full" style="width: 75%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-sm font-semibold text-slate-700 dark:text-slate-300">Basketball Shoes</span>
+                                <span class="text-sm font-bold text-slate-900 dark:text-white">$32,180</span>
+                            </div>
+                            <div class="h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                                <div class="h-full bg-blue-500 rounded-full" style="width: 55%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-sm font-semibold text-slate-700 dark:text-slate-300">Casual Sneakers</span>
+                                <span class="text-sm font-bold text-slate-900 dark:text-white">$28,940</span>
+                            </div>
+                            <div class="h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                                <div class="h-full bg-emerald-500 rounded-full" style="width: 48%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-sm font-semibold text-slate-700 dark:text-slate-300">Training Shoes</span>
+                                <span class="text-sm font-bold text-slate-900 dark:text-white">$18,213</span>
+                            </div>
+                            <div class="h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                                <div class="h-full bg-yellow-500 rounded-full" style="width: 30%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Additional Stats -->
+            <div class="bg-white dark:bg-card-dark p-6 rounded-2xl border border-slate-200 dark:border-border-dark">
+                <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-6">Top Performing Products</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left">
+                        <thead>
+                            <tr class="border-b border-slate-200 dark:border-border-dark">
+                                <th class="pb-3 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Product</th>
+                                <th class="pb-3 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Units Sold</th>
+                                <th class="pb-3 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Revenue</th>
+                                <th class="pb-3 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Growth</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100 dark:divide-border-dark">
+                            <tr>
+                                <td class="py-3 text-sm font-semibold text-slate-900 dark:text-white">Nike Air Max 270</td>
+                                <td class="py-3 text-sm text-slate-600 dark:text-slate-400">245</td>
+                                <td class="py-3 text-sm font-bold text-slate-900 dark:text-white">$36,750</td>
+                                <td class="py-3 text-sm text-emerald-500 font-bold">+24%</td>
+                            </tr>
+                            <tr>
+                                <td class="py-3 text-sm font-semibold text-slate-900 dark:text-white">Adidas Ultraboost</td>
+                                <td class="py-3 text-sm text-slate-600 dark:text-slate-400">198</td>
+                                <td class="py-3 text-sm font-bold text-slate-900 dark:text-white">$35,640</td>
+                                <td class="py-3 text-sm text-emerald-500 font-bold">+18%</td>
+                            </tr>
+                            <tr>
+                                <td class="py-3 text-sm font-semibold text-slate-900 dark:text-white">Puma RS-X</td>
+                                <td class="py-3 text-sm text-slate-600 dark:text-slate-400">156</td>
+                                <td class="py-3 text-sm font-bold text-slate-900 dark:text-white">$18,720</td>
+                                <td class="py-3 text-sm text-emerald-500 font-bold">+12%</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            `,
+
+            settings: `
+            <!-- Page Header -->
+            <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+                <div>
+                    <h2 class="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">Settings</h2>
+                    <div class="flex items-center gap-2 mt-2 text-sm text-slate-500 dark:text-slate-400">
+                        <span>Dashboard</span>
+                        <span class="material-symbols-rounded text-[14px]">chevron_right</span>
+                        <span class="text-primary font-semibold">Settings</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings Tabs -->
+            <div class="flex items-center gap-2 p-1 bg-slate-100 dark:bg-card-dark rounded-xl w-fit">
+                <button class="px-6 py-3 bg-white dark:bg-background-dark text-slate-900 dark:text-white text-sm font-bold rounded-lg shadow-sm transition-all">General</button>
+                <button class="px-6 py-3 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white text-sm font-medium rounded-lg transition-all">Payment</button>
+                <button class="px-6 py-3 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white text-sm font-medium rounded-lg transition-all">Notifications</button>
+                <button class="px-6 py-3 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white text-sm font-medium rounded-lg transition-all">Security</button>
+            </div>
+
+            <!-- Settings Sections -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Store Information -->
+                <div class="bg-white dark:bg-card-dark p-6 rounded-2xl border border-slate-200 dark:border-border-dark">
+                    <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-6">Store Information</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Store Name</label>
+                            <input type="text" value="X-Sneaker" class="w-full px-4 py-2.5 bg-slate-50 dark:bg-background-dark border border-slate-200 dark:border-border-dark rounded-xl text-sm font-medium focus:ring-2 focus:ring-primary/50 text-slate-900 dark:text-white">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Store Email</label>
+                            <input type="email" value="info@xsneaker.com" class="w-full px-4 py-2.5 bg-slate-50 dark:bg-background-dark border border-slate-200 dark:border-border-dark rounded-xl text-sm font-medium focus:ring-2 focus:ring-primary/50 text-slate-900 dark:text-white">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Phone Number</label>
+                            <input type="tel" value="+1 (555) 123-4567" class="w-full px-4 py-2.5 bg-slate-50 dark:bg-background-dark border border-slate-200 dark:border-border-dark rounded-xl text-sm font-medium focus:ring-2 focus:ring-primary/50 text-slate-900 dark:text-white">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Address</label>
+                            <textarea rows="3" class="w-full px-4 py-2.5 bg-slate-50 dark:bg-background-dark border border-slate-200 dark:border-border-dark rounded-xl text-sm font-medium focus:ring-2 focus:ring-primary/50 text-slate-900 dark:text-white">123 Sneaker Street, Fashion District, NY 10001</textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Business Settings -->
+                <div class="bg-white dark:bg-card-dark p-6 rounded-2xl border border-slate-200 dark:border-border-dark">
+                    <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-6">Business Settings</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Currency</label>
+                            <select class="w-full px-4 py-2.5 bg-slate-50 dark:bg-background-dark border border-slate-200 dark:border-border-dark rounded-xl text-sm font-medium focus:ring-2 focus:ring-primary/50 text-slate-900 dark:text-white">
+                                <option>USD ($)</option>
+                                <option>EUR (€)</option>
+                                <option>GBP (£)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Timezone</label>
+                            <select class="w-full px-4 py-2.5 bg-slate-50 dark:bg-background-dark border border-slate-200 dark:border-border-dark rounded-xl text-sm font-medium focus:ring-2 focus:ring-primary/50 text-slate-900 dark:text-white">
+                                <option>UTC-5 (Eastern Time)</option>
+                                <option>UTC-8 (Pacific Time)</option>
+                                <option>UTC+0 (GMT)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Date Format</label>
+                            <select class="w-full px-4 py-2.5 bg-slate-50 dark:bg-background-dark border border-slate-200 dark:border-border-dark rounded-xl text-sm font-medium focus:ring-2 focus:ring-primary/50 text-slate-900 dark:text-white">
+                                <option>MM/DD/YYYY</option>
+                                <option>DD/MM/YYYY</option>
+                                <option>YYYY-MM-DD</option>
+                            </select>
+                        </div>
+                        <div class="flex items-center justify-between pt-2">
+                            <div>
+                                <p class="text-sm font-semibold text-slate-900 dark:text-white">Enable Tax</p>
+                                <p class="text-xs text-slate-500">Automatically calculate taxes</p>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" checked class="sr-only peer">
+                                <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-primary/50 rounded-full peer dark:bg-slate-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-slate-600 peer-checked:bg-primary"></div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Preferences -->
+            <div class="bg-white dark:bg-card-dark p-6 rounded-2xl border border-slate-200 dark:border-border-dark">
+                <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-6">Appearance</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="p-4 border-2 border-primary rounded-xl cursor-pointer">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-sm font-bold text-slate-900 dark:text-white">Light Mode</span>
+                            <span class="material-symbols-rounded text-primary">check_circle</span>
+                        </div>
+                        <div class="h-20 bg-gradient-to-br from-slate-50 to-slate-100 rounded-lg"></div>
+                    </div>
+                    <div class="p-4 border-2 border-slate-200 dark:border-border-dark rounded-xl cursor-pointer hover:border-primary transition-colors">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-sm font-bold text-slate-900 dark:text-white">Dark Mode</span>
+                        </div>
+                        <div class="h-20 bg-gradient-to-br from-slate-800 to-slate-900 rounded-lg"></div>
+                    </div>
+                    <div class="p-4 border-2 border-slate-200 dark:border-border-dark rounded-xl cursor-pointer hover:border-primary transition-colors">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-sm font-bold text-slate-900 dark:text-white">Auto</span>
+                        </div>
+                        <div class="h-20 bg-gradient-to-r from-slate-100 via-slate-400 to-slate-800 rounded-lg"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex justify-end gap-3">
+                <button class="px-6 py-2.5 bg-white dark:bg-card-dark border border-slate-200 dark:border-border-dark rounded-xl text-sm font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-white/5 transition-all">
+                    Cancel
+                </button>
+                <button class="px-6 py-2.5 bg-primary hover:bg-primary-600 text-white rounded-xl text-sm font-bold shadow-lg shadow-primary/25 hover:shadow-primary/40 active:scale-95 transition-all">
+                    Save Changes
+                </button>
+            </div>
+            `
+        };
+
+        // Function to load tab content
+        function loadTab(tabName) {
+            const pageContent = document.getElementById('page-content');
+            if (tabContents[tabName]) {
+                pageContent.innerHTML = tabContents[tabName];
+                
+                // Update active nav link
+                document.querySelectorAll('.nav-link').forEach(link => {
+                    link.classList.remove('bg-primary/10', 'text-primary');
+                    link.classList.add('text-slate-600', 'dark:text-slate-400', 'hover:bg-slate-50', 'dark:hover:bg-white/5', 'hover:text-primary', 'dark:hover:text-primary');
+                    const existingIndicator = link.querySelector('.absolute');
+                    if (existingIndicator) {
+                        existingIndicator.remove();
+                    }
+                    const spanText = link.querySelector('span:last-child');
+                    if (spanText) {
+                        spanText.classList.remove('font-bold');
+                        spanText.classList.add('font-semibold');
+                    }
+                });
+                
+                const activeLink = document.querySelector(`[data-tab="${tabName}"]`);
+                if (activeLink) {
+                    activeLink.classList.remove('text-slate-600', 'dark:text-slate-400', 'hover:bg-slate-50', 'dark:hover:bg-white/5', 'hover:text-primary', 'dark:hover:text-primary');
+                    activeLink.classList.add('bg-primary/10', 'text-primary');
+                    
+                    const indicator = document.createElement('div');
+                    indicator.className = 'absolute inset-y-0 left-0 w-1 bg-primary rounded-r-full';
+                    activeLink.appendChild(indicator);
+                    
+                    const spanText = activeLink.querySelector('span:last-child');
+                    if (spanText) {
+                        spanText.classList.remove('font-semibold');
+                        spanText.classList.add('font-bold');
+                    }
+                }
+            }
+        }
+
+        // Add click event listeners to navigation links
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const tabName = this.getAttribute('data-tab');
+                    loadTab(tabName);
+                });
+            });
+            
+            // Load default tab (orders)
+            loadTab('orders');
+        });
+    </script>
+
+</body>
+</html>
