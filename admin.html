@@ -4,6 +4,7 @@
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
     <title>X-Sneaker Admin | Order Management</title>
+    <link rel="icon" type="image/png" href="image/Logo_X_Sneaker.png">
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
@@ -224,9 +225,9 @@
                     </div>
                     <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">Total Revenue</p>
                     <div class="flex items-baseline gap-2 mt-2">
-                        <h3 class="text-3xl font-extrabold text-slate-900 dark:text-white">$45,231</h3>
-                        <span class="text-xs font-bold text-emerald-500 flex items-center">
-                            <span class="material-symbols-rounded text-[14px]">trending_up</span> 12%
+                        <h3 id="stat-revenue" class="text-3xl font-extrabold text-slate-900 dark:text-white">0đ</h3>
+                        <span id="stat-revenue-change" class="text-xs font-bold text-emerald-500 flex items-center">
+                            <span class="material-symbols-rounded text-[14px]">trending_up</span> 0%
                         </span>
                     </div>
                 </div>
@@ -237,9 +238,9 @@
                     </div>
                     <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">Total Orders</p>
                     <div class="flex items-baseline gap-2 mt-2">
-                        <h3 class="text-3xl font-extrabold text-slate-900 dark:text-white">1,234</h3>
-                        <span class="text-xs font-bold text-emerald-500 flex items-center">
-                            <span class="material-symbols-rounded text-[14px]">trending_up</span> 8%
+                        <h3 id="stat-orders" class="text-3xl font-extrabold text-slate-900 dark:text-white">0</h3>
+                        <span id="stat-orders-change" class="text-xs font-bold text-emerald-500 flex items-center">
+                            <span class="material-symbols-rounded text-[14px]">trending_up</span> 0%
                         </span>
                     </div>
                 </div>
@@ -248,11 +249,11 @@
                     <div class="absolute right-0 top-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
                         <span class="material-symbols-rounded text-6xl text-emerald-500">group</span>
                     </div>
-                    <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">New Customers</p>
+                    <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">Total Customers</p>
                     <div class="flex items-baseline gap-2 mt-2">
-                        <h3 class="text-3xl font-extrabold text-slate-900 dark:text-white">432</h3>
-                        <span class="text-xs font-bold text-emerald-500 flex items-center">
-                            <span class="material-symbols-rounded text-[14px]">trending_up</span> 15%
+                        <h3 id="stat-customers" class="text-3xl font-extrabold text-slate-900 dark:text-white">0</h3>
+                        <span id="stat-customers-change" class="text-xs font-bold text-emerald-500 flex items-center">
+                            <span class="material-symbols-rounded text-[14px]">trending_up</span> 0%
                         </span>
                     </div>
                 </div>
@@ -263,9 +264,9 @@
                     </div>
                     <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">Products</p>
                     <div class="flex items-baseline gap-2 mt-2">
-                        <h3 class="text-3xl font-extrabold text-slate-900 dark:text-white">156</h3>
+                        <h3 id="stat-products" class="text-3xl font-extrabold text-slate-900 dark:text-white">0</h3>
                         <span class="text-xs font-bold text-slate-500 flex items-center">
-                            +12 new
+                            Active
                         </span>
                     </div>
                 </div>
@@ -275,37 +276,19 @@
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <div class="bg-white dark:bg-card-dark p-6 rounded-2xl border border-slate-200 dark:border-border-dark">
                     <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-4">Revenue Overview</h3>
-                    <div class="h-64 flex items-center justify-center text-slate-400">
-                        <span class="material-symbols-rounded text-6xl opacity-20">monitoring</span>
+                    <div id="revenue-chart" class="h-64">
+                        <div class="h-full flex items-center justify-center text-slate-400">
+                            <span class="material-symbols-rounded text-6xl opacity-20">monitoring</span>
+                        </div>
                     </div>
                 </div>
 
                 <div class="bg-white dark:bg-card-dark p-6 rounded-2xl border border-slate-200 dark:border-border-dark">
                     <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-4">Top Products</h3>
-                    <div class="space-y-4">
-                        <div class="flex items-center gap-4">
-                            <div class="h-12 w-12 rounded-lg bg-slate-100 dark:bg-slate-800"></div>
-                            <div class="flex-1">
-                                <p class="text-sm font-semibold text-slate-900 dark:text-white">Nike Air Max 270</p>
-                                <p class="text-xs text-slate-500">245 sold</p>
-                            </div>
-                            <span class="text-sm font-bold text-slate-900 dark:text-white">$12,450</span>
-                        </div>
-                        <div class="flex items-center gap-4">
-                            <div class="h-12 w-12 rounded-lg bg-slate-100 dark:bg-slate-800"></div>
-                            <div class="flex-1">
-                                <p class="text-sm font-semibold text-slate-900 dark:text-white">Adidas Ultraboost</p>
-                                <p class="text-xs text-slate-500">198 sold</p>
-                            </div>
-                            <span class="text-sm font-bold text-slate-900 dark:text-white">$9,870</span>
-                        </div>
-                        <div class="flex items-center gap-4">
-                            <div class="h-12 w-12 rounded-lg bg-slate-100 dark:bg-slate-800"></div>
-                            <div class="flex-1">
-                                <p class="text-sm font-semibold text-slate-900 dark:text-white">Puma RS-X</p>
-                                <p class="text-xs text-slate-500">156 sold</p>
-                            </div>
-                            <span class="text-sm font-bold text-slate-900 dark:text-white">$7,320</span>
+                    <div id="top-products-list" class="space-y-4">
+                        <div class="text-center py-8 text-slate-400">
+                            <span class="material-symbols-rounded text-4xl opacity-20">inventory_2</span>
+                            <p class="text-sm mt-2">Loading...</p>
                         </div>
                     </div>
                 </div>
@@ -314,30 +297,13 @@
             <!-- Recent Activity -->
             <div class="bg-white dark:bg-card-dark rounded-2xl border border-slate-200 dark:border-border-dark p-6">
                 <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-4">Recent Activity</h3>
-                <div class="space-y-4">
-                    <div class="flex items-start gap-4 pb-4 border-b border-slate-100 dark:border-border-dark">
-                        <div class="w-10 h-10 rounded-full bg-emerald-100 dark:bg-emerald-500/10 flex items-center justify-center">
-                            <span class="material-symbols-rounded text-emerald-600 dark:text-emerald-400 text-[20px]">shopping_bag</span>
-                        </div>
-                        <div class="flex-1">
-                            <p class="text-sm font-semibold text-slate-900 dark:text-white">New order #XS-9842</p>
-                            <p class="text-xs text-slate-500 mt-1">Marcus V. ordered Nike Air Max 270</p>
-                        </div>
-                        <span class="text-xs text-slate-400">2 min ago</span>
+                <div id="recent-activities" class="space-y-4">
+                    <div class="text-center py-8 text-slate-400">
+                        <span class="material-symbols-rounded text-4xl opacity-20">notifications</span>
+                        <p class="text-sm mt-2">Loading...</p>
                     </div>
-                    <div class="flex items-start gap-4 pb-4 border-b border-slate-100 dark:border-border-dark">
-                        <div class="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-500/10 flex items-center justify-center">
-                            <span class="material-symbols-rounded text-blue-600 dark:text-blue-400 text-[20px]">person_add</span>
-                        </div>
-                        <div class="flex-1">
-                            <p class="text-sm font-semibold text-slate-900 dark:text-white">New customer registered</p>
-                            <p class="text-xs text-slate-500 mt-1">Sarah J. joined the platform</p>
-                        </div>
-                        <span class="text-xs text-slate-400">15 min ago</span>
-                    </div>
-                    <div class="flex items-start gap-4">
-                        <div class="w-10 h-10 rounded-full bg-yellow-100 dark:bg-yellow-500/10 flex items-center justify-center">
-                            <span class="material-symbols-rounded text-yellow-600 dark:text-yellow-400 text-[20px]">inventory</span>
+                </div>
+            </div>
                         </div>
                         <div class="flex-1">
                             <p class="text-sm font-semibold text-slate-900 dark:text-white">Low stock alert</p>
@@ -353,21 +319,24 @@
             <!-- Page Header -->
             <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
                 <div>
-                    <h2 class="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">Order Management</h2>
+                    <h2 class="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">Quản lý Đơn hàng</h2>
                     <div class="flex items-center gap-2 mt-2 text-sm text-slate-500 dark:text-slate-400">
                         <span>Dashboard</span>
                         <span class="material-symbols-rounded text-[14px]">chevron_right</span>
-                        <span class="text-primary font-semibold">Orders</span>
+                        <span class="text-primary font-semibold">Đơn hàng</span>
                     </div>
                 </div>
                 <div class="flex items-center gap-3">
-                    <button class="flex items-center gap-2 px-5 py-2.5 bg-white dark:bg-card-dark border border-slate-200 dark:border-border-dark rounded-xl text-sm font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-white/5 hover:border-slate-300 dark:hover:border-slate-600 transition-all">
-                        <span class="material-symbols-rounded text-[20px]">download</span>
-                        Export CSV
+                    <button onclick="window.ordersModule.reload()" class="p-2.5 text-slate-500 hover:text-primary transition-all" title="Reload">
+                        <span class="material-symbols-rounded text-[24px]">refresh</span>
                     </button>
-                    <button class="flex items-center gap-2 px-5 py-2.5 bg-primary hover:bg-primary-600 text-white rounded-xl text-sm font-bold shadow-lg shadow-primary/25 hover:shadow-primary/40 active:scale-95 transition-all">
+                    <button onclick="window.ordersModule.exportCSV()" class="flex items-center gap-2 px-5 py-2.5 bg-white dark:bg-card-dark border border-slate-200 dark:border-border-dark rounded-xl text-sm font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-white/5 transition-all">
+                        <span class="material-symbols-rounded text-[20px]">download</span>
+                        Xuất CSV
+                    </button>
+                    <button onclick="window.ordersModule.createOrder()" class="flex items-center gap-2 px-5 py-2.5 bg-primary hover:bg-primary-600 text-white rounded-xl text-sm font-bold shadow-lg shadow-primary/25 hover:shadow-primary/40 active:scale-95 transition-all">
                         <span class="material-symbols-rounded text-[20px]">add</span>
-                        Create Order
+                        Tạo Đơn
                     </button>
                 </div>
             </div>
@@ -378,12 +347,9 @@
                     <div class="absolute right-0 top-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
                         <span class="material-symbols-rounded text-6xl text-yellow-500">pending</span>
                     </div>
-                    <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">Processing</p>
+                    <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">Đang xử lý</p>
                     <div class="flex items-baseline gap-2 mt-2">
-                        <h3 class="text-3xl font-extrabold text-slate-900 dark:text-white">24</h3>
-                        <span class="text-xs font-bold text-emerald-500 flex items-center">
-                            <span class="material-symbols-rounded text-[14px]">trending_up</span> 12%
-                        </span>
+                        <h3 id="stat-orders-processing" class="text-3xl font-extrabold text-slate-900 dark:text-white">0</h3>
                     </div>
                 </div>
 
@@ -391,12 +357,9 @@
                     <div class="absolute right-0 top-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
                         <span class="material-symbols-rounded text-6xl text-blue-500">local_shipping</span>
                     </div>
-                    <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">Shipped</p>
+                    <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">Đang giao</p>
                      <div class="flex items-baseline gap-2 mt-2">
-                        <h3 class="text-3xl font-extrabold text-slate-900 dark:text-white">42</h3>
-                         <span class="text-xs font-bold text-emerald-500 flex items-center">
-                            <span class="material-symbols-rounded text-[14px]">trending_up</span> 4%
-                        </span>
+                        <h3 id="stat-orders-shipped" class="text-3xl font-extrabold text-slate-900 dark:text-white">0</h3>
                     </div>
                 </div>
 
@@ -404,12 +367,9 @@
                     <div class="absolute right-0 top-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
                         <span class="material-symbols-rounded text-6xl text-emerald-500">check_circle</span>
                     </div>
-                    <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">Delivered</p>
+                    <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">Hoàn thành</p>
                      <div class="flex items-baseline gap-2 mt-2">
-                        <h3 class="text-3xl font-extrabold text-slate-900 dark:text-white">542</h3>
-                         <span class="text-xs font-bold text-emerald-500 flex items-center">
-                            <span class="material-symbols-rounded text-[14px]">trending_up</span> 28%
-                        </span>
+                        <h3 id="stat-orders-delivered" class="text-3xl font-extrabold text-slate-900 dark:text-white">0</h3>
                     </div>
                 </div>
 
@@ -417,12 +377,9 @@
                     <div class="absolute right-0 top-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
                         <span class="material-symbols-rounded text-6xl text-primary">cancel</span>
                     </div>
-                    <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">Cancelled</p>
+                    <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">Đã hủy</p>
                      <div class="flex items-baseline gap-2 mt-2">
-                        <h3 class="text-3xl font-extrabold text-slate-900 dark:text-white">12</h3>
-                         <span class="text-xs font-bold text-rose-500 flex items-center">
-                            <span class="material-symbols-rounded text-[14px]">trending_down</span> 2%
-                        </span>
+                        <h3 id="stat-orders-cancelled" class="text-3xl font-extrabold text-slate-900 dark:text-white">0</h3>
                     </div>
                 </div>
             </div>
@@ -433,152 +390,213 @@
                 <!-- Filters Toolbar -->
                 <div class="p-6 border-b border-slate-100 dark:border-border-dark flex flex-wrap items-center gap-4">
                     <div class="flex items-center gap-2 p-1 bg-slate-100 dark:bg-background-dark rounded-xl">
-                        <button class="px-4 py-2 bg-white dark:bg-card-dark text-slate-900 dark:text-white text-sm font-bold rounded-lg shadow-sm transition-all">All Orders</button>
-                        <button class="px-4 py-2 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white text-sm font-medium rounded-lg transition-all">Processing</button>
-                        <button class="px-4 py-2 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white text-sm font-medium rounded-lg transition-all">Shipped</button>
-                        <button class="px-4 py-2 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white text-sm font-medium rounded-lg transition-all">Delivered</button>
+                        <button id="filter-btn-all" onclick="window.ordersModule.setFilter('all')" class="px-4 py-2 bg-white dark:bg-card-dark text-slate-900 dark:text-white text-sm font-bold rounded-lg shadow-sm transition-all">Tất cả</button>
+                        <button id="filter-btn-processing" onclick="window.ordersModule.setFilter('processing')" class="px-4 py-2 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white text-sm font-medium rounded-lg transition-all">Đang xử lý</button>
+                        <button id="filter-btn-shipped" onclick="window.ordersModule.setFilter('shipped')" class="px-4 py-2 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white text-sm font-medium rounded-lg transition-all">Đang giao</button>
+                        <button id="filter-btn-delivered" onclick="window.ordersModule.setFilter('delivered')" class="px-4 py-2 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white text-sm font-medium rounded-lg transition-all">Hoàn thành</button>
                     </div>
 
                     <div class="ml-auto flex items-center gap-3">
                         <div class="relative">
                             <span class="material-symbols-rounded absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-[18px]">filter_list</span>
-                            <select class="pl-10 pr-8 py-2.5 bg-slate-50 dark:bg-background-dark/50 border border-slate-200 dark:border-border-dark rounded-xl text-sm font-semibold focus:ring-primary focus:border-primary text-slate-700 dark:text-slate-300 appearance-none cursor-pointer">
-                                <option>Newest First</option>
-                                <option>Oldest First</option>
-                                <option>Highest Total</option>
+                            <select onchange="window.ordersModule.setSort(this.value)" class="pl-10 pr-8 py-2.5 bg-slate-50 dark:bg-background-dark/50 border border-slate-200 dark:border-border-dark rounded-xl text-sm font-semibold focus:ring-primary focus:border-primary text-slate-700 dark:text-slate-300 appearance-none cursor-pointer">
+                                <option value="newest">Mới nhất</option>
+                                <option value="oldest">Cũ nhất</option>
+                                <option value="highest_total">Tổng tiền cao nhất</option>
                             </select>
                         </div>
                     </div>
                 </div>
 
                 <!-- Table -->
-                <div class="overflow-x-auto">
+                <div class="overflow-x-auto relative min-h-[300px]">
+                     <!-- Loading State -->
+                     <div id="orders-loading" class="absolute inset-0 bg-white/80 dark:bg-card-dark/80 z-10 flex items-center justify-center backdrop-blur-sm" style="display: none;">
+                        <div class="flex flex-col items-center gap-3">
+                            <span class="material-symbols-outlined animate-spin text-primary text-4xl">rotate_right</span>
+                            <p class="text-sm font-medium text-slate-500">Đang tải dữ liệu...</p>
+                        </div>
+                     </div>
+
                     <table class="w-full text-left border-collapse">
                         <thead>
                             <tr class="bg-slate-50/50 dark:bg-white/[0.02] border-b border-slate-200 dark:border-border-dark">
-                                <th class="px-6 py-5 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Order ID</th>
-                                <th class="px-6 py-5 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Date/Time</th>
-                                <th class="px-6 py-5 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Customer</th>
-                                <th class="px-6 py-5 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Payment</th>
-                                <th class="px-6 py-5 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Total</th>
-                                <th class="px-6 py-5 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Status</th>
-                                <th class="px-6 py-5 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider text-right">Actions</th>
+                                <th class="px-6 py-5 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Mã Đơn</th>
+                                <th class="px-6 py-5 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Ngày đặt</th>
+                                <th class="px-6 py-5 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Khách hàng</th>
+                                <th class="px-6 py-5 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Thanh toán</th>
+                                <th class="px-6 py-5 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Tổng tiền</th>
+                                <th class="px-6 py-5 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Trạng thái</th>
+                                <th class="px-6 py-5 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider text-right">Thao tác</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-slate-100 dark:divide-border-dark">
-                            <tr class="group hover:bg-slate-50/80 dark:hover:bg-white/[0.02] transition-colors">
-                                <td class="px-6 py-4">
-                                    <span class="text-primary font-bold hover:underline cursor-pointer">#XS-9842</span>
-                                </td>
-                                <td class="px-6 py-4">
-                                    <div class="flex flex-col">
-                                        <span class="text-sm font-semibold text-slate-700 dark:text-slate-300">Oct 24, 2023</span>
-                                        <span class="text-xs text-slate-400">14:20 PM</span>
-                                    </div>
-                                </td>
-                                <td class="px-6 py-4">
-                                    <div class="flex items-center gap-3">
-                                        <div class="h-9 w-9 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-xs font-bold text-slate-500 border border-slate-200 dark:border-slate-700">
-                                            MV
-                                        </div>
-                                        <div>
-                                            <p class="text-sm font-semibold text-slate-900 dark:text-white">Marcus V.</p>
-                                            <p class="text-xs text-slate-500">premium user</p>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="px-6 py-4">
-                                    <div class="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
-                                        <span class="material-symbols-rounded text-[18px] text-slate-400">credit_card</span>
-                                        Credit Card
-                                    </div>
-                                </td>
-                                <td class="px-6 py-4 text-sm font-bold text-slate-900 dark:text-white">$180.00</td>
-                                <td class="px-6 py-4">
-                                    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-emerald-100 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/20">
-                                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                                        Delivered
-                                    </span>
-                                </td>
-                                <td class="px-6 py-4 text-right">
-                                    <div class="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                                        <button class="p-2 text-slate-400 hover:text-primary hover:bg-slate-100 dark:hover:bg-white/5 rounded-lg transition-all" title="View Details">
-                                            <span class="material-symbols-rounded text-[20px]">visibility</span>
-                                        </button>
-                                        <button class="p-2 text-slate-400 hover:text-primary hover:bg-slate-100 dark:hover:bg-white/5 rounded-lg transition-all" title="Edit Status">
-                                            <span class="material-symbols-rounded text-[20px]">edit_square</span>
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                            
-                             <tr class="group hover:bg-slate-50/80 dark:hover:bg-white/[0.02] transition-colors">
-                                <td class="px-6 py-4">
-                                    <span class="text-primary font-bold hover:underline cursor-pointer">#XS-9841</span>
-                                </td>
-                                <td class="px-6 py-4">
-                                    <div class="flex flex-col">
-                                        <span class="text-sm font-semibold text-slate-700 dark:text-slate-300">Oct 24, 2023</span>
-                                        <span class="text-xs text-slate-400">12:15 PM</span>
-                                    </div>
-                                </td>
-                                <td class="px-6 py-4">
-                                    <div class="flex items-center gap-3">
-                                        <div class="h-9 w-9 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-xs font-bold text-slate-500 border border-slate-200 dark:border-slate-700">
-                                            SJ
-                                        </div>
-                                        <div>
-                                            <p class="text-sm font-semibold text-slate-900 dark:text-white">Sarah J.</p>
-                                            <p class="text-xs text-slate-500">customer</p>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="px-6 py-4">
-                                    <div class="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
-                                        <span class="material-symbols-rounded text-[18px] text-blue-500">payments</span>
-                                        PayPal
-                                    </div>
-                                </td>
-                                <td class="px-6 py-4 text-sm font-bold text-slate-900 dark:text-white">$210.50</td>
-                                <td class="px-6 py-4">
-                                    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-yellow-100 dark:bg-yellow-500/10 text-yellow-600 dark:text-yellow-500 border border-yellow-200 dark:border-yellow-500/20">
-                                        <span class="w-1.5 h-1.5 rounded-full bg-yellow-500 animate-pulse"></span>
-                                        Processing
-                                    </span>
-                                </td>
-                                <td class="px-6 py-4 text-right">
-                                    <div class="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                                        <button class="p-2 text-slate-400 hover:text-primary hover:bg-slate-100 dark:hover:bg-white/5 rounded-lg transition-all" title="View Details">
-                                            <span class="material-symbols-rounded text-[20px]">visibility</span>
-                                        </button>
-                                        <button class="p-2 text-slate-400 hover:text-primary hover:bg-slate-100 dark:hover:bg-white/5 rounded-lg transition-all" title="Edit Status">
-                                            <span class="material-symbols-rounded text-[20px]">edit_square</span>
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
+                        <tbody id="orders-table-body" class="divide-y divide-slate-100 dark:divide-border-dark">
+                           <!-- Content loaded by JS -->
                         </tbody>
                     </table>
                 </div>
 
                 <!-- Pagination -->
-                <div class="px-6 py-4 border-t border-slate-100 dark:border-border-dark flex items-center justify-between">
-                    <p class="text-sm text-slate-500 font-medium">Showing <span class="text-slate-900 dark:text-white font-bold">1-10</span> of <span class="text-slate-900 dark:text-white font-bold">124</span> results</p>
-                    <div class="flex items-center gap-2">
-                        <button class="p-2 rounded-lg border border-slate-200 dark:border-border-dark text-slate-400 hover:bg-slate-50 dark:hover:bg-white/5 disabled:opacity-50 transition-all" disabled>
-                            <span class="material-symbols-rounded text-[18px]">chevron_left</span>
-                        </button>
-                        <button class="w-9 h-9 rounded-lg bg-primary text-white text-sm font-bold shadow-lg shadow-primary/20">1</button>
-                        <button class="w-9 h-9 rounded-lg hover:bg-slate-50 dark:hover:bg-white/5 text-slate-600 dark:text-slate-400 text-sm font-medium transition-all">2</button>
-                        <button class="w-9 h-9 rounded-lg hover:bg-slate-50 dark:hover:bg-white/5 text-slate-600 dark:text-slate-400 text-sm font-medium transition-all">3</button>
-                        <span class="text-slate-400 px-1">...</span>
-                        <button class="w-9 h-9 rounded-lg hover:bg-slate-50 dark:hover:bg-white/5 text-slate-600 dark:text-slate-400 text-sm font-medium transition-all">12</button>
-                        <button class="p-2 rounded-lg border border-slate-200 dark:border-border-dark text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-white/5 hover:text-primary transition-all">
-                            <span class="material-symbols-rounded text-[18px]">chevron_right</span>
-                        </button>
+                <div id="orders-pagination" class="px-6 py-4 border-t border-slate-100 dark:border-border-dark flex items-center justify-between">
+                    <p class="text-sm text-slate-500 font-medium" id="orders-showing-text">Hiển thị <span class="text-slate-900 dark:text-white font-bold">...</span></p>
+                    <div class="flex items-center gap-2" id="orders-pagination-controls">
+                        <!-- Controls generated by JS -->
                     </div>
                 </div>
 
+                <!-- Order Details Modal -->
+                <div id="order-details-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+                    <div class="bg-white dark:bg-card-dark rounded-2xl w-full max-w-2xl shadow-2xl max-h-[90vh] flex flex-col">
+                        <!-- Header -->
+                        <div class="p-6 border-b border-slate-100 dark:border-border-dark flex items-center justify-between">
+                            <div>
+                                <h3 class="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-3">
+                                    <span id="modal-order-id">#Order123</span>
+                                    <span id="modal-status"></span>
+                                </h3>
+                                <p class="text-sm text-slate-500 mt-1" id="modal-order-date">Date</p>
+                            </div>
+                            <button onclick="window.ordersModule.closeDetails()" class="p-2 text-slate-400 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-500/10 rounded-full transition-all">
+                                <span class="material-symbols-rounded">close</span>
+                            </button>
+                        </div>
+
+                        <!-- Content (Scrollable) -->
+                        <div class="flex-1 overflow-y-auto p-6 space-y-6">
+                            <!-- Customer Info -->
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div class="space-y-3">
+                                    <h4 class="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider">Khách hàng</h4>
+                                    <div class="flex items-start gap-3">
+                                        <div class="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center">
+                                            <span class="material-symbols-rounded text-slate-400">person</span>
+                                        </div>
+                                        <div>
+                                            <p class="font-semibold text-slate-900 dark:text-white" id="modal-customer">Name</p>
+                                            <p class="text-sm text-slate-500" id="modal-phone">Phone</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="space-y-3">
+                                    <h4 class="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider">Giao hàng & Thanh toán</h4>
+                                    <div class="space-y-2">
+                                        <div class="flex items-start gap-2 text-sm text-slate-600 dark:text-slate-400">
+                                            <span class="material-symbols-rounded text-[18px] mt-0.5">location_on</span>
+                                            <span id="modal-address">Address</span>
+                                        </div>
+                                        <div class="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
+                                            <span class="material-symbols-rounded text-[18px]">payments</span>
+                                            <span id="modal-payment">Payment</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Order Items -->
+                            <div>
+                                <h4 class="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider mb-4">Sản phẩm</h4>
+                                <div class="bg-slate-50 dark:bg-slate-900/50 rounded-xl p-4" id="modal-items">
+                                    <!-- Dynamic Items -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Footer -->
+                        <div class="p-6 border-t border-slate-100 dark:border-border-dark flex items-center justify-between bg-slate-50 dark:bg-slate-900/20 rounded-b-2xl">
+                            <span class="text-slate-500 font-medium">Tổng tiền</span>
+                            <span class="text-2xl font-extrabold text-primary" id="modal-total">0đ</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Create Order Modal -->
+                <div id="create-order-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+                    <div class="bg-white dark:bg-card-dark rounded-2xl w-full max-w-4xl shadow-2xl max-h-[90vh] flex flex-col">
+                        <!-- Header -->
+                        <div class="p-6 border-b border-slate-100 dark:border-border-dark flex items-center justify-between">
+                            <h3 class="text-xl font-bold text-slate-900 dark:text-white">Tạo Đơn Hàng Mới</h3>
+                            <button onclick="window.ordersModule.closeCreateModal()" class="p-2 text-slate-400 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-500/10 rounded-full transition-all">
+                                <span class="material-symbols-rounded">close</span>
+                            </button>
+                        </div>
+
+                        <!-- Content -->
+                        <div class="flex-1 overflow-y-auto p-6">
+                            <form id="create-order-form" class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                                <!-- Left Column: Customer Info -->
+                                <div class="space-y-6">
+                                    <div class="flex items-center justify-between">
+                                        <h4 class="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider">Thông tin khách hàng</h4>
+                                        <!-- Optional: Button to select existing user -->
+                                    </div>
+                                    
+                                    <div class="space-y-4">
+                                        <div>
+                                            <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Họ tên</label>
+                                            <input type="text" id="new-order-name" required class="w-full px-4 py-2 bg-slate-50 dark:bg-background-dark border border-slate-200 dark:border-border-dark rounded-xl text-sm" placeholder="Nhập tên khách hàng">
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Số điện thoại</label>
+                                            <input type="tel" id="new-order-phone" required class="w-full px-4 py-2 bg-slate-50 dark:bg-background-dark border border-slate-200 dark:border-border-dark rounded-xl text-sm" placeholder="Nhập số điện thoại">
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Địa chỉ giao hàng</label>
+                                            <textarea id="new-order-address" required rows="3" class="w-full px-4 py-2 bg-slate-50 dark:bg-background-dark border border-slate-200 dark:border-border-dark rounded-xl text-sm" placeholder="Nhập địa chỉ chi tiết"></textarea>
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Phương thức thanh toán</label>
+                                            <select id="new-order-payment" class="w-full px-4 py-2 bg-slate-50 dark:bg-background-dark border border-slate-200 dark:border-border-dark rounded-xl text-sm">
+                                                <option value="COD">Thanh toán khi nhận hàng (COD)</option>
+                                                <option value="Banking">Chuyển khoản ngân hàng</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Right Column: Products -->
+                                <div class="space-y-6">
+                                    <h4 class="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider">Sản phẩm</h4>
+                                    
+                                    <!-- Product Search -->
+                                    <div class="relative">
+                                        <input type="text" id="product-search" class="w-full px-4 py-2 pl-10 bg-slate-50 dark:bg-background-dark border border-slate-200 dark:border-border-dark rounded-xl text-sm" placeholder="Tìm kiếm sản phẩm...">
+                                        <span class="material-symbols-rounded absolute left-3 top-2.5 text-slate-400 text-[18px]">search</span>
+                                        <!-- Dropdown results -->
+                                        <div id="product-search-results" class="absolute left-0 right-0 top-full mt-1 bg-white dark:bg-card-dark border border-slate-200 dark:border-border-dark rounded-xl shadow-xl z-20 hidden max-h-60 overflow-y-auto">
+                                            <!-- Dynamic Items -->
+                                        </div>
+                                    </div>
+
+                                    <!-- Selected Items List -->
+                                    <div class="border border-slate-100 dark:border-border-dark rounded-xl bg-slate-50/50 dark:bg-white/[0.02]">
+                                        <div id="selected-products-list" class="divide-y divide-slate-100 dark:divide-border-dark max-h-[300px] overflow-y-auto">
+                                            <div class="p-8 text-center text-slate-400">
+                                                <span class="material-symbols-rounded text-4xl opacity-20 block mb-2">shopping_cart</span>
+                                                Chưa có sản phẩm nào
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Totals -->
+                                        <div class="p-4 border-t border-slate-100 dark:border-border-dark bg-white dark:bg-card-dark rounded-b-xl">
+                                            <div class="flex justify-between items-center text-sm font-bold text-slate-900 dark:text-white">
+                                                <span>Tổng tiền:</span>
+                                                <span id="new-order-total" class="text-xl text-primary">0đ</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- Footer -->
+                        <div class="p-6 border-t border-slate-100 dark:border-border-dark flex justify-end gap-3">
+                            <button onclick="window.ordersModule.closeCreateModal()" class="px-6 py-2.5 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-xl text-sm font-bold hover:bg-slate-200 dark:hover:bg-slate-700 transition-all">Hủy</button>
+                            <button onclick="window.ordersModule.saveOrder()" class="px-6 py-2.5 bg-primary hover:bg-primary-600 text-white rounded-xl text-sm font-bold shadow-lg shadow-primary/25 hover:shadow-primary/40 active:scale-95 transition-all">
+                                Tạo Đơn Hàng
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
             `,
 
@@ -598,7 +616,7 @@
                         <span class="material-symbols-rounded text-[20px]">upload</span>
                         Import CSV
                     </button>
-                    <button class="flex items-center gap-2 px-5 py-2.5 bg-primary hover:bg-primary-600 text-white rounded-xl text-sm font-bold shadow-lg shadow-primary/25 hover:shadow-primary/40 active:scale-95 transition-all">
+                    <button class="flex items-center gap-2 px-5 py-2.5 bg-primary hover:bg-primary-600 text-white rounded-xl text-sm font-bold shadow-lg shadow-primary/25 hover:shadow-primary/40 active:scale-95 transition-all" id="btn-add-product">
                         <span class="material-symbols-rounded text-[20px]">add</span>
                         Add Product
                     </button>
@@ -681,72 +699,8 @@
                                 <th class="px-6 py-5 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider text-right">Actions</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-slate-100 dark:divide-border-dark">
-                            <tr class="group hover:bg-slate-50/80 dark:hover:bg-white/[0.02] transition-colors">
-                                <td class="px-6 py-4">
-                                    <div class="flex items-center gap-3">
-                                        <div class="h-12 w-12 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center overflow-hidden">
-                                            <span class="material-symbols-rounded text-slate-400">image</span>
-                                        </div>
-                                        <div>
-                                            <p class="text-sm font-semibold text-slate-900 dark:text-white">Nike Air Max 270</p>
-                                            <p class="text-xs text-slate-500">Men's Running Shoes</p>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="px-6 py-4 text-sm text-slate-600 dark:text-slate-400 font-mono">NK-AM270-BK</td>
-                                <td class="px-6 py-4 text-sm text-slate-600 dark:text-slate-400">Running</td>
-                                <td class="px-6 py-4 text-sm font-bold text-slate-900 dark:text-white">$150.00</td>
-                                <td class="px-6 py-4 text-sm font-semibold text-slate-900 dark:text-white">45</td>
-                                <td class="px-6 py-4">
-                                    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-emerald-100 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/20">
-                                        In Stock
-                                    </span>
-                                </td>
-                                <td class="px-6 py-4 text-right">
-                                    <div class="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                                        <button class="p-2 text-slate-400 hover:text-primary hover:bg-slate-100 dark:hover:bg-white/5 rounded-lg transition-all">
-                                            <span class="material-symbols-rounded text-[20px]">edit</span>
-                                        </button>
-                                        <button class="p-2 text-slate-400 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-500/10 rounded-lg transition-all">
-                                            <span class="material-symbols-rounded text-[20px]">delete</span>
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-
-                            <tr class="group hover:bg-slate-50/80 dark:hover:bg-white/[0.02] transition-colors">
-                                <td class="px-6 py-4">
-                                    <div class="flex items-center gap-3">
-                                        <div class="h-12 w-12 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center overflow-hidden">
-                                            <span class="material-symbols-rounded text-slate-400">image</span>
-                                        </div>
-                                        <div>
-                                            <p class="text-sm font-semibold text-slate-900 dark:text-white">Adidas Ultraboost</p>
-                                            <p class="text-xs text-slate-500">Men's Running Shoes</p>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="px-6 py-4 text-sm text-slate-600 dark:text-slate-400 font-mono">AD-UB-WH</td>
-                                <td class="px-6 py-4 text-sm text-slate-600 dark:text-slate-400">Running</td>
-                                <td class="px-6 py-4 text-sm font-bold text-slate-900 dark:text-white">$180.00</td>
-                                <td class="px-6 py-4 text-sm font-semibold text-yellow-600 dark:text-yellow-400">5</td>
-                                <td class="px-6 py-4">
-                                    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-yellow-100 dark:bg-yellow-500/10 text-yellow-600 dark:text-yellow-400 border border-yellow-200 dark:border-yellow-500/20">
-                                        Low Stock
-                                    </span>
-                                </td>
-                                <td class="px-6 py-4 text-right">
-                                    <div class="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                                        <button class="p-2 text-slate-400 hover:text-primary hover:bg-slate-100 dark:hover:bg-white/5 rounded-lg transition-all">
-                                            <span class="material-symbols-rounded text-[20px]">edit</span>
-                                        </button>
-                                        <button class="p-2 text-slate-400 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-500/10 rounded-lg transition-all">
-                                            <span class="material-symbols-rounded text-[20px]">delete</span>
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
+                        <tbody class="divide-y divide-slate-100 dark:divide-border-dark" id="products-table-body">
+                            <!-- Products will be loaded dynamically -->
                         </tbody>
                     </table>
                 </div>
@@ -869,73 +823,43 @@
                                 <th class="px-6 py-5 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider text-right">Actions</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-slate-100 dark:divide-border-dark">
-                            <tr class="group hover:bg-slate-50/80 dark:hover:bg-white/[0.02] transition-colors">
-                                <td class="px-6 py-4">
-                                    <div class="flex items-center gap-3">
-                                        <div class="h-10 w-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-xs font-bold text-slate-500 border border-slate-200 dark:border-slate-700">
-                                            MV
-                                        </div>
-                                        <div>
-                                            <p class="text-sm font-semibold text-slate-900 dark:text-white">Marcus Valdez</p>
-                                            <p class="text-xs text-slate-500">ID: #CUS-1234</p>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="px-6 py-4 text-sm text-slate-600 dark:text-slate-400">marcus.v@email.com</td>
-                                <td class="px-6 py-4 text-sm font-semibold text-slate-900 dark:text-white">24</td>
-                                <td class="px-6 py-4 text-sm font-bold text-slate-900 dark:text-white">$3,240</td>
-                                <td class="px-6 py-4">
-                                    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-yellow-100 dark:bg-yellow-500/10 text-yellow-600 dark:text-yellow-400 border border-yellow-200 dark:border-yellow-500/20">
-                                        Premium
-                                    </span>
-                                </td>
-                                <td class="px-6 py-4 text-sm text-slate-600 dark:text-slate-400">Jan 15, 2024</td>
-                                <td class="px-6 py-4 text-right">
-                                    <div class="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                                        <button class="p-2 text-slate-400 hover:text-primary hover:bg-slate-100 dark:hover:bg-white/5 rounded-lg transition-all">
-                                            <span class="material-symbols-rounded text-[20px]">visibility</span>
-                                        </button>
-                                        <button class="p-2 text-slate-400 hover:text-primary hover:bg-slate-100 dark:hover:bg-white/5 rounded-lg transition-all">
-                                            <span class="material-symbols-rounded text-[20px]">edit</span>
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-
-                            <tr class="group hover:bg-slate-50/80 dark:hover:bg-white/[0.02] transition-colors">
-                                <td class="px-6 py-4">
-                                    <div class="flex items-center gap-3">
-                                        <div class="h-10 w-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-xs font-bold text-slate-500 border border-slate-200 dark:border-slate-700">
-                                            SJ
-                                        </div>
-                                        <div>
-                                            <p class="text-sm font-semibold text-slate-900 dark:text-white">Sarah Johnson</p>
-                                            <p class="text-xs text-slate-500">ID: #CUS-1235</p>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="px-6 py-4 text-sm text-slate-600 dark:text-slate-400">sarah.j@email.com</td>
-                                <td class="px-6 py-4 text-sm font-semibold text-slate-900 dark:text-white">8</td>
-                                <td class="px-6 py-4 text-sm font-bold text-slate-900 dark:text-white">$1,120</td>
-                                <td class="px-6 py-4">
-                                    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-slate-100 dark:bg-slate-500/10 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-500/20">
-                                        Regular
-                                    </span>
-                                </td>
-                                <td class="px-6 py-4 text-sm text-slate-600 dark:text-slate-400">Mar 22, 2024</td>
-                                <td class="px-6 py-4 text-right">
-                                    <div class="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                                        <button class="p-2 text-slate-400 hover:text-primary hover:bg-slate-100 dark:hover:bg-white/5 rounded-lg transition-all">
-                                            <span class="material-symbols-rounded text-[20px]">visibility</span>
-                                        </button>
-                                        <button class="p-2 text-slate-400 hover:text-primary hover:bg-slate-100 dark:hover:bg-white/5 rounded-lg transition-all">
-                                            <span class="material-symbols-rounded text-[20px]">edit</span>
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
+                        <tbody class="divide-y divide-slate-100 dark:divide-border-dark" id="users-table-body">
+                            <!-- Users will be loaded dynamically -->
                         </tbody>
+
+                <!-- User Edit Modal -->
+                <div id="user-edit-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+                    <div class="bg-white dark:bg-card-dark rounded-2xl w-full max-w-md shadow-2xl flex flex-col">
+                        <div class="p-6 border-b border-slate-100 dark:border-border-dark flex items-center justify-between">
+                            <h3 class="text-xl font-bold text-slate-900 dark:text-white">Edit User</h3>
+                            <button onclick="window.closeUserModal()" class="p-2 text-slate-400 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-500/10 rounded-full transition-all">
+                                <span class="material-symbols-rounded">close</span>
+                            </button>
+                        </div>
+                        <div class="p-6 space-y-4">
+                            <input type="hidden" id="edit-user-id">
+                            <div>
+                                <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Full Name</label>
+                                <input type="text" id="edit-fullname" class="w-full px-4 py-2 bg-slate-50 dark:bg-background-dark border border-slate-200 dark:border-border-dark rounded-xl text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Email</label>
+                                <input type="email" id="edit-email" disabled class="w-full px-4 py-2 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-border-dark rounded-xl text-sm text-slate-500 cursor-not-allowed">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Role</label>
+                                <select id="edit-role" class="w-full px-4 py-2 bg-slate-50 dark:bg-background-dark border border-slate-200 dark:border-border-dark rounded-xl text-sm">
+                                    <option value="customer">Customer</option>
+                                    <option value="admin">Admin</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="p-6 border-t border-slate-100 dark:border-border-dark flex justify-end gap-3">
+                            <button onclick="window.closeUserModal()" class="px-4 py-2 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-xl text-sm font-bold hover:bg-slate-200 dark:hover:bg-slate-700 transition-all">Cancel</button>
+                            <button onclick="window.saveUserChanges()" class="px-4 py-2 bg-primary text-white rounded-xl text-sm font-bold shadow-lg shadow-primary/25 hover:shadow-primary/40 hover:bg-primary-600 transition-all">Save Changes</button>
+                        </div>
+                    </div>
+                </div>
                     </table>
                 </div>
 
@@ -1290,6 +1214,32 @@
                         spanText.classList.add('font-bold');
                     }
                 }
+
+                // Reload data if switching to dashboard tab
+                if (tabName === 'dashboard' && window.dashboardModule) {
+                    setTimeout(() => {
+                        window.dashboardModule.reload();
+                    }, 100);
+                }
+
+                // Reload data if switching to orders tab
+                if (tabName === 'orders' && window.ordersModule) {
+                    setTimeout(() => {
+                        window.ordersModule.reload();
+                    }, 100);
+                }
+
+                if (tabName === 'inventory' && window.productsModule) {
+                    setTimeout(() => {
+                        window.productsModule.reload();
+                    }, 100);
+                }
+
+                if (tabName === 'customers' && window.usersModule) {
+                    setTimeout(() => {
+                        window.usersModule.reload();
+                    }, 100);
+                }
             }
         }
 
@@ -1303,10 +1253,16 @@
                 });
             });
             
-            // Load default tab (orders)
-            loadTab('orders');
+            // Load default tab (dashboard)
+            loadTab('dashboard');
         });
     </script>
+
+    <!-- Firebase Dashboard Module -->
+    <script type="module" src="js/admin/dashboard.js"></script>
+    <script type="module" src="js/admin/orders.js"></script>
+    <script type="module" src="js/admin/products.js"></script>
+    <script type="module" src="js/admin/users.js"></script>
 
 </body>
 </html>

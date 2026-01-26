@@ -1,32 +1,27 @@
 import { getFirebaseDatabase } from '../firebase-config.js';
 import { ref, push, set, remove, onValue, get } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-database.js";
 import { uploadAvatarDirect, getOptimizedImageUrl } from '../cloudinary-upload.js';
+import { getFirebaseAuth } from '../firebase-config.js';
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-auth.js";
 
 const db = getFirebaseDatabase();
 const productsRef = ref(db, 'products');
 
-// DOM Elements
-const tableBody = document.getElementById('products-table-body');
-const modal = document.getElementById('product-modal');
-const form = document.getElementById('product-form');
-const btnAdd = document.getElementById('btn-add-product');
-const btnClose = document.getElementById('btn-close-modal');
-const btnCancel = document.getElementById('btn-cancel');
-const fileInput = document.getElementById('prod-image-file');
-const previewDiv = document.getElementById('image-preview');
-
 let currentProducts = {};
+let isInitialized = false;
 
 function formatCurrency(amount) {
     return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
 }
 
-// 1. Render Table
 function renderTable(products) {
+    const tableBody = document.getElementById('products-table-body');
+    if (!tableBody) return;
+
     tableBody.innerHTML = '';
     
     if (!products) {
-        tableBody.innerHTML = '<tr><td colspan="5" class="text-center py-4 text-gray-500">No products found.</td></tr>';
+        tableBody.innerHTML = '<tr><td colspan="7" class="text-center py-4 text-gray-500">No products found.</td></tr>';
         return;
     }
 
@@ -46,12 +41,17 @@ function renderTable(products) {
             <td class="px-6 py-4 font-bold text-slate-700 dark:text-slate-300">${formatCurrency(product.price)}</td>
             <td class="px-6 py-4 text-slate-500 dark:text-slate-400">${product.brand || 'N/A'}</td>
             <td class="px-6 py-4 text-slate-500 dark:text-slate-400 capitalize">${product.gender || 'Unisex'}</td>
+            <td class="px-6 py-4 text-center">
+                 <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-emerald-100 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/20">
+                    In Stock
+                </span>
+            </td>
             <td class="px-6 py-4 text-right">
                 <button class="p-2 text-slate-400 hover:text-primary transition-colors btn-edit" data-id="${id}">
-                    <span class="material-symbols-outlined text-[20px]">edit_note</span>
+                    <span class="material-symbols-rounded text-[20px]">edit</span>
                 </button>
                 <button class="p-2 text-slate-400 hover:text-primary transition-colors btn-delete" data-id="${id}">
-                    <span class="material-symbols-outlined text-[20px]">delete</span>
+                    <span class="material-symbols-rounded text-[20px]">delete</span>
                 </button>
             </td>
         `;
@@ -68,40 +68,47 @@ function renderTable(products) {
     });
 }
 
-import { getFirebaseAuth } from '../firebase-config.js';
-import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-auth.js";
+function loadProducts() {
+    const tableBody = document.getElementById('products-table-body');
+    if (!tableBody) return; // Prevent collecting if tab is not active
 
-// ...
-
-function initProducts() {
-    const auth = getFirebaseAuth();
-    onAuthStateChanged(auth, (user) => {
-        if (user) {
-            onValue(productsRef, (snapshot) => {
-                currentProducts = snapshot.val();
-                renderTable(currentProducts);
-            }, (error) => {
-                console.error('Error loading products:', error);
-                tableBody.innerHTML = `<tr><td colspan="6" class="text-center py-4 text-red-500">Error: ${error.message}</td></tr>`;
-            });
-        }
+    onValue(productsRef, (snapshot) => {
+        currentProducts = snapshot.val();
+        renderTable(currentProducts);
+    }, (error) => {
+        console.error('Error loading products:', error);
+        if(tableBody) tableBody.innerHTML = `<tr><td colspan="7" class="text-center py-4 text-red-500">Error: ${error.message}</td></tr>`;
     });
 }
 
-// 3. Modal Handling
+// Modal Handling
 function openModal() {
-    modal.classList.remove('hidden');
-    document.body.classList.add('overflow-hidden');
+    const modal = document.getElementById('product-modal');
+    if(modal) {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex'); // Ensure flex display
+        // document.body.classList.add('overflow-hidden');
+    }
 }
 
 function closeModal() {
-    modal.classList.add('hidden');
-    document.body.classList.remove('overflow-hidden');
-    form.reset();
-    document.getElementById('product-id').value = '';
-    document.getElementById('prod-image-url').value = '';
-    previewDiv.innerHTML = '<span class="material-symbols-outlined text-gray-400">image</span>';
-    document.getElementById('modal-title').innerText = 'Add New Product';
+    const modal = document.getElementById('product-modal');
+    const form = document.getElementById('product-form');
+    const previewDiv = document.getElementById('image-preview');
+    
+    if(modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+        // document.body.classList.remove('overflow-hidden');
+    }
+    
+    if(form) {
+        form.reset();
+        document.getElementById('product-id').value = '';
+        document.getElementById('prod-image-url').value = '';
+        if(previewDiv) previewDiv.innerHTML = '<span class="material-symbols-rounded text-slate-400">image</span>';
+        document.getElementById('modal-title').innerText = 'Add New Product';
+    }
 }
 
 function openEditModal(id) {
@@ -119,7 +126,8 @@ function openEditModal(id) {
     document.getElementById('prod-color').value = product.color || '';
     document.getElementById('prod-image-url').value = product.image || '';
 
-    if (product.image) {
+    const previewDiv = document.getElementById('image-preview');
+    if (previewDiv && product.image) {
         previewDiv.innerHTML = `<img src="${product.image}" class="w-full h-full object-cover">`;
     }
 
@@ -127,25 +135,27 @@ function openEditModal(id) {
     openModal();
 }
 
-// 4. Form Submission
-form.addEventListener('submit', async (e) => {
+async function handleFormSubmit(e) {
     e.preventDefault();
     
+    const form = document.getElementById('product-form');
     const submitBtn = form.querySelector('button[type="submit"]');
     const originalBtnText = submitBtn.innerHTML;
-    submitBtn.innerHTML = '<span class="material-symbols-outlined animate-spin text-sm">rotate_right</span> Saving...';
+    submitBtn.innerHTML = '<span class="material-symbols-rounded animate-spin text-sm">rotate_right</span> Saving...';
     submitBtn.disabled = true;
 
     try {
         const id = document.getElementById('product-id').value;
-        const file = fileInput.files[0];
+        const fileInput = document.getElementById('prod-image-file');
+        const file = fileInput ? fileInput.files[0] : null;
         let imageUrl = document.getElementById('prod-image-url').value;
 
         // Upload image if selected
         if (file) {
-            document.getElementById('upload-status').innerText = 'Uploading image...';
+            const statusEl = document.getElementById('upload-status');
+            if(statusEl) statusEl.innerText = 'Uploading image...';
             imageUrl = await uploadAvatarDirect(file);
-            document.getElementById('upload-status').innerText = 'Upload complete!';
+            if(statusEl) statusEl.innerText = 'Upload complete!';
         }
 
         const productData = {
@@ -162,16 +172,14 @@ form.addEventListener('submit', async (e) => {
         };
 
         if (id) {
-            // Update
-            await set(ref(db, `products/${id}`), productData); // Use set to overwrite/merge logic if needed, actually update is safer but set works for full object replacement
+            await set(ref(db, `products/${id}`), productData);
         } else {
-            // Create
             productData.createdAt = new Date().toISOString();
             await push(productsRef, productData);
         }
 
         closeModal();
-        // Toast success?
+        alert('Product saved successfully!');
         
     } catch (error) {
         console.error('Error saving product:', error);
@@ -180,9 +188,8 @@ form.addEventListener('submit', async (e) => {
         submitBtn.innerHTML = originalBtnText;
         submitBtn.disabled = false;
     }
-});
+}
 
-// Delete
 async function deleteProduct(id) {
     if (confirm('Are you sure you want to delete this product?')) {
         try {
@@ -194,22 +201,66 @@ async function deleteProduct(id) {
     }
 }
 
-// Event Listeners
-btnAdd.addEventListener('click', openModal);
-btnClose.addEventListener('click', closeModal);
-btnCancel.addEventListener('click', closeModal);
+// Reload function: Re-binds events and re-renders
+function reload() {
+    console.log('Products Module: Reloading...');
+    
+    // 1. Re-bind static button events if elements exist
+    const btnAdd = document.getElementById('btn-add-product');
+    const btnClose = document.getElementById('btn-close-modal');
+    const btnCancel = document.getElementById('btn-cancel');
+    const fileInput = document.getElementById('prod-image-file');
+    const form = document.getElementById('product-form');
 
-fileInput.addEventListener('change', (e) => {
-    const file = e.target.files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            previewDiv.innerHTML = `<img src="${e.target.result}" class="w-full h-full object-cover opacity-50">`;
-        };
-        reader.readAsDataURL(file);
+    if (btnAdd) {
+        btnAdd.replaceWith(btnAdd.cloneNode(true)); // Remove old listeners
+        document.getElementById('btn-add-product').addEventListener('click', openModal);
     }
-});
+    
+    if (btnClose) btnClose.onclick = closeModal;
+    if (btnCancel) btnCancel.onclick = closeModal;
+    
+    if (form) {
+        form.removeEventListener('submit', handleFormSubmit); // Hard to remove with bound args, easier to clone or use onclick
+        form.onsubmit = handleFormSubmit;
+    }
 
-// Initialize
-initProducts();
-console.log('Product Module Loaded');
+    if (fileInput) {
+        fileInput.onchange = (e) => {
+            const file = e.target.files[0];
+            const previewDiv = document.getElementById('image-preview');
+            if (file && previewDiv) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    previewDiv.innerHTML = `<img src="${e.target.result}" class="w-full h-full object-cover">`;
+                };
+                reader.readAsDataURL(file);
+            }
+        };
+    }
+
+    // 2. Load Data
+    loadProducts();
+}
+
+function init() {
+    if (isInitialized) return;
+    
+    const auth = getFirebaseAuth();
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            console.log('Products: User authenticated');
+            // We don't load data here immediately because tab might not be active
+        }
+    });
+
+    isInitialized = true;
+}
+
+window.productsModule = {
+    init,
+    reload
+};
+
+// Auto init
+init();
