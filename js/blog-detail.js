@@ -71,6 +71,86 @@ async function loadRelatedBlogs(category, currentBlogId, limit = 3) {
     }
 }
 
+async function loadFeaturedProducts(limit = 2) {
+    try {
+        const productsRef = ref(database, 'products');
+        const snapshot = await get(productsRef);
+        
+        if (snapshot.exists()) {
+            const productsData = snapshot.val();
+            const featuredProducts = Object.keys(productsData)
+                .map(key => ({ id: key, ...productsData[key] }))
+                .filter(product => product.featured || product.bestseller)
+                .sort((a, b) => (b.sales || 0) - (a.sales || 0))
+                .slice(0, limit);
+            
+            console.log('✅ Loaded featured products:', featuredProducts.length);
+            return featuredProducts;
+        }
+        
+        return [];
+    } catch (error) {
+        console.error('❌ Error loading featured products:', error);
+        return [];
+    }
+}
+
+async function loadBlogCategories() {
+    try {
+        const blogsRef = ref(database, 'blogs');
+        const snapshot = await get(blogsRef);
+        
+        if (snapshot.exists()) {
+            const blogsData = snapshot.val();
+            const categoriesMap = {};
+            
+            Object.values(blogsData).forEach(blog => {
+                if (blog.category) {
+                    categoriesMap[blog.category] = (categoriesMap[blog.category] || 0) + 1;
+                }
+            });
+            
+            const categories = Object.keys(categoriesMap).map(name => ({
+                name,
+                count: categoriesMap[name]
+            }));
+            
+            console.log('✅ Loaded blog categories:', categories.length);
+            return categories;
+        }
+        
+        return [];
+    } catch (error) {
+        console.error('❌ Error loading categories:', error);
+        return [];
+    }
+}
+
+async function loadPopularBlogs(currentBlogId, limit = 3) {
+    try {
+        const blogsRef = ref(database, 'blogs');
+        const snapshot = await get(blogsRef);
+        
+        if (snapshot.exists()) {
+            const blogsData = snapshot.val();
+            const popularBlogs = Object.keys(blogsData)
+                .filter(key => key !== currentBlogId)
+                .map(key => ({ id: key, ...blogsData[key] }))
+                .sort((a, b) => (b.views || 0) - (a.views || 0))
+                .slice(0, limit);
+            
+            console.log('✅ Loaded popular blogs:', popularBlogs.length);
+            return popularBlogs;
+        }
+        
+        return [];
+    } catch (error) {
+        console.error('❌ Error loading popular blogs:', error);
+        return [];
+    }
+}
+
+
 // ============================================================================
 // RENDERING
 // ============================================================================
@@ -212,6 +292,118 @@ function renderRelatedBlogs(blogs) {
     `;
 }
 
+// ============================================================================
+// SIDEBAR RENDERING
+// ============================================================================
+
+function renderFeaturedProducts(products) {
+    const container = document.getElementById('sidebar-products');
+    if (!container) return;
+    
+    if (products.length === 0) {
+        container.innerHTML = `
+            <h4 class="text-xl font-bold mb-6 flex items-center gap-2">
+                <span class="material-symbols-outlined text-primary">shopping_bag</span>
+                Sản Phẩm Trong Bài
+            </h4>
+            <p class="text-gray-400 text-sm text-center py-8">Không có sản phẩm nổi bật</p>
+        `;
+        return;
+    }
+    
+    container.innerHTML = `
+        <h4 class="text-xl font-bold mb-6 flex items-center gap-2">
+            <span class="material-symbols-outlined text-primary">shopping_bag</span>
+            Sản Phẩm Trong Bài
+        </h4>
+        <div class="space-y-6">
+            ${products.map(product => `
+                <a href="Product-detail.html?id=${product.id}" class="flex gap-4 group cursor-pointer">
+                    <div class="size-20 bg-gray-50 rounded-lg overflow-hidden flex-shrink-0">
+                        <img alt="${product.name}" 
+                             src="${product.images?.[0] || 'image/coming_soon.png'}"
+                             class="w-full h-full object-cover group-hover:scale-110 transition-transform"/>
+                    </div>
+                    <div class="flex-1">
+                        <p class="text-xs font-bold ${product.bestseller ? 'text-primary' : 'text-gray-400'} uppercase">
+                            ${product.bestseller ? 'Bán Chạy' : 'Hàng Mới'}
+                        </p>
+                        <h5 class="font-bold text-sm line-clamp-1 group-hover:text-primary transition-colors">
+                            ${product.name}
+                        </h5>
+                        <p class="text-lg font-black mt-1">
+                            ${formatPrice(product.price)}₫
+                        </p>
+                    </div>
+                </a>
+            `).join('')}
+        </div>
+        <a href="Product.html" class="block w-full mt-8 bg-black dark:bg-white dark:text-black text-white py-3 rounded-lg font-bold hover:bg-primary transition-colors text-center">
+            Xem Tất Cả Sản Phẩm
+        </a>
+    `;
+}
+
+function renderCategories(categories) {
+    const container = document.getElementById('sidebar-categories');
+    if (!container) return;
+    
+    if (categories.length === 0) {
+        container.innerHTML = `
+            <h4 class="text-xl font-bold mb-6 border-b border-gray-100 dark:border-gray-800 pb-2">Danh Mục</h4>
+            <p class="text-gray-400 text-sm text-center py-8">Không có danh mục</p>
+        `;
+        return;
+    }
+    
+    container.innerHTML = `
+        <h4 class="text-xl font-bold mb-6 border-b border-gray-100 dark:border-gray-800 pb-2">Danh Mục</h4>
+        <div class="flex flex-wrap gap-2">
+            ${categories.map(category => `
+                <a class="px-4 py-2 bg-gray-100 dark:bg-gray-800 rounded-full text-sm font-medium hover:bg-primary hover:text-white transition-all" 
+                   href="Blog-list.html?category=${encodeURIComponent(category.name)}">
+                    ${category.name}
+                </a>
+            `).join('')}
+        </div>
+    `;
+}
+
+function renderPopularBlogs(blogs) {
+    const container = document.getElementById('sidebar-popular');
+    if (!container) return;
+    
+    if (blogs.length === 0) {
+        container.innerHTML = `
+            <h4 class="text-xl font-bold mb-6 border-b border-gray-100 dark:border-gray-800 pb-2">Phổ Biến Hiện Nay</h4>
+            <p class="text-gray-400 text-sm text-center py-8">Không có bài viết phổ biến</p>
+        `;
+        return;
+    }
+    
+    container.innerHTML = `
+        <h4 class="text-xl font-bold mb-6 border-b border-gray-100 dark:border-gray-800 pb-2">Phổ Biến Hiện Nay</h4>
+        <div class="space-y-6">
+            ${blogs.map((blog, index) => `
+                <a href="Blog-detail.html?id=${blog.id}" class="flex gap-4 items-center group cursor-pointer">
+                    <span class="text-3xl font-black text-gray-200 group-hover:text-primary transition-colors">
+                        ${String(index + 1).padStart(2, '0')}
+                    </span>
+                    <div>
+                        <h5 class="font-bold text-sm group-hover:underline">
+                            ${blog.title}
+                        </h5>
+                        <p class="text-xs text-gray-400 mt-1">
+                            ${formatNumber(blog.views || 0)} Lượt xem
+                        </p>
+                    </div>
+                </a>
+            `).join('')}
+        </div>
+    `;
+}
+
+
 function showError() {
     const main = document.querySelector('main');
     if (main) {
@@ -245,6 +437,10 @@ function formatNumber(num) {
     if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
     if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
     return num.toString();
+}
+
+function formatPrice(price) {
+    return new Intl.NumberFormat('vi-VN').format(price);
 }
 
 function getBlogIdFromURL() {
@@ -281,6 +477,17 @@ async function init() {
         const relatedBlogs = await loadRelatedBlogs(blog.category, blogId);
         renderRelatedBlogs(relatedBlogs);
     }
+    
+    // Load and render sidebar sections concurrently
+    const [products, categories, popularBlogs] = await Promise.all([
+        loadFeaturedProducts(2),
+        loadBlogCategories(),
+        loadPopularBlogs(blogId, 3)
+    ]);
+    
+    renderFeaturedProducts(products);
+    renderCategories(categories);
+    renderPopularBlogs(popularBlogs);
     
     // Initialize comments system
     await initComments(blogId);
