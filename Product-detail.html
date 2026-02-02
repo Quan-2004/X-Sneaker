@@ -150,26 +150,26 @@
                 <div class="mb-8">
                     <h3 class="text-sm font-bold uppercase tracking-wide mb-3">Màu Sắc: <span class="text-gray-500 font-medium">Đỏ Thẫm</span></h3>
                     <div class="flex gap-3">
-                        <button class="w-10 h-10 rounded-full border-2 border-primary bg-primary ring-offset-2 ring-1 ring-primary"></button>
-                        <button class="w-10 h-10 rounded-full border border-gray-200 bg-black"></button>
-                        <button class="w-10 h-10 rounded-full border border-gray-200 bg-white"></button>
-                        <button class="w-10 h-10 rounded-full border border-gray-200 bg-blue-600"></button>
+                        <button class="color-btn w-10 h-10 rounded-full border-2 border-primary bg-primary ring-offset-2 ring-1 ring-primary" data-color="Đỏ Thẫm"></button>
+                        <button class="color-btn w-10 h-10 rounded-full border border-gray-200 bg-black" data-color="Đen"></button>
+                        <button class="color-btn w-10 h-10 rounded-full border border-gray-200 bg-white" data-color="Trắng"></button>
+                        <button class="color-btn w-10 h-10 rounded-full border border-gray-200 bg-blue-600" data-color="Xanh Dương"></button>
                     </div>
                 </div>
                 <!-- Size Selection -->
                 <div class="mb-8">
                     <div class="flex justify-between items-center mb-3">
                         <h3 class="text-sm font-bold uppercase tracking-wide">Chọn Kích Thước</h3>
-                        <button class="text-primary text-xs font-bold underline">Bảng Size</button>
+                        <button id="size-guide-btn" class="text-primary text-xs font-bold underline">Bảng Size</button>
                     </div>
                     <div class="grid grid-cols-4 gap-2">
-                        <button class="py-3 text-center border border-gray-200 dark:border-gray-700 rounded-lg text-sm font-semibold hover:border-primary transition-all">US 7</button>
-                        <button class="py-3 text-center border border-gray-200 dark:border-gray-700 rounded-lg text-sm font-semibold hover:border-primary transition-all">US 8</button>
-                        <button class="py-3 text-center border border-primary bg-primary/5 text-primary rounded-lg text-sm font-bold">US 9</button>
-                        <button class="py-3 text-center border border-gray-200 dark:border-gray-700 rounded-lg text-sm font-semibold hover:border-primary transition-all">US 10</button>
-                        <button class="py-3 text-center border border-gray-200 dark:border-gray-700 rounded-lg text-sm font-semibold hover:border-primary transition-all">US 11</button>
-                        <button class="py-3 text-center border border-gray-200 dark:border-gray-700 rounded-lg text-sm font-semibold hover:border-primary transition-all">US 12</button>
-                        <button class="py-3 text-center border border-gray-200 dark:border-gray-700 rounded-lg text-sm font-semibold opacity-40 cursor-not-allowed bg-gray-50 dark:bg-gray-900" disabled="">US 13</button>
+                        <button class="size-btn py-3 text-center border border-gray-200 dark:border-gray-700 rounded-lg text-sm font-semibold hover:border-primary transition-all" data-size="US 7">US 7</button>
+                        <button class="size-btn py-3 text-center border border-gray-200 dark:border-gray-700 rounded-lg text-sm font-semibold hover:border-primary transition-all" data-size="US 8">US 8</button>
+                        <button class="size-btn py-3 text-center border border-primary bg-primary/5 text-primary rounded-lg text-sm font-bold" data-size="US 9">US 9</button>
+                        <button class="size-btn py-3 text-center border border-gray-200 dark:border-gray-700 rounded-lg text-sm font-semibold hover:border-primary transition-all" data-size="US 10">US 10</button>
+                        <button class="size-btn py-3 text-center border border-gray-200 dark:border-gray-700 rounded-lg text-sm font-semibold hover:border-primary transition-all" data-size="US 11">US 11</button>
+                        <button class="size-btn py-3 text-center border border-gray-200 dark:border-gray-700 rounded-lg text-sm font-semibold hover:border-primary transition-all" data-size="US 12">US 12</button>
+                        <button class="size-btn py-3 text-center border border-gray-200 dark:border-gray-700 rounded-lg text-sm font-semibold opacity-40 cursor-not-allowed bg-gray-50 dark:bg-gray-900" disabled="" data-size="US 13">US 13</button>
                     </div>
                 </div>
                 <div class="flex flex-col gap-3">

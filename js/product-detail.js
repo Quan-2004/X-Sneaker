@@ -1,8 +1,11 @@
 // Product Detail Page Logic for X-Sneaker
 // Handles product loading, gallery, options, cart, and related products
 
-import { getFirebaseDatabase } from './firebase-config.js';
-import { ref, get } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-database.js";
+import { getFirebaseAuth, getFirebaseDatabase } from './firebase-config.js';
+import { ref, get, set, remove } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-database.js";
+
+// Get Firebase instances
+const auth = getFirebaseAuth();
 
 // Get Firebase database instance
 const database = getFirebaseDatabase();
@@ -114,6 +117,10 @@ function renderProductData(product) {
     
     // Update sizes
     renderSizes(product.sizes || []);
+    
+    // Initialize default selections
+    selectedColor = 'Đỏ Thẫm'; // Default color from first button
+    selectedSize = 'US 9'; // Default size from selected button
 }
 
 /**
@@ -295,6 +302,23 @@ function setupEventListeners() {
         addToWishlistBtn.addEventListener('click', handleAddToWishlist);
     }
     
+    // Size guide button
+    const sizeGuideBtn = document.getElementById('size-guide-btn');
+    if (sizeGuideBtn) {
+        sizeGuideBtn.addEventListener('click', showSizeGuide);
+    }
+    
+    // Wishlist buttons on related products
+    document.addEventListener('click', (e) => {
+        const wishlistBtn = e.target.closest('.wishlist-btn');
+        if (wishlistBtn) {
+            e.preventDefault();
+            e.stopPropagation();
+            const productId = wishlistBtn.dataset.productId;
+            toggleWishlistForRelated(productId, wishlistBtn);
+        }
+    });
+    
     // Product tabs
     setupTabs();
     
@@ -385,9 +409,10 @@ function handleAddToCart() {
 /**
  * Handle Add to Wishlist
  */
-function handleAddToWishlist() {
+async function handleAddToWishlist() {
     if (!currentProduct) return;
     
+    const user = auth.currentUser;
     let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
     const existingIndex = wishlist.findIndex(item => item.id === currentProduct.id);
     
@@ -398,19 +423,182 @@ function handleAddToWishlist() {
         wishlist.splice(existingIndex, 1);
         if (btn) btn.textContent = 'favorite';
         window.showToast?.('Đã xóa khỏi danh sách yêu thích');
+        
+        // Xóa khỏi Firebase nếu đã đăng nhập
+        if (user) {
+            try {
+                const wishlistItemRef = ref(database, `wishlist/${user.uid}/${currentProduct.id}`);
+                await remove(wishlistItemRef);
+                console.log('✅ Đã xóa khỏi Firebase wishlist');
+            } catch (error) {
+                console.error('❌ Lỗi xóa Firebase wishlist:', error);
+            }
+        }
     } else {
         // Add to wishlist
-        wishlist.push({
+        const wishlistItem = {
             id: currentProduct.id,
             name: currentProduct.name,
             price: currentProduct.price,
-            image: currentProduct.images?.[0] || ''
-        });
+            image: currentProduct.images?.[0] || '',
+            addedAt: Date.now()
+        };
+        
+        wishlist.push(wishlistItem);
         if (btn) btn.textContent = 'favorite';
         window.showToast?.('Đã thêm vào danh sách yêu thích');
+        
+        // Lưu lên Firebase nếu đã đăng nhập
+        if (user) {
+            try {
+                const wishlistItemRef = ref(database, `wishlist/${user.uid}/${currentProduct.id}`);
+                await set(wishlistItemRef, wishlistItem);
+                console.log('✅ Đã lưu vào Firebase wishlist');
+            } catch (error) {
+                console.error('❌ Lỗi lưu Firebase wishlist:', error);
+            }
+        }
     }
     
     localStorage.setItem('wishlist', JSON.stringify(wishlist));
+}
+
+/**
+ * Toggle wishlist for related products
+ */
+async function toggleWishlistForRelated(productId, button) {
+    const user = auth.currentUser;
+    let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+    const existingIndex = wishlist.findIndex(item => item.id === productId);
+    
+    const icon = button.querySelector('span.material-symbols-outlined');
+    
+    if (existingIndex >= 0) {
+        // Remove from wishlist
+        wishlist.splice(existingIndex, 1);
+        if (icon) {
+            icon.textContent = 'favorite';
+            icon.classList.remove('text-red-500');
+            icon.classList.add('text-gray-800');
+        }
+        window.showToast?.('Đã xóa khỏi yêu thích');
+        
+        // Xóa khỏi Firebase
+        if (user) {
+            try {
+                const wishlistItemRef = ref(database, `wishlist/${user.uid}/${productId}`);
+                await remove(wishlistItemRef);
+            } catch (error) {
+                console.error('❌ Lỗi xóa Firebase wishlist:', error);
+            }
+        }
+    } else {
+        // Add to wishlist - need to fetch product data from related products
+        const relatedCard = button.closest('.group');
+        const productName = relatedCard?.querySelector('h4')?.textContent || '';
+        const productPrice = relatedCard?.querySelector('.font-bold.text-lg')?.textContent || '';
+        const productImage = relatedCard?.querySelector('[style*="background-image"]')?.style.backgroundImage.match(/url\("(.+)"\)/)?.[1] || '';
+        
+        const wishlistItem = {
+            id: productId,
+            name: productName,
+            price: parseFloat(productPrice.replace(/[^\d]/g, '')),
+            image: productImage,
+            addedAt: Date.now()
+        };
+        
+        wishlist.push(wishlistItem);
+        
+        if (icon) {
+            icon.textContent = 'favorite';
+            icon.classList.remove('text-gray-800');
+            icon.classList.add('text-red-500');
+        }
+        window.showToast?.('Đã thêm vào yêu thích');
+        
+        // Lưu lên Firebase
+        if (user) {
+            try {
+                const wishlistItemRef = ref(database, `wishlist/${user.uid}/${productId}`);
+                await set(wishlistItemRef, wishlistItem);
+            } catch (error) {
+                console.error('❌ Lỗi lưu Firebase wishlist:', error);
+            }
+        }
+    }
+    
+    localStorage.setItem('wishlist', JSON.stringify(wishlist));
+}
+
+/**
+ * Show size guide modal
+ */
+function showSizeGuide() {
+    window.showToast?.('Đang mở bảng hướng dẫn chọn size...', 'info');
+    
+    // Create modal
+    const modal = document.createElement('div');
+    modal.className = 'fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4';
+    modal.innerHTML = `
+        <div class="bg-white dark:bg-background-dark rounded-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto">
+            <div class="sticky top-0 bg-white dark:bg-background-dark border-b border-gray-200 dark:border-white/10 p-6 flex items-center justify-between z-10">
+                <h2 class="text-2xl font-bold">Bảng Hướng Dẫn Chọn Size</h2>
+                <button class="close-modal text-gray-400 hover:text-gray-600 transition-colors">
+                    <span class="material-symbols-outlined text-3xl">close</span>
+                </button>
+            </div>
+            <div class="p-6">
+                <p class="text-gray-500 mb-6">Chọn size phù hợp với chiều dài bàn chân của bạn (tính bằng cm):</p>
+                <div class="overflow-x-auto">
+                    <table class="w-full border-collapse">
+                        <thead>
+                            <tr class="bg-gray-50 dark:bg-white/5">
+                                <th class="border border-gray-200 dark:border-gray-700 px-4 py-3 text-left font-bold">US Size</th>
+                                <th class="border border-gray-200 dark:border-gray-700 px-4 py-3 text-left font-bold">EU Size</th>
+                                <th class="border border-gray-200 dark:border-gray-700 px-4 py-3 text-left font-bold">UK Size</th>
+                                <th class="border border-gray-200 dark:border-gray-700 px-4 py-3 text-left font-bold">Chiều dài (cm)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td class="border border-gray-200 dark:border-gray-700 px-4 py-2">US 7</td><td class="border border-gray-200 dark:border-gray-700 px-4 py-2">40</td><td class="border border-gray-200 dark:border-gray-700 px-4 py-2">6</td><td class="border border-gray-200 dark:border-gray-700 px-4 py-2">25.0</td></tr>
+                            <tr><td class="border border-gray-200 dark:border-gray-700 px-4 py-2">US 8</td><td class="border border-gray-200 dark:border-gray-700 px-4 py-2">41</td><td class="border border-gray-200 dark:border-gray-700 px-4 py-2">7</td><td class="border border-gray-200 dark:border-gray-700 px-4 py-2">25.5</td></tr>
+                            <tr><td class="border border-gray-200 dark:border-gray-700 px-4 py-2">US 9</td><td class="border border-gray-200 dark:border-gray-700 px-4 py-2">42</td><td class="border border-gray-200 dark:border-gray-700 px-4 py-2">8</td><td class="border border-gray-200 dark:border-gray-700 px-4 py-2">26.0</td></tr>
+                            <tr><td class="border border-gray-200 dark:border-gray-700 px-4 py-2">US 10</td><td class="border border-gray-200 dark:border-gray-700 px-4 py-2">43</td><td class="border border-gray-200 dark:border-gray-700 px-4 py-2">9</td><td class="border border-gray-200 dark:border-gray-700 px-4 py-2">26.5</td></tr>
+                            <tr><td class="border border-gray-200 dark:border-gray-700 px-4 py-2">US 11</td><td class="border border-gray-200 dark:border-gray-700 px-4 py-2">44</td><td class="border border-gray-200 dark:border-gray-700 px-4 py-2">10</td><td class="border border-gray-200 dark:border-gray-700 px-4 py-2">27.0</td></tr>
+                            <tr><td class="border border-gray-200 dark:border-gray-700 px-4 py-2">US 12</td><td class="border border-gray-200 dark:border-gray-700 px-4 py-2">45</td><td class="border border-gray-200 dark:border-gray-700 px-4 py-2">11</td><td class="border border-gray-200 dark:border-gray-700 px-4 py-2">27.5</td></tr>
+                            <tr><td class="border border-gray-200 dark:border-gray-700 px-4 py-2">US 13</td><td class="border border-gray-200 dark:border-gray-700 px-4 py-2">46</td><td class="border border-gray-200 dark:border-gray-700 px-4 py-2">12</td><td class="border border-gray-200 dark:border-gray-700 px-4 py-2">28.0</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="mt-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                    <h3 class="font-bold mb-2 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-blue-600">lightbulb</span>
+                        Mẹo chọn size:
+                    </h3>
+                    <ul class="text-sm text-gray-600 dark:text-gray-400 space-y-1 list-disc list-inside">
+                        <li>Đo chân vào buổi chiều khi bàn chân có xu hướng sưng lên</li>
+                        <li>Để lại khoảng trống 0.5-1cm ở phía trước ngón chân dài nhất</li>
+                        <li>Nếu rơi vào giữa 2 size, chọn size lớn hơn</li>
+                        <li>Đối với giày chạy bộ, nên chọn size lớn hơn 0.5-1 size so với giày thường</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    
+    // Close modal
+    modal.querySelector('.close-modal').addEventListener('click', () => {
+        modal.remove();
+    });
+    
+    // Close on backdrop click
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            modal.remove();
+        }
+    });
 }
 
 /**
@@ -474,13 +662,23 @@ function showErrorPage() {
     const main = document.querySelector('main');
     if (main) {
         main.innerHTML = `
-            <div class="flex flex-col items-center justify-center py-20">
-                <span class="material-symbols-outlined text-8xl text-gray-300 mb-4">error</span>
-                <h2 class="text-2xl font-bold mb-2">Không tìm thấy sản phẩm</h2>
-                <p class="text-gray-500 mb-6">Sản phẩm bạn đang tìm không tồn tại hoặc đã bị xóa</p>
-                <a href="Product.html" class="bg-primary text-white px-6 py-3 rounded-lg font-bold hover:bg-[#c4141d] transition-colors">
-                    Về trang sản phẩm
-                </a>
+            <div class="flex flex-col items-center justify-center py-20 px-4">
+                <div class="size-24 bg-red-50 dark:bg-red-900/20 rounded-full flex items-center justify-center mb-6">
+                    <span class="material-symbols-outlined text-5xl text-red-500">error</span>
+                </div>
+                <h2 class="text-3xl font-black mb-3 text-center">Không Tìm Thấy Sản Phẩm</h2>
+                <p class="text-gray-500 mb-2 text-center">Sản phẩm bạn đang tìm không tồn tại hoặc đã bị xóa.</p>
+                <p class="text-gray-400 text-sm mb-8 text-center">Vui lòng kiểm tra lại đường dẫn hoặc tìm kiếm sản phẩm khác.</p>
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <a href="Product.html" class="bg-primary text-white px-8 py-3 rounded-lg font-bold hover:bg-[#c4141d] transition-colors inline-flex items-center justify-center gap-2">
+                        <span class="material-symbols-outlined">storefront</span>
+                        Về trang sản phẩm
+                    </a>
+                    <a href="index.html" class="bg-gray-100 dark:bg-white/10 text-gray-700 dark:text-gray-300 px-8 py-3 rounded-lg font-bold hover:bg-gray-200 dark:hover:bg-white/20 transition-colors inline-flex items-center justify-center gap-2">
+                        <span class="material-symbols-outlined">home</span>
+                        Về trang chủ
+                    </a>
+                </div>
             </div>
         `;
     }

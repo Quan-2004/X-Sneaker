@@ -3,8 +3,12 @@
  * Handles cart summary display and order placement (COD & VNPay)
  */
 
-
 import { initAuthStateObserver, getUserData } from './auth.js';
+import { getFirebaseAuth, getFirebaseDatabase } from './firebase-config.js';
+import { ref, push, set } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-database.js";
+
+const auth = getFirebaseAuth();
+const database = getFirebaseDatabase();
 
 document.addEventListener('DOMContentLoaded', () => {
     const checkoutItemsContainer = document.getElementById('checkout-items');
@@ -122,21 +126,64 @@ document.addEventListener('DOMContentLoaded', () => {
 
             try {
                 // XỬ LÝ THANH TOÁN
+                const cart = window.getCart ? window.getCart() : [];
+                const user = auth.currentUser;
+                
+                // Tạo order data
+                const orderData = {
+                    userId: user ? user.uid : 'guest',
+                    userEmail: user ? user.email : email,
+                    orderId: 'ORD-' + Date.now(),
+                    customerInfo: {
+                        fullname,
+                        email,
+                        phone,
+                        address,
+                        city
+                    },
+                    items: cart.map(item => ({
+                        id: item.id,
+                        name: item.name,
+                        price: item.price,
+                        quantity: item.quantity,
+                        size: item.size,
+                        color: item.color,
+                        image: item.image
+                    })),
+                    total: _currentTotal,
+                    subtotal: _currentTotal / (1 + TAX_RATE),
+                    tax: _currentTotal - (_currentTotal / (1 + TAX_RATE)),
+                    paymentMethod: paymentMethod === 'cod' ? 'COD' : 'VNPay',
+                    status: 'processing',
+                    createdAt: Date.now(),
+                    updatedAt: Date.now()
+                };
 
-                    // 2. THANH TOÁN COD (Mặc định)
-                    await new Promise(resolve => setTimeout(resolve, 2000)); // Fake delay
+                // 2. THANH TOÁN COD (Mặc định)
+                await new Promise(resolve => setTimeout(resolve, 1000)); // Fake delay
 
-                    // Clear Cart
-                    localStorage.removeItem('cart');
-                    
-                    // Show Success
-                    submitBtn.innerHTML = `<span class="material-symbols-outlined">check</span> Thành công!`;
-                    window.showToast('Đặt hàng thành công! Cảm ơn bạn đã mua sắm.');
+                // Lưu đơn hàng vào Firebase
+                try {
+                    const ordersRef = ref(database, 'orders');
+                    const newOrderRef = push(ordersRef);
+                    await set(newOrderRef, orderData);
+                    console.log('✅ Đơn hàng đã được lưu vào Firebase:', orderData.orderId);
+                } catch (saveError) {
+                    console.error('❌ Lỗi lưu đơn hàng:', saveError);
+                    // Vẫn cho phép tiếp tục nếu lưu Firebase thất bại
+                }
 
-                    // Redirect
-                    setTimeout(() => {
-                         window.location.href = 'index.html?orderSuccess=true';
-                    }, 1500);
+                // Clear Cart
+                localStorage.removeItem('cart');
+                
+                // Show Success
+                submitBtn.innerHTML = `<span class="material-symbols-outlined">check</span> Thành công!`;
+                window.showToast('Đặt hàng thành công! Cảm ơn bạn đã mua sắm.');
+
+                // Redirect
+                setTimeout(() => {
+                     window.location.href = 'index.html?orderSuccess=true';
+                }, 1500);
 
             } catch (error) {
                 console.error('Checkout error:', error);

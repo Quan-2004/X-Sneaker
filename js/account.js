@@ -42,9 +42,10 @@ function initAccountPage() {
         if (user) {
             console.log('User authenticated:', user.uid);
             currentUser = user;
-            loadUserProfile(user.uid);
-            loadUserOrders(user.uid);
-            loadUserWishlist(user.uid);
+            
+            // Check if user has pending deletion request
+            checkPendingDeletion(user.uid);
+            
             loadUserProfile(user.uid);
             loadUserOrders(user.uid);
             loadUserWishlist(user.uid);
@@ -119,18 +120,16 @@ async function createBasicProfile(uid) {
 
 async function loadUserOrders(uid) {
     try {
-        // Read all orders and filter client-side (temporary solution)
-        // Better solution: Store orders in /userOrders/{uid}/{orderId}
+        // Query orders by userId using Firebase query
         const ordersRef = ref(database, 'orders');
+        const userOrdersQuery = query(ordersRef, orderByChild('userId'), equalTo(uid));
         
-        // Try to get all orders (will fail if not admin, that's OK)
-        const snapshot = await get(ordersRef);
+        const snapshot = await get(userOrdersQuery);
         
         if (snapshot.exists()) {
-            const allOrders = snapshot.val();
-            // Filter orders for this user
-            const userOrders = Object.entries(allOrders)
-                .filter(([id, order]) => order.userId === uid)
+            const ordersData = snapshot.val();
+            // Convert to array and sort by createdAt
+            const userOrders = Object.entries(ordersData)
                 .map(([id, order]) => ({ ...order, id }))
                 .sort((a, b) => b.createdAt - a.createdAt);
             
@@ -138,13 +137,13 @@ async function loadUserOrders(uid) {
             renderOrderHistory(userOrders);
             updateOrderStats(userOrders);
         } else {
-            console.log('No orders found');
+            console.log('No orders found for user');
             renderOrderHistory([]);
             updateOrderStats([]);
         }
     } catch (error) {
         console.error('Error loading orders:', error);
-        // If permission denied, show empty state (user has no orders or not logged in)
+        // If permission denied or error, show empty state
         renderOrderHistory([]);
         updateOrderStats([]);
     }
@@ -214,12 +213,6 @@ function renderUserProfile(userData) {
         welcomeEl.textContent = `Chào mừng trở lại, ${firstName}!`;
     }
 
-    // Loyalty Points
-    const pointsEl = document.getElementById('loyalty-points');
-    if (pointsEl) {
-        pointsEl.textContent = (userData.loyaltyPoints || 0).toLocaleString();
-    }
-
     // Populate Detailed Info Card
     const infoName = document.getElementById('info-displayname');
     const infoEmail = document.getElementById('info-email');
@@ -284,7 +277,7 @@ function renderOrderHistory(orders) {
                     <div class="flex -space-x-2">
                         ${order.items ? order.items.slice(0, 3).map(item => `
                             <div class="size-8 rounded-full border-2 border-white dark:border-background-dark bg-cover bg-center" 
-                                 style="background-image: url('${item.image || '../image/product-1.jpg'}')"></div>
+                                 style="background-image: url('${item.image || '../image/coming_soon.png'}')"></div>
                         `).join('') : ''}
                         ${order.items && order.items.length > 3 ? `
                             <div class="size-8 rounded-full border-2 border-white dark:border-background-dark bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-xs font-bold">
@@ -327,14 +320,18 @@ function renderWishlist(products) {
 
     grid.innerHTML = products.map(product => `
         <div class="bg-white dark:bg-background-dark border border-gray-200 dark:border-white/10 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow group relative">
-            <div class="aspect-square bg-gray-100 relative overflow-hidden">
-                <img src="${product.image || '../image/product-1.jpg'}" alt="${product.name}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
-                <button onclick="addToCart('${product.id}')" class="absolute bottom-3 right-3 bg-white text-black p-2 rounded-full shadow-lg hover:bg-primary hover:text-white transition-colors">
-                    <span class="material-symbols-outlined text-xl">shopping_cart</span>
-                </button>
-            </div>
+            <a href="Product-detail.html?id=${product.id}" class="block">
+                <div class="aspect-square bg-gray-100 relative overflow-hidden">
+                    <img src="${product.image || product.images?.[0] || 'image/coming_soon.png'}" alt="${product.name}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                    <button onclick="event.preventDefault(); event.stopPropagation(); addToCart('${product.id}')" class="absolute bottom-3 right-3 bg-white text-black p-2 rounded-full shadow-lg hover:bg-primary hover:text-white transition-colors">
+                        <span class="material-symbols-outlined text-xl">shopping_cart</span>
+                    </button>
+                </div>
+            </a>
             <div class="p-4">
-                <h3 class="font-bold text-sm line-clamp-1 mb-1">${product.name}</h3>
+                <a href="Product-detail.html?id=${product.id}" class="block">
+                    <h3 class="font-bold text-sm line-clamp-1 mb-1 hover:text-primary transition-colors">${product.name}</h3>
+                </a>
                 <p class="text-primary font-black">${formatPrice(product.price)}</p>
             </div>
         </div>
@@ -439,6 +436,11 @@ function setupEventListeners() {
     // Modal Action Buttons (Delete)
     document.getElementById('btn-cancel-delete')?.addEventListener('click', closeDeleteModal);
     document.getElementById('btn-confirm-delete')?.addEventListener('click', handleDeleteAccount);
+    
+    // Pending Deletion Modal Buttons
+    document.getElementById('btn-cancel-pending-deletion')?.addEventListener('click', handleCancelDeletion);
+    document.getElementById('btn-proceed-deletion')?.addEventListener('click', closePendingDeletionModal);
+    document.getElementById('close-pending-deletion-btn')?.addEventListener('click', closePendingDeletionModal);
 }
 
 // ============================================================================
@@ -624,6 +626,133 @@ async function handleLogout() {
         // Fallback logout
         await auth.signOut();
         window.location.href = 'index.html';
+    }
+}
+
+// ============================================================================
+// PENDING DELETION MANAGEMENT
+// ============================================================================
+
+async function checkPendingDeletion(uid) {
+    try {
+        const userRef = ref(database, `users/${uid}`);
+        const snapshot = await get(userRef);
+        
+        if (snapshot.exists()) {
+            const userData = snapshot.val();
+            
+            // Check if account is scheduled for deletion
+            if (userData.deletionScheduled === true && userData.deletionRequestedAt) {
+                const requestDate = userData.deletionRequestedAt;
+                const currentTime = Date.now();
+                const daysPassed = Math.floor((currentTime - requestDate) / (1000 * 60 * 60 * 24));
+                const daysRemaining = 7 - daysPassed;
+                
+                console.log('Pending deletion detected:', {
+                    requestDate: new Date(requestDate),
+                    daysPassed,
+                    daysRemaining
+                });
+                
+                // If grace period expired, force logout
+                if (daysRemaining <= 0) {
+                    showToast('Tài khoản đã hết thời gian gia hạn và sẽ bị xóa vĩnh viễn.', 'error');
+                    setTimeout(() => {
+                        handleLogout();
+                    }, 3000);
+                    return;
+                }
+                
+                // Show pending deletion notification
+                showPendingDeletionModal(requestDate, daysRemaining);
+            }
+        }
+    } catch (error) {
+        console.error('Error checking pending deletion:', error);
+    }
+}
+
+function showPendingDeletionModal(requestDate, daysRemaining) {
+    const modal = document.getElementById('pending-deletion-modal');
+    if (!modal) return;
+    
+    // Format request date
+    const dateEl = document.getElementById('deletion-request-date');
+    if (dateEl) {
+        dateEl.textContent = new Date(requestDate).toLocaleDateString('vi-VN', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric'
+        });
+    }
+    
+    // Display days remaining
+    const daysEl = document.getElementById('days-remaining');
+    if (daysEl) {
+        daysEl.textContent = daysRemaining;
+    }
+    
+    // Show modal with animation
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+    
+    setTimeout(() => {
+        modal.classList.remove('opacity-0');
+        modal.classList.add('opacity-100');
+        const content = modal.querySelector('.transform');
+        if (content) {
+            content.classList.remove('scale-95');
+            content.classList.add('scale-100');
+        }
+    }, 10);
+}
+
+function closePendingDeletionModal() {
+    const modal = document.getElementById('pending-deletion-modal');
+    if (!modal) return;
+    
+    modal.classList.add('opacity-0');
+    const content = modal.querySelector('.transform');
+    if (content) {
+        content.classList.add('scale-95');
+        content.classList.remove('scale-100');
+    }
+    
+    setTimeout(() => {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+    }, 300);
+}
+
+async function handleCancelDeletion() {
+    const cancelBtn = document.getElementById('btn-cancel-pending-deletion');
+    const originalHTML = cancelBtn.innerHTML;
+    
+    try {
+        cancelBtn.disabled = true;
+        cancelBtn.innerHTML = '<span class="material-symbols-outlined animate-spin">progress_activity</span> Đang xử lý...';
+        
+        // Remove deletion flags from user account
+        await update(ref(database, `users/${currentUser.uid}`), {
+            deletionScheduled: false,
+            deletionRequestedAt: null,
+            accountStatus: 'active'
+        });
+        
+        showToast('Yêu cầu xóa tài khoản đã được hủy thành công! Tài khoản của bạn đã được khôi phục.');
+        
+        // Close modal
+        setTimeout(() => {
+            closePendingDeletionModal();
+            cancelBtn.disabled = false;
+            cancelBtn.innerHTML = originalHTML;
+        }, 1500);
+        
+    } catch (error) {
+        console.error('Error canceling deletion:', error);
+        showToast('Có lỗi xảy ra khi hủy yêu cầu. Vui lòng thử lại!', 'error');
+        cancelBtn.disabled = false;
+        cancelBtn.innerHTML = originalHTML;
     }
 }
 

@@ -195,17 +195,6 @@
                         </div>
                     </div>
                 </div>
-                <div class="bg-white dark:bg-background-dark border border-gray-200 dark:border-white/10 p-6 rounded-xl shadow-sm">
-                    <div class="flex items-center gap-4">
-                        <div class="size-12 rounded-lg bg-yellow-100 dark:bg-yellow-900/30 flex items-center justify-center text-yellow-600 dark:text-yellow-400">
-                            <span class="material-symbols-outlined text-2xl">loyalty</span>
-                        </div>
-                        <div>
-                            <p class="text-sm text-gray-500 dark:text-gray-400 font-bold uppercase tracking-wider">Điểm Thưởng</p>
-                            <p id="loyalty-points" class="text-3xl font-black mt-2">0</p>
-                        </div>
-                    </div>
-                </div>
             </div>
 
             <!-- Recent Orders Section -->
@@ -492,6 +481,44 @@
                     </button>
                     <button id="btn-confirm-delete" class="flex-1 px-4 py-3 bg-red-600 text-white font-bold rounded-xl hover:bg-red-700 transition-colors">
                         Xác Nhận Xóa
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pending Deletion Notification Modal -->
+    <div id="pending-deletion-modal" class="fixed inset-0 z-[80] hidden items-center justify-center bg-black/60 backdrop-blur-sm p-4 opacity-0 transition-opacity duration-300">
+        <div class="bg-white dark:bg-background-dark w-full max-w-lg rounded-2xl p-8 shadow-2xl transform scale-95 transition-transform duration-300 border-2 border-red-500 relative">
+            <!-- Close Button -->
+            <button id="close-pending-deletion-btn" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors">
+                <span class="material-symbols-outlined text-2xl">close</span>
+            </button>
+            <div class="text-center">
+                <div class="size-20 bg-gradient-to-br from-orange-100 to-red-100 dark:from-orange-900/30 dark:to-red-900/30 rounded-full flex items-center justify-center mx-auto mb-6 text-orange-600 dark:text-orange-400 animate-pulse">
+                    <span class="material-symbols-outlined text-4xl">schedule_send</span>
+                </div>
+                <h3 class="text-2xl font-bold mb-3 text-red-600 dark:text-red-400">Tài Khoản Đang Chờ Xóa</h3>
+                <div class="bg-red-50 dark:bg-red-900/20 rounded-xl p-4 mb-6">
+                    <p class="text-gray-700 dark:text-gray-300 text-sm leading-relaxed mb-3">
+                        Bạn đã yêu cầu xóa tài khoản vào ngày <strong id="deletion-request-date"></strong>.
+                    </p>
+                    <p class="text-gray-700 dark:text-gray-300 text-sm leading-relaxed">
+                        Tài khoản sẽ bị xóa vĩnh viễn sau <strong class="text-red-600 dark:text-red-400 text-xl" id="days-remaining"></strong> ngày nữa.
+                    </p>
+                </div>
+                <p class="text-gray-600 dark:text-gray-400 text-sm mb-6">
+                    Nếu bạn muốn <strong>giữ lại tài khoản</strong>, vui lòng nhấn nút "Hủy Yêu Cầu Xóa" bên dưới. <br>
+                    Nếu không làm gì, tài khoản sẽ tự động bị xóa sau thời gian trên.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <button id="btn-cancel-pending-deletion" class="flex-1 px-6 py-3 bg-green-600 text-white font-bold rounded-xl hover:bg-green-700 transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-2">
+                        <span class="material-symbols-outlined">undo</span>
+                        Hủy Yêu Cầu Xóa
+                    </button>
+                    <button id="btn-proceed-deletion" class="flex-1 px-6 py-3 bg-gray-600 text-white font-bold rounded-xl hover:bg-gray-700 transition-all flex items-center justify-center gap-2">
+                        <span class="material-symbols-outlined">close</span>
+                        Để Sau
                     </button>
                 </div>
             </div>
