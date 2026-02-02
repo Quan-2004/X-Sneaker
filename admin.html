@@ -6,6 +6,7 @@
     <title>X-Sneaker Admin | Order Management</title>
     <link rel="icon" type="image/png" href="image/Logo_X_Sneaker.png">
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
     <script id="tailwind-config">
@@ -110,9 +111,9 @@
         <div class="flex-1 overflow-y-auto py-6 px-4 space-y-1">
             <div class="px-4 mb-2 text-xs font-bold text-slate-400 uppercase tracking-wider">Main Menu</div>
             
-            <a href="#" data-tab="dashboard" class="nav-link flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-white/5 hover:text-primary dark:hover:text-primary rounded-xl transition-all group">
-                <span class="material-symbols-rounded text-[22px] group-hover:scale-110 transition-transform">dashboard</span>
-                <span class="text-sm font-semibold">Dashboard</span>
+            <a href="#" data-tab="blog" class="nav-link flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-white/5 hover:text-primary dark:hover:text-primary rounded-xl transition-all group">
+                <span class="material-symbols-rounded text-[22px] group-hover:scale-110 transition-transform">article</span>
+                <span class="text-sm font-semibold">Blog Posts</span>
             </a>
             
             <a href="#" data-tab="orders" class="nav-link flex items-center gap-3 px-4 py-3 bg-primary/10 text-primary rounded-xl transition-all relative overflow-hidden">
@@ -139,6 +140,11 @@
             </a>
 
             <div class="px-4 mt-8 mb-2 text-xs font-bold text-slate-400 uppercase tracking-wider">System</div>
+
+            <a href="#" data-tab="cms" class="nav-link flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-white/5 hover:text-primary dark:hover:text-primary rounded-xl transition-all group">
+                <span class="material-symbols-rounded text-[22px] group-hover:scale-110 transition-transform">edit_document</span>
+                <span class="text-sm font-semibold">CMS</span>
+            </a>
 
             <a href="#" data-tab="settings" class="nav-link flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-white/5 hover:text-primary dark:hover:text-primary rounded-xl transition-all group">
                 <span class="material-symbols-rounded text-[22px] group-hover:scale-110 transition-transform">settings</span>
@@ -196,120 +202,49 @@
     <script>
         // Tab content definitions
         const tabContents = {
-            dashboard: `
+            blog: `
             <!-- Page Header -->
             <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
                 <div>
-                    <h2 class="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">Dashboard</h2>
+                    <h2 class="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">Blog Management</h2>
                     <div class="flex items-center gap-2 mt-2 text-sm text-slate-500 dark:text-slate-400">
-                        <span class="text-primary font-semibold">Dashboard</span>
-                        <span class="material-symbols-rounded text-[14px]">chevron_right</span>
-                        <span>Overview</span>
+                        <span class="text-primary font-semibold">Blog Posts</span>
                     </div>
                 </div>
                 <div class="flex items-center gap-3">
-                    <select class="px-4 py-2.5 bg-white dark:bg-card-dark border border-slate-200 dark:border-border-dark rounded-xl text-sm font-semibold focus:ring-primary focus:border-primary text-slate-700 dark:text-slate-300">
-                        <option>Last 7 days</option>
-                        <option>Last 30 days</option>
-                        <option>Last 90 days</option>
-                        <option>This year</option>
-                    </select>
+                    <button onclick="window.blogModule.openModal()" class="flex items-center gap-2 px-5 py-2.5 bg-primary hover:bg-primary-600 text-white rounded-xl text-sm font-bold shadow-lg shadow-primary/25 hover:shadow-primary/40 active:scale-95 transition-all">
+                        <span class="material-symbols-rounded text-[20px]">add</span>
+                        Create Post
+                    </button>
                 </div>
             </div>
 
-            <!-- Stats Overview -->
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-                <div class="bg-white dark:bg-card-dark p-6 rounded-2xl border border-slate-100 dark:border-border-dark shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
-                    <div class="absolute right-0 top-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
-                        <span class="material-symbols-rounded text-6xl text-primary">attach_money</span>
-                    </div>
-                    <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">Total Revenue</p>
-                    <div class="flex items-baseline gap-2 mt-2">
-                        <h3 id="stat-revenue" class="text-3xl font-extrabold text-slate-900 dark:text-white">0đ</h3>
-                        <span id="stat-revenue-change" class="text-xs font-bold text-emerald-500 flex items-center">
-                            <span class="material-symbols-rounded text-[14px]">trending_up</span> 0%
-                        </span>
+            <!-- Blog Table -->
+            <div class="bg-white dark:bg-card-dark border border-slate-200 dark:border-border-dark rounded-2xl overflow-hidden shadow-sm mt-6">
+                <!-- Filters -->
+                <div class="p-6 border-b border-slate-100 dark:border-border-dark flex flex-wrap items-center gap-4">
+                     <div class="w-full relative">
+                        <span class="material-symbols-rounded absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-[18px]">search</span>
+                        <input type="text" placeholder="Search posts..." class="w-full md:w-80 pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-background-dark/50 border border-slate-200 dark:border-border-dark rounded-xl text-sm font-semibold focus:ring-primary focus:border-primary text-slate-700 dark:text-slate-300">
                     </div>
                 </div>
 
-                <div class="bg-white dark:bg-card-dark p-6 rounded-2xl border border-slate-100 dark:border-border-dark shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
-                    <div class="absolute right-0 top-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
-                        <span class="material-symbols-rounded text-6xl text-blue-500">shopping_cart</span>
-                    </div>
-                    <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">Total Orders</p>
-                    <div class="flex items-baseline gap-2 mt-2">
-                        <h3 id="stat-orders" class="text-3xl font-extrabold text-slate-900 dark:text-white">0</h3>
-                        <span id="stat-orders-change" class="text-xs font-bold text-emerald-500 flex items-center">
-                            <span class="material-symbols-rounded text-[14px]">trending_up</span> 0%
-                        </span>
-                    </div>
-                </div>
-
-                <div class="bg-white dark:bg-card-dark p-6 rounded-2xl border border-slate-100 dark:border-border-dark shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
-                    <div class="absolute right-0 top-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
-                        <span class="material-symbols-rounded text-6xl text-emerald-500">group</span>
-                    </div>
-                    <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">Total Customers</p>
-                    <div class="flex items-baseline gap-2 mt-2">
-                        <h3 id="stat-customers" class="text-3xl font-extrabold text-slate-900 dark:text-white">0</h3>
-                        <span id="stat-customers-change" class="text-xs font-bold text-emerald-500 flex items-center">
-                            <span class="material-symbols-rounded text-[14px]">trending_up</span> 0%
-                        </span>
-                    </div>
-                </div>
-
-                <div class="bg-white dark:bg-card-dark p-6 rounded-2xl border border-slate-100 dark:border-border-dark shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
-                    <div class="absolute right-0 top-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
-                        <span class="material-symbols-rounded text-6xl text-yellow-500">inventory_2</span>
-                    </div>
-                    <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">Products</p>
-                    <div class="flex items-baseline gap-2 mt-2">
-                        <h3 id="stat-products" class="text-3xl font-extrabold text-slate-900 dark:text-white">0</h3>
-                        <span class="text-xs font-bold text-slate-500 flex items-center">
-                            Active
-                        </span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Charts Section -->
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div class="bg-white dark:bg-card-dark p-6 rounded-2xl border border-slate-200 dark:border-border-dark">
-                    <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-4">Revenue Overview</h3>
-                    <div id="revenue-chart" class="h-64">
-                        <div class="h-full flex items-center justify-center text-slate-400">
-                            <span class="material-symbols-rounded text-6xl opacity-20">monitoring</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="bg-white dark:bg-card-dark p-6 rounded-2xl border border-slate-200 dark:border-border-dark">
-                    <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-4">Top Products</h3>
-                    <div id="top-products-list" class="space-y-4">
-                        <div class="text-center py-8 text-slate-400">
-                            <span class="material-symbols-rounded text-4xl opacity-20">inventory_2</span>
-                            <p class="text-sm mt-2">Loading...</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Recent Activity -->
-            <div class="bg-white dark:bg-card-dark rounded-2xl border border-slate-200 dark:border-border-dark p-6">
-                <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-4">Recent Activity</h3>
-                <div id="recent-activities" class="space-y-4">
-                    <div class="text-center py-8 text-slate-400">
-                        <span class="material-symbols-rounded text-4xl opacity-20">notifications</span>
-                        <p class="text-sm mt-2">Loading...</p>
-                    </div>
-                </div>
-            </div>
-                        </div>
-                        <div class="flex-1">
-                            <p class="text-sm font-semibold text-slate-900 dark:text-white">Low stock alert</p>
-                            <p class="text-xs text-slate-500 mt-1">Adidas Ultraboost - Only 5 left</p>
-                        </div>
-                        <span class="text-xs text-slate-400">1 hour ago</span>
+                <div class="overflow-x-auto min-h-[300px]">
+                    <div id="blog-table-body-container">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-slate-50/50 dark:bg-white/[0.02] border-b border-slate-200 dark:border-border-dark">
+                                    <th class="px-6 py-5 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Image</th>
+                                    <th class="px-6 py-5 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Content</th>
+                                    <th class="px-6 py-5 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Author</th>
+                                    <th class="px-6 py-5 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Date</th>
+                                    <th class="px-6 py-5 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider text-right">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100 dark:divide-border-dark" id="blog-table-body">
+                                <tr><td colspan="5" class="text-center py-8 text-slate-400">Loading posts...</td></tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
@@ -949,15 +884,15 @@
                     </div>
                 </div>
                 <div class="flex items-center gap-3">
-                    <select class="px-4 py-2.5 bg-white dark:bg-card-dark border border-slate-200 dark:border-border-dark rounded-xl text-sm font-semibold focus:ring-primary focus:border-primary text-slate-700 dark:text-slate-300">
-                        <option>Last 30 days</option>
-                        <option>Last 90 days</option>
-                        <option>This year</option>
-                        <option>All time</option>
+                    <select id="report-period" onchange="window.reportsModule.updatePeriod(this.value)" class="px-4 py-2.5 bg-white dark:bg-card-dark border border-slate-200 dark:border-border-dark rounded-xl text-sm font-semibold focus:ring-primary focus:border-primary text-slate-700 dark:text-slate-300">
+                        <option value="30">Last 30 days</option>
+                        <option value="7">Last 7 days</option>
+                        <option value="year">This year</option>
+                        <option value="all">All time</option>
                     </select>
-                    <button class="flex items-center gap-2 px-5 py-2.5 bg-primary hover:bg-primary-600 text-white rounded-xl text-sm font-bold shadow-lg shadow-primary/25 hover:shadow-primary/40 active:scale-95 transition-all">
-                        <span class="material-symbols-rounded text-[20px]">download</span>
-                        Export Report
+                    <button onclick="window.reportsModule.reload()" class="flex items-center gap-2 px-5 py-2.5 bg-primary hover:bg-primary-600 text-white rounded-xl text-sm font-bold shadow-lg shadow-primary/25 hover:shadow-primary/40 active:scale-95 transition-all">
+                        <span class="material-symbols-rounded text-[20px]">refresh</span>
+                        Refresh
                     </button>
                 </div>
             </div>
@@ -969,12 +904,9 @@
                         <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">Total Revenue</p>
                         <span class="material-symbols-rounded text-primary">attach_money</span>
                     </div>
-                    <h3 class="text-3xl font-extrabold text-slate-900 dark:text-white mb-2">$124,563</h3>
+                    <h3 id="report-revenue" class="text-3xl font-extrabold text-slate-900 dark:text-white mb-2">...</h3>
                     <div class="flex items-center gap-2 text-sm">
-                        <span class="text-emerald-500 font-bold flex items-center">
-                            <span class="material-symbols-rounded text-[14px]">trending_up</span> 23.5%
-                        </span>
-                        <span class="text-slate-500">vs last period</span>
+                        <span class="text-slate-500">Net earnings</span>
                     </div>
                 </div>
 
@@ -983,26 +915,20 @@
                         <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">Average Order Value</p>
                         <span class="material-symbols-rounded text-blue-500">shopping_cart</span>
                     </div>
-                    <h3 class="text-3xl font-extrabold text-slate-900 dark:text-white mb-2">$185.50</h3>
+                    <h3 id="report-aov" class="text-3xl font-extrabold text-slate-900 dark:text-white mb-2">...</h3>
                     <div class="flex items-center gap-2 text-sm">
-                        <span class="text-emerald-500 font-bold flex items-center">
-                            <span class="material-symbols-rounded text-[14px]">trending_up</span> 8.2%
-                        </span>
-                        <span class="text-slate-500">vs last period</span>
+                        <span class="text-slate-500">Per order</span>
                     </div>
                 </div>
 
                 <div class="bg-white dark:bg-card-dark p-6 rounded-2xl border border-slate-100 dark:border-border-dark shadow-sm hover:shadow-md transition-shadow">
                     <div class="flex items-center justify-between mb-4">
-                        <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">Conversion Rate</p>
-                        <span class="material-symbols-rounded text-emerald-500">percent</span>
+                        <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">Total Orders</p>
+                        <span class="material-symbols-rounded text-emerald-500">shopping_bag</span>
                     </div>
-                    <h3 class="text-3xl font-extrabold text-slate-900 dark:text-white mb-2">4.8%</h3>
-                    <div class="flex items-center gap-2 text-sm">
-                        <span class="text-emerald-500 font-bold flex items-center">
-                            <span class="material-symbols-rounded text-[14px]">trending_up</span> 1.2%
-                        </span>
-                        <span class="text-slate-500">vs last period</span>
+                    <h3 id="report-orders" class="text-3xl font-extrabold text-slate-900 dark:text-white mb-2">...</h3>
+                     <div class="flex items-center gap-2 text-sm">
+                        <span class="text-slate-500">Delivered orders</span>
                     </div>
                 </div>
             </div>
@@ -1012,17 +938,9 @@
                 <div class="bg-white dark:bg-card-dark p-6 rounded-2xl border border-slate-200 dark:border-border-dark">
                     <div class="flex items-center justify-between mb-6">
                         <h3 class="text-lg font-bold text-slate-900 dark:text-white">Sales Trends</h3>
-                        <select class="px-3 py-1.5 bg-slate-50 dark:bg-background-dark/50 border border-slate-200 dark:border-border-dark rounded-lg text-xs font-semibold text-slate-700 dark:text-slate-300">
-                            <option>Daily</option>
-                            <option>Weekly</option>
-                            <option>Monthly</option>
-                        </select>
                     </div>
-                    <div class="h-64 flex items-center justify-center text-slate-400">
-                        <div class="text-center">
-                            <span class="material-symbols-rounded text-6xl opacity-20">monitoring</span>
-                            <p class="text-sm mt-2">Chart visualization will be here</p>
-                        </div>
+                    <div class="h-80 w-full">
+                        <canvas id="salesChart"></canvas>
                     </div>
                 </div>
 
@@ -1030,43 +948,8 @@
                     <div class="flex items-center justify-between mb-6">
                         <h3 class="text-lg font-bold text-slate-900 dark:text-white">Category Performance</h3>
                     </div>
-                    <div class="space-y-4">
-                        <div>
-                            <div class="flex items-center justify-between mb-2">
-                                <span class="text-sm font-semibold text-slate-700 dark:text-slate-300">Running Shoes</span>
-                                <span class="text-sm font-bold text-slate-900 dark:text-white">$45,230</span>
-                            </div>
-                            <div class="h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
-                                <div class="h-full bg-primary rounded-full" style="width: 75%"></div>
-                            </div>
-                        </div>
-                        <div>
-                            <div class="flex items-center justify-between mb-2">
-                                <span class="text-sm font-semibold text-slate-700 dark:text-slate-300">Basketball Shoes</span>
-                                <span class="text-sm font-bold text-slate-900 dark:text-white">$32,180</span>
-                            </div>
-                            <div class="h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
-                                <div class="h-full bg-blue-500 rounded-full" style="width: 55%"></div>
-                            </div>
-                        </div>
-                        <div>
-                            <div class="flex items-center justify-between mb-2">
-                                <span class="text-sm font-semibold text-slate-700 dark:text-slate-300">Casual Sneakers</span>
-                                <span class="text-sm font-bold text-slate-900 dark:text-white">$28,940</span>
-                            </div>
-                            <div class="h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
-                                <div class="h-full bg-emerald-500 rounded-full" style="width: 48%"></div>
-                            </div>
-                        </div>
-                        <div>
-                            <div class="flex items-center justify-between mb-2">
-                                <span class="text-sm font-semibold text-slate-700 dark:text-slate-300">Training Shoes</span>
-                                <span class="text-sm font-bold text-slate-900 dark:text-white">$18,213</span>
-                            </div>
-                            <div class="h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
-                                <div class="h-full bg-yellow-500 rounded-full" style="width: 30%"></div>
-                            </div>
-                        </div>
+                    <div class="h-80 w-full flex items-center justify-center">
+                        <canvas id="categoryChart"></canvas>
                     </div>
                 </div>
             </div>
@@ -1081,28 +964,10 @@
                                 <th class="pb-3 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Product</th>
                                 <th class="pb-3 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Units Sold</th>
                                 <th class="pb-3 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Revenue</th>
-                                <th class="pb-3 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Growth</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-slate-100 dark:divide-border-dark">
-                            <tr>
-                                <td class="py-3 text-sm font-semibold text-slate-900 dark:text-white">Nike Air Max 270</td>
-                                <td class="py-3 text-sm text-slate-600 dark:text-slate-400">245</td>
-                                <td class="py-3 text-sm font-bold text-slate-900 dark:text-white">$36,750</td>
-                                <td class="py-3 text-sm text-emerald-500 font-bold">+24%</td>
-                            </tr>
-                            <tr>
-                                <td class="py-3 text-sm font-semibold text-slate-900 dark:text-white">Adidas Ultraboost</td>
-                                <td class="py-3 text-sm text-slate-600 dark:text-slate-400">198</td>
-                                <td class="py-3 text-sm font-bold text-slate-900 dark:text-white">$35,640</td>
-                                <td class="py-3 text-sm text-emerald-500 font-bold">+18%</td>
-                            </tr>
-                            <tr>
-                                <td class="py-3 text-sm font-semibold text-slate-900 dark:text-white">Puma RS-X</td>
-                                <td class="py-3 text-sm text-slate-600 dark:text-slate-400">156</td>
-                                <td class="py-3 text-sm font-bold text-slate-900 dark:text-white">$18,720</td>
-                                <td class="py-3 text-sm text-emerald-500 font-bold">+12%</td>
-                            </tr>
+                        <tbody id="report-top-products" class="divide-y divide-slate-100 dark:divide-border-dark">
+                           <!-- Dynamic content -->
                         </tbody>
                     </table>
                 </div>
@@ -1122,103 +987,753 @@
                 </div>
             </div>
 
-            <!-- Settings Tabs -->
-            <div class="flex items-center gap-2 p-1 bg-slate-100 dark:bg-card-dark rounded-xl w-fit">
-                <button class="px-6 py-3 bg-white dark:bg-background-dark text-slate-900 dark:text-white text-sm font-bold rounded-lg shadow-sm transition-all">General</button>
-                <button class="px-6 py-3 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white text-sm font-medium rounded-lg transition-all">Payment</button>
-                <button class="px-6 py-3 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white text-sm font-medium rounded-lg transition-all">Notifications</button>
-                <button class="px-6 py-3 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white text-sm font-medium rounded-lg transition-all">Security</button>
+            <!-- Settings Sub-Tabs -->
+            <div class="flex items-center gap-2 p-1 bg-slate-100 dark:bg-card-dark rounded-xl w-fit overflow-x-auto">
+                <button onclick="window.settingsModule.switchSubTab('general')" id="subtab-general" class="settings-subtab px-6 py-3 bg-white dark:bg-background-dark text-slate-900 dark:text-white text-sm font-bold rounded-lg shadow-sm transition-all whitespace-nowrap">
+                    <span class="material-symbols-rounded text-[18px] mr-2 align-middle">settings</span>General
+                </button>
+                <button onclick="window.settingsModule.switchSubTab('payment')" id="subtab-payment" class="settings-subtab px-6 py-3 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white text-sm font-medium rounded-lg transition-all whitespace-nowrap">
+                    <span class="material-symbols-rounded text-[18px] mr-2 align-middle">payment</span>Payment
+                </button>
+                <button onclick="window.settingsModule.switchSubTab('notifications')" id="subtab-notifications" class="settings-subtab px-6 py-3 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white text-sm font-medium rounded-lg transition-all whitespace-nowrap">
+                    <span class="material-symbols-rounded text-[18px] mr-2 align-middle">notifications</span>Notifications
+                </button>
+                <button onclick="window.settingsModule.switchSubTab('security')" id="subtab-security" class="settings-subtab px-6 py-3 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white text-sm font-medium rounded-lg transition-all whitespace-nowrap">
+                    <span class="material-symbols-rounded text-[18px] mr-2 align-middle">security</span>Security
+                </button>
+                <button onclick="window.settingsModule.switchSubTab('brand')" id="subtab-brand" class="settings-subtab px-6 py-3 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white text-sm font-medium rounded-lg transition-all whitespace-nowrap">
+                    <span class="material-symbols-rounded text-[18px] mr-2 align-middle">palette</span>Thương Hiệu
+                </button>
             </div>
 
-            <!-- Settings Sections -->
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <!-- Store Information -->
-                <div class="bg-white dark:bg-card-dark p-6 rounded-2xl border border-slate-200 dark:border-border-dark">
-                    <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-6">Store Information</h3>
-                    <div class="space-y-4">
-                        <div>
-                            <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Store Name</label>
-                            <input type="text" value="X-Sneaker" class="w-full px-4 py-2.5 bg-slate-50 dark:bg-background-dark border border-slate-200 dark:border-border-dark rounded-xl text-sm font-medium focus:ring-2 focus:ring-primary/50 text-slate-900 dark:text-white">
+            <!-- General Tab Content -->
+            <div id="settings-general-content" class="settings-content">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- Store Information -->
+                    <div class="bg-white dark:bg-card-dark p-6 rounded-2xl border border-slate-200 dark:border-border-dark">
+                        <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
+                            <span class="material-symbols-rounded text-primary">store</span>
+                            Store Information
+                        </h3>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Store Name <span class="text-red-500">*</span></label>
+                                <input type="text" id="setting-site-name" required class="w-full px-4 py-2.5 bg-slate-50 dark:bg-background-dark border border-slate-200 dark:border-border-dark rounded-xl text-sm font-medium focus:ring-2 focus:ring-primary/50 text-slate-900 dark:text-white">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Store Email <span class="text-red-500">*</span></label>
+                                <input type="email" id="setting-store-email" required class="w-full px-4 py-2.5 bg-slate-50 dark:bg-background-dark border border-slate-200 dark:border-border-dark rounded-xl text-sm font-medium focus:ring-2 focus:ring-primary/50 text-slate-900 dark:text-white">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Phone Number</label>
+                                <input type="tel" id="setting-store-phone" class="w-full px-4 py-2.5 bg-slate-50 dark:bg-background-dark border border-slate-200 dark:border-border-dark rounded-xl text-sm font-medium focus:ring-2 focus:ring-primary/50 text-slate-900 dark:text-white">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Address</label>
+                                <textarea id="setting-store-address" rows="3" class="w-full px-4 py-2.5 bg-slate-50 dark:bg-background-dark border border-slate-200 dark:border-border-dark rounded-xl text-sm font-medium focus:ring-2 focus:ring-primary/50 text-slate-900 dark:text-white resize-none"></textarea>
+                            </div>
                         </div>
-                        <div>
-                            <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Store Email</label>
-                            <input type="email" value="info@xsneaker.com" class="w-full px-4 py-2.5 bg-slate-50 dark:bg-background-dark border border-slate-200 dark:border-border-dark rounded-xl text-sm font-medium focus:ring-2 focus:ring-primary/50 text-slate-900 dark:text-white">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Phone Number</label>
-                            <input type="tel" value="+1 (555) 123-4567" class="w-full px-4 py-2.5 bg-slate-50 dark:bg-background-dark border border-slate-200 dark:border-border-dark rounded-xl text-sm font-medium focus:ring-2 focus:ring-primary/50 text-slate-900 dark:text-white">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Address</label>
-                            <textarea rows="3" class="w-full px-4 py-2.5 bg-slate-50 dark:bg-background-dark border border-slate-200 dark:border-border-dark rounded-xl text-sm font-medium focus:ring-2 focus:ring-primary/50 text-slate-900 dark:text-white">123 Sneaker Street, Fashion District, NY 10001</textarea>
+                    </div>
+
+                    <!-- Business Settings -->
+                    <div class="bg-white dark:bg-card-dark p-6 rounded-2xl border border-slate-200 dark:border-border-dark">
+                        <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
+                            <span class="material-symbols-rounded text-primary">business</span>
+                            Business Settings
+                        </h3>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Currency</label>
+                                <select id="setting-currency" class="w-full px-4 py-2.5 bg-slate-50 dark:bg-background-dark border border-slate-200 dark:border-border-dark rounded-xl text-sm font-medium focus:ring-2 focus:ring-primary/50 text-slate-900 dark:text-white">
+                                    <option value="USD">USD ($)</option>
+                                    <option value="EUR">EUR (€)</option>
+                                    <option value="GBP">GBP (£)</option>
+                                    <option value="VND">VND (₫)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Timezone</label>
+                                <select id="setting-timezone" class="w-full px-4 py-2.5 bg-slate-50 dark:bg-background-dark border border-slate-200 dark:border-border-dark rounded-xl text-sm font-medium focus:ring-2 focus:ring-primary/50 text-slate-900 dark:text-white">
+                                    <option value="UTC-5">UTC-5 (Eastern Time)</option>
+                                    <option value="UTC-8">UTC-8 (Pacific Time)</option>
+                                    <option value="UTC+0">UTC+0 (GMT)</option>
+                                    <option value="UTC+7">UTC+7 (Vietnam)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Date Format</label>
+                                <select id="setting-date-format" class="w-full px-4 py-2.5 bg-slate-50 dark:bg-background-dark border border-slate-200 dark:border-border-dark rounded-xl text-sm font-medium focus:ring-2 focus:ring-primary/50 text-slate-900 dark:text-white">
+                                    <option value="MM/DD/YYYY">MM/DD/YYYY</option>
+                                    <option value="DD/MM/YYYY">DD/MM/YYYY</option>
+                                    <option value="YYYY-MM-DD">YYYY-MM-DD</option>
+                                </select>
+                            </div>
+                            <div class="flex items-center justify-between pt-2">
+                                <div>
+                                    <p class="text-sm font-semibold text-slate-900 dark:text-white">Enable Tax</p>
+                                    <p class="text-xs text-slate-500">Automatically calculate taxes</p>
+                                </div>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" id="setting-enable-tax" class="sr-only peer">
+                                    <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-primary/50 rounded-full peer dark:bg-slate-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-slate-600 peer-checked:bg-primary"></div>
+                                </label>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Business Settings -->
+                <!-- Social Media Links -->
                 <div class="bg-white dark:bg-card-dark p-6 rounded-2xl border border-slate-200 dark:border-border-dark">
-                    <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-6">Business Settings</h3>
-                    <div class="space-y-4">
+                    <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
+                        <span class="material-symbols-rounded text-primary">share</span>
+                        Social Media Links
+                    </h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Currency</label>
-                            <select class="w-full px-4 py-2.5 bg-slate-50 dark:bg-background-dark border border-slate-200 dark:border-border-dark rounded-xl text-sm font-medium focus:ring-2 focus:ring-primary/50 text-slate-900 dark:text-white">
-                                <option>USD ($)</option>
-                                <option>EUR (€)</option>
-                                <option>GBP (£)</option>
-                            </select>
+                            <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2 flex items-center gap-2">
+                                <span class="text-blue-600">📘</span> Facebook
+                            </label>
+                            <input type="url" id="setting-facebook" placeholder="https://facebook.com/xsneaker" class="w-full px-4 py-2.5 bg-slate-50 dark:bg-background-dark border border-slate-200 dark:border-border-dark rounded-xl text-sm font-medium focus:ring-2 focus:ring-primary/50 text-slate-900 dark:text-white">
                         </div>
                         <div>
-                            <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Timezone</label>
-                            <select class="w-full px-4 py-2.5 bg-slate-50 dark:bg-background-dark border border-slate-200 dark:border-border-dark rounded-xl text-sm font-medium focus:ring-2 focus:ring-primary/50 text-slate-900 dark:text-white">
-                                <option>UTC-5 (Eastern Time)</option>
-                                <option>UTC-8 (Pacific Time)</option>
-                                <option>UTC+0 (GMT)</option>
-                            </select>
+                            <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2 flex items-center gap-2">
+                                <span class="text-pink-600">📷</span> Instagram
+                            </label>
+                            <input type="url" id="setting-instagram" placeholder="https://instagram.com/xsneaker" class="w-full px-4 py-2.5 bg-slate-50 dark:bg-background-dark border border-slate-200 dark:border-border-dark rounded-xl text-sm font-medium focus:ring-2 focus:ring-primary/50 text-slate-900 dark:text-white">
                         </div>
                         <div>
-                            <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Date Format</label>
-                            <select class="w-full px-4 py-2.5 bg-slate-50 dark:bg-background-dark border border-slate-200 dark:border-border-dark rounded-xl text-sm font-medium focus:ring-2 focus:ring-primary/50 text-slate-900 dark:text-white">
-                                <option>MM/DD/YYYY</option>
-                                <option>DD/MM/YYYY</option>
-                                <option>YYYY-MM-DD</option>
-                            </select>
+                            <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2 flex items-center gap-2">
+                                <span class="text-blue-400">🐦</span> Twitter
+                            </label>
+                            <input type="url" id="setting-twitter" placeholder="https://twitter.com/xsneaker" class="w-full px-4 py-2.5 bg-slate-50 dark:bg-background-dark border border-slate-200 dark:border-border-dark rounded-xl text-sm font-medium focus:ring-2 focus:ring-primary/50 text-slate-900 dark:text-white">
                         </div>
-                        <div class="flex items-center justify-between pt-2">
-                            <div>
-                                <p class="text-sm font-semibold text-slate-900 dark:text-white">Enable Tax</p>
-                                <p class="text-xs text-slate-500">Automatically calculate taxes</p>
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2 flex items-center gap-2">
+                                <span class="text-black dark:text-white">🎵</span> TikTok
+                            </label>
+                            <input type="url" id="setting-tiktok" placeholder="https://tiktok.com/@xsneaker" class="w-full px-4 py-2.5 bg-slate-50 dark:bg-background-dark border border-slate-200 dark:border-border-dark rounded-xl text-sm font-medium focus:ring-2 focus:ring-primary/50 text-slate-900 dark:text-white">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Appearance -->
+                <div class="bg-white dark:bg-card-dark p-6 rounded-2xl border border-slate-200 dark:border-border-dark">
+                    <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
+                        <span class="material-symbols-rounded text-primary">palette</span>
+                        Appearance
+                    </h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div onclick="window.settingsModule.setTheme('light')" class="p-4 border-2 border-slate-200 dark:border-border-dark rounded-xl cursor-pointer hover:border-primary transition-colors" id="theme-btn-light">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-sm font-bold text-slate-900 dark:text-white">Light Mode</span>
+                                <span class="material-symbols-rounded text-primary hidden check-icon">check_circle</span>
                             </div>
+                            <div class="h-20 bg-gradient-to-br from-slate-50 to-slate-100 rounded-lg border border-slate-200"></div>
+                        </div>
+                        <div onclick="window.settingsModule.setTheme('dark')" class="p-4 border-2 border-slate-200 dark:border-border-dark rounded-xl cursor-pointer hover:border-primary transition-colors" id="theme-btn-dark">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-sm font-bold text-slate-900 dark:text-white">Dark Mode</span>
+                                <span class="material-symbols-rounded text-primary hidden check-icon">check_circle</span>
+                            </div>
+                            <div class="h-20 bg-gradient-to-br from-slate-800 to-slate-900 rounded-lg"></div>
+                        </div>
+                        <div onclick="window.settingsModule.setTheme('auto')" class="p-4 border-2 border-slate-200 dark:border-border-dark rounded-xl cursor-pointer hover:border-primary transition-colors" id="theme-btn-auto">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-sm font-bold text-slate-900 dark:text-white">Auto</span>
+                                <span class="material-symbols-rounded text-primary hidden check-icon">check_circle</span>
+                            </div>
+                            <div class="h-20 bg-gradient-to-r from-slate-100 via-slate-400 to-slate-800 rounded-lg"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Payment Tab Content -->
+            <div id="settings-payment-content" class="settings-content hidden">
+                <div class="grid grid-cols-1 gap-6">
+                    <!-- VNPay Configuration -->
+                    <div class="bg-white dark:bg-card-dark p-6 rounded-2xl border border-slate-200 dark:border-border-dark">
+                        <div class="flex items-center justify-between mb-6">
+                            <h3 class="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                                <span class="material-symbols-rounded text-primary">account_balance</span>
+                                VNPay Configuration
+                            </h3>
                             <label class="relative inline-flex items-center cursor-pointer">
-                                <input type="checkbox" checked class="sr-only peer">
+                                <input type="checkbox" id="payment-vnpay-enabled" class="sr-only peer">
                                 <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-primary/50 rounded-full peer dark:bg-slate-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-slate-600 peer-checked:bg-primary"></div>
                             </label>
                         </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">TMN Code</label>
+                                <input type="text" id="payment-vnpay-tmn" placeholder="Enter TMN Code" class="w-full px-4 py-2.5 bg-slate-50 dark:bg-background-dark border border-slate-200 dark:border-border-dark rounded-xl text-sm font-medium focus:ring-2 focus:ring-primary/50 text-slate-900 dark:text-white">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Hash Secret</label>
+                                <input type="password" id="payment-vnpay-secret" placeholder="Enter Hash Secret" class="w-full px-4 py-2.5 bg-slate-50 dark:bg-background-dark border border-slate-200 dark:border-border-dark rounded-xl text-sm font-medium focus:ring-2 focus:ring-primary/50 text-slate-900 dark:text-white">
+                            </div>
+                            <div class="md:col-span-2">
+                                <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Return URL</label>
+                                <input type="url" id="payment-vnpay-return" placeholder="https://yoursite.com/payment/return" class="w-full px-4 py-2.5 bg-slate-50 dark:bg-background-dark border border-slate-200 dark:border-border-dark rounded-xl text-sm font-medium focus:ring-2 focus:ring-primary/50 text-slate-900 dark:text-white">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Momo Configuration -->
+                    <div class="bg-white dark:bg-card-dark p-6 rounded-2xl border border-slate-200 dark:border-border-dark">
+                        <div class="flex items-center justify-between mb-6">
+                            <h3 class="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                                <span class="material-symbols-rounded text-primary">phone_android</span>
+                                Momo Configuration
+                            </h3>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" id="payment-momo-enabled" class="sr-only peer">
+                                <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-primary/50 rounded-full peer dark:bg-slate-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-slate-600 peer-checked:bg-primary"></div>
+                            </label>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Partner Code</label>
+                                <input type="text" id="payment-momo-partner" placeholder="Enter Partner Code" class="w-full px-4 py-2.5 bg-slate-50 dark:bg-background-dark border border-slate-200 dark:border-border-dark rounded-xl text-sm font-medium focus:ring-2 focus:ring-primary/50 text-slate-900 dark:text-white">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Access Key</label>
+                                <input type="text" id="payment-momo-access" placeholder="Enter Access Key" class="w-full px-4 py-2.5 bg-slate-50 dark:bg-background-dark border border-slate-200 dark:border-border-dark rounded-xl text-sm font-medium focus:ring-2 focus:ring-primary/50 text-slate-900 dark:text-white">
+                            </div>
+                            <div class="md:col-span-2">
+                                <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Secret Key</label>
+                                <input type="password" id="payment-momo-secret" placeholder="Enter Secret Key" class="w-full px-4 py-2.5 bg-slate-50 dark:bg-background-dark border border-slate-200 dark:border-border-dark rounded-xl text-sm font-medium focus:ring-2 focus:ring-primary/50 text-slate-900 dark:text-white">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Cash on Delivery -->
+                    <div class="bg-white dark:bg-card-dark p-6 rounded-2xl border border-slate-200 dark:border-border-dark">
+                        <div class="flex items-center justify-between mb-6">
+                            <h3 class="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                                <span class="material-symbols-rounded text-primary">local_shipping</span>
+                                Cash on Delivery (COD)
+                            </h3>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" id="payment-cod-enabled" class="sr-only peer">
+                                <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-primary/50 rounded-full peer dark:bg-slate-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-slate-600 peer-checked:bg-primary"></div>
+                            </label>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">COD Fee (VND)</label>
+                                <input type="number" id="payment-cod-fee" placeholder="0" min="0" class="w-full px-4 py-2.5 bg-slate-50 dark:bg-background-dark border border-slate-200 dark:border-border-dark rounded-xl text-sm font-medium focus:ring-2 focus:ring-primary/50 text-slate-900 dark:text-white">
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Preferences -->
-            <div class="bg-white dark:bg-card-dark p-6 rounded-2xl border border-slate-200 dark:border-border-dark">
-                <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-6">Appearance</h3>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div class="p-4 border-2 border-primary rounded-xl cursor-pointer">
-                        <div class="flex items-center justify-between mb-2">
-                            <span class="text-sm font-bold text-slate-900 dark:text-white">Light Mode</span>
-                            <span class="material-symbols-rounded text-primary">check_circle</span>
+            <!-- Notifications Tab Content -->
+            <div id="settings-notifications-content" class="settings-content hidden">
+                <div class="grid grid-cols-1 gap-6">
+                    <!-- SMTP Configuration -->
+                    <div class="bg-white dark:bg-card-dark p-6 rounded-2xl border border-slate-200 dark:border-border-dark">
+                        <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
+                            <span class="material-symbols-rounded text-primary">mail</span>
+                            SMTP Email Configuration
+                        </h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">SMTP Host</label>
+                                <input type="text" id="smtp-host" placeholder="smtp.gmail.com" class="w-full px-4 py-2.5 bg-slate-50 dark:bg-background-dark border border-slate-200 dark:border-border-dark rounded-xl text-sm font-medium focus:ring-2 focus:ring-primary/50 text-slate-900 dark:text-white">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">SMTP Port</label>
+                                <input type="number" id="smtp-port" placeholder="587" class="w-full px-4 py-2.5 bg-slate-50 dark:bg-background-dark border border-slate-200 dark:border-border-dark rounded-xl text-sm font-medium focus:ring-2 focus:ring-primary/50 text-slate-900 dark:text-white">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Username / Email</label>
+                                <input type="email" id="smtp-username" placeholder="your-email@gmail.com" class="w-full px-4 py-2.5 bg-slate-50 dark:bg-background-dark border border-slate-200 dark:border-border-dark rounded-xl text-sm font-medium focus:ring-2 focus:ring-primary/50 text-slate-900 dark:text-white">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Password</label>
+                                <input type="password" id="smtp-password" placeholder="••••••••" class="w-full px-4 py-2.5 bg-slate-50 dark:bg-background-dark border border-slate-200 dark:border-border-dark rounded-xl text-sm font-medium focus:ring-2 focus:ring-primary/50 text-slate-900 dark:text-white">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Encryption</label>
+                                <select id="smtp-encryption" class="w-full px-4 py-2.5 bg-slate-50 dark:bg-background-dark border border-slate-200 dark:border-border-dark rounded-xl text-sm font-medium focus:ring-2 focus:ring-primary/50 text-slate-900 dark:text-white">
+                                    <option value="tls">TLS</option>
+                                    <option value="ssl">SSL</option>
+                                    <option value="none">None</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">From Name</label>
+                                <input type="text" id="smtp-from-name" placeholder="X-Sneaker Store" class="w-full px-4 py-2.5 bg-slate-50 dark:bg-background-dark border border-slate-200 dark:border-border-dark rounded-xl text-sm font-medium focus:ring-2 focus:ring-primary/50 text-slate-900 dark:text-white">
+                            </div>
                         </div>
-                        <div class="h-20 bg-gradient-to-br from-slate-50 to-slate-100 rounded-lg"></div>
+                        <div class="mt-4">
+                            <button onclick="window.settingsModule.testEmail()" class="px-5 py-2.5 bg-blue-500 hover:bg-blue-600 text-white rounded-xl text-sm font-bold shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40 active:scale-95 transition-all">
+                                <span class="material-symbols-rounded text-[18px] mr-2 align-middle">send</span>
+                                Test Email Connection
+                            </button>
+                        </div>
                     </div>
-                    <div class="p-4 border-2 border-slate-200 dark:border-border-dark rounded-xl cursor-pointer hover:border-primary transition-colors">
-                        <div class="flex items-center justify-between mb-2">
-                            <span class="text-sm font-bold text-slate-900 dark:text-white">Dark Mode</span>
+
+                    <!-- Email Notifications -->
+                    <div class="bg-white dark:bg-card-dark p-6 rounded-2xl border border-slate-200 dark:border-border-dark">
+                        <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
+                            <span class="material-symbols-rounded text-primary">notifications_active</span>
+                            Email Notifications
+                        </h3>
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-between p-4 bg-slate-50 dark:bg-background-dark rounded-xl">
+                                <div>
+                                    <p class="text-sm font-semibold text-slate-900 dark:text-white">Order Confirmation</p>
+                                    <p class="text-xs text-slate-500">Send email when order is placed</p>
+                                </div>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" id="notif-order-confirmation" class="sr-only peer">
+                                    <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-primary/50 rounded-full peer dark:bg-slate-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-slate-600 peer-checked:bg-primary"></div>
+                                </label>
+                            </div>
+                            <div class="flex items-center justify-between p-4 bg-slate-50 dark:bg-background-dark rounded-xl">
+                                <div>
+                                    <p class="text-sm font-semibold text-slate-900 dark:text-white">Order Shipped</p>
+                                    <p class="text-xs text-slate-500">Send email when order is shipped</p>
+                                </div>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" id="notif-order-shipped" class="sr-only peer">
+                                    <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-primary/50 rounded-full peer dark:bg-slate-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-slate-600 peer-checked:bg-primary"></div>
+                                </label>
+                            </div>
+                            <div class="flex items-center justify-between p-4 bg-slate-50 dark:bg-background-dark rounded-xl">
+                                <div>
+                                    <p class="text-sm font-semibold text-slate-900 dark:text-white">Order Delivered</p>
+                                    <p class="text-xs text-slate-500">Send email when order is delivered</p>
+                                </div>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" id="notif-order-delivered" class="sr-only peer">
+                                    <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-primary/50 rounded-full peer dark:bg-slate-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-slate-600 peer-checked:bg-primary"></div>
+                                </label>
+                            </div>
+                            <div class="flex items-center justify-between p-4 bg-slate-50 dark:bg-background-dark rounded-xl">
+                                <div>
+                                    <p class="text-sm font-semibold text-slate-900 dark:text-white">Low Stock Alert</p>
+                                    <p class="text-xs text-slate-500">Send email when product stock is low</p>
+                                </div>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" id="notif-low-stock" class="sr-only peer">
+                                    <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-primary/50 rounded-full peer dark:bg-slate-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-slate-600 peer-checked:bg-primary"></div>
+                                </label>
+                            </div>
                         </div>
-                        <div class="h-20 bg-gradient-to-br from-slate-800 to-slate-900 rounded-lg"></div>
                     </div>
-                    <div class="p-4 border-2 border-slate-200 dark:border-border-dark rounded-xl cursor-pointer hover:border-primary transition-colors">
-                        <div class="flex items-center justify-between mb-2">
-                            <span class="text-sm font-bold text-slate-900 dark:text-white">Auto</span>
+                </div>
+            </div>
+
+            <!-- Security Tab Content -->
+            <div id="settings-security-content" class="settings-content hidden">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- Change Password -->
+                    <div class="bg-white dark:bg-card-dark p-6 rounded-2xl border border-slate-200 dark:border-border-dark">
+                        <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
+                            <span class="material-symbols-rounded text-primary">lock</span>
+                            Change Password
+                        </h3>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Current Password</label>
+                                <input type="password" id="security-current-password" placeholder="Enter current password" class="w-full px-4 py-2.5 bg-slate-50 dark:bg-background-dark border border-slate-200 dark:border-border-dark rounded-xl text-sm font-medium focus:ring-2 focus:ring-primary/50 text-slate-900 dark:text-white">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">New Password</label>
+                                <input type="password" id="security-new-password" placeholder="Enter new password" class="w-full px-4 py-2.5 bg-slate-50 dark:bg-background-dark border border-slate-200 dark:border-border-dark rounded-xl text-sm font-medium focus:ring-2 focus:ring-primary/50 text-slate-900 dark:text-white">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Confirm New Password</label>
+                                <input type="password" id="security-confirm-password" placeholder="Confirm new password" class="w-full px-4 py-2.5 bg-slate-50 dark:bg-background-dark border border-slate-200 dark:border-border-dark rounded-xl text-sm font-medium focus:ring-2 focus:ring-primary/50 text-slate-900 dark:text-white">
+                            </div>
+                            <button onclick="window.settingsModule.changePassword()" class="w-full px-5 py-2.5 bg-primary hover:bg-primary-600 text-white rounded-xl text-sm font-bold shadow-lg shadow-primary/25 hover:shadow-primary/40 active:scale-95 transition-all">
+                                Update Password
+                            </button>
                         </div>
-                        <div class="h-20 bg-gradient-to-r from-slate-100 via-slate-400 to-slate-800 rounded-lg"></div>
+                    </div>
+
+                    <!-- Two-Factor Authentication -->
+                    <div class="bg-white dark:bg-card-dark p-6 rounded-2xl border border-slate-200 dark:border-border-dark">
+                        <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
+                            <span class="material-symbols-rounded text-primary">shield</span>
+                            Two-Factor Authentication
+                        </h3>
+                        <div class="space-y-4">
+                            <div class="p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-xl">
+                                <p class="text-sm text-blue-900 dark:text-blue-200 mb-2">
+                                    <span class="font-bold">Status:</span> 
+                                    <span id="2fa-status">Disabled</span>
+                                </p>
+                                <p class="text-xs text-blue-700 dark:text-blue-300">
+                                    Add an extra layer of security to your account
+                                </p>
+                            </div>
+                            <button onclick="window.settingsModule.toggle2FA()" id="btn-toggle-2fa" class="w-full px-5 py-2.5 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl text-sm font-bold shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 active:scale-95 transition-all">
+                                Enable 2FA
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Session Management -->
+                <div class="bg-white dark:bg-card-dark p-6 rounded-2xl border border-slate-200 dark:border-border-dark">
+                    <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
+                        <span class="material-symbols-rounded text-primary">devices</span>
+                        Active Sessions
+                    </h3>
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between p-4 bg-slate-50 dark:bg-background-dark rounded-xl">
+                            <div class="flex items-center gap-3">
+                                <span class="material-symbols-rounded text-green-500">check_circle</span>
+                                <div>
+                                    <p class="text-sm font-semibold text-slate-900 dark:text-white">Current Session</p>
+                                    <p class="text-xs text-slate-500">Windows · Chrome · Vietnam</p>
+                                </div>
+                            </div>
+                            <span class="text-xs text-green-600 font-medium">Active Now</span>
+                        </div>
+                        <div class="text-center py-8 text-slate-400">
+                            <span class="material-symbols-rounded text-4xl opacity-20">devices</span>
+                            <p class="text-sm mt-2">No other active sessions</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Data Management -->
+                <div class="bg-white dark:bg-card-dark p-6 rounded-2xl border border-slate-200 dark:border-border-dark">
+                    <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
+                        <span class="material-symbols-rounded text-primary">database</span>
+                        Data Management
+                    </h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <button onclick="window.settingsModule.exportData()" class="px-5 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-xl text-sm font-bold shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40 active:scale-95 transition-all flex items-center justify-center gap-2">
+                            <span class="material-symbols-rounded text-[20px]">download</span>
+                            Export All Data
+                        </button>
+                        <button onclick="window.settingsModule.clearCache()" class="px-5 py-3 bg-amber-500 hover:bg-amber-600 text-white rounded-xl text-sm font-bold shadow-lg shadow-amber-500/25 hover:shadow-amber-500/40 active:scale-95 transition-all flex items-center justify-center gap-2">
+                            <span class="material-symbols-rounded text-[20px]">delete_sweep</span>
+                            Clear Cache
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Brand Tab Content -->
+            <div id="settings-brand-content" class="settings-content hidden space-y-6">
+                <!-- Brand Colors -->
+                <div class="bg-white dark:bg-card-dark p-6 rounded-2xl border border-slate-200 dark:border-border-dark">
+                    <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
+                        <span class="material-symbols-rounded text-primary">palette</span>
+                        Màu Sắc Thương Hiệu
+                    </h3>
+                    
+                    <div class="space-y-5">
+                        <!-- Primary Color -->
+                        <div class="flex flex-col md:flex-row md:items-center gap-4">
+                            <label class="text-sm font-semibold text-slate-700 dark:text-slate-300 w-40">Màu Chính (Primary)</label>
+                            <div class="flex items-center gap-3 flex-1">
+                               <input type="color" id="brand-color-primary" value="#e71823" class="h-12 w-20 border-2 border-slate-200 dark:border-border-dark rounded-lg cursor-pointer">
+                                <input type="text" id="brand-color-primary-hex" value="#e71823" placeholder="#e71823" class="flex-1 px-4 py-2.5 bg-slate-50 dark:bg-background-dark border border-slate-200 dark:border-border-dark rounded-xl text-sm font-mono font-medium focus:ring-2 focus:ring-primary focus:border-primary transition-all">
+                                <button onclick="window.settingsModule.resetColor('primary')" class="px-4 py-2.5 bg-slate-100 dark:bg-background-dark hover:bg-slate-200 dark:hover:bg-white/10 border border-slate-200 dark:border-border-dark rounded-xl text-sm font-semibold transition-all">
+                                    Mặc định
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Background Light -->
+                        <div class="flex flex-col md:flex-row md:items-center gap-4">
+                            <label class="text-sm font-semibold text-slate-700 dark:text-slate-300 w-40">Nền Sáng</label>
+                            <div class="flex items-center gap-3 flex-1">
+                                <input type="color" id="brand-color-bg-light" value="#ffffff" class="h-12 w-20 border-2 border-slate-200 dark:border-border-dark rounded-lg cursor-pointer">
+                                <input type="text" id="brand-color-bg-light-hex" value="#ffffff" placeholder="#ffffff" class="flex-1 px-4 py-2.5 bg-slate-50 dark:bg-background-dark border border-slate-200 dark:border-border-dark rounded-xl text-sm font-mono font-medium focus:ring-2 focus:ring-primary focus:border-primary transition-all">
+                                <button onclick="window.settingsModule.resetColor('bg-light')" class="px-4 py-2.5 bg-slate-100 dark:bg-background-dark hover:bg-slate-200 dark:hover:bg-white/10 border border-slate-200 dark:border-border-dark rounded-xl text-sm font-semibold transition-all">
+                                    Mặc định
+                                </button>
+                            </div>
+                        </div>
+
+                        <!--Background Dark -->
+                        <div class="flex flex-col md:flex-row md:items-center gap-4">
+                            <label class="text-sm font-semibold text-slate-700 dark:text-slate-300 w-40">Nền Tối</label>
+                            <div class="flex items-center gap-3 flex-1">
+                                <input type="color" id="brand-color-bg-dark" value="#211112" class="h-12 w-20 border-2 border-slate-200 dark:border-border-dark rounded-lg cursor-pointer">
+                                <input type="text" id="brand-color-bg-dark-hex" value="#211112" placeholder="#211112" class="flex-1 px-4 py-2.5 bg-slate-50 dark:bg-background-dark border border-slate-200 dark:border-border-dark rounded-xl text-sm font-mono font-medium focus:ring-2 focus:ring-primary focus:border-primary transition-all">
+                                <button onclick="window.settingsModule.resetColor('bg-dark')" class="px-4 py-2.5 bg-slate-100 dark:bg-background-dark hover:bg-slate-200 dark:hover:bg-white/10 border border-slate-200 dark:border-border-dark rounded-xl text-sm font-semibold transition-all">
+                                    Mặc định
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Color Preview -->
+                        <div class="mt-6 p-8 bg-gradient-to-br from-slate-50 to-slate-100 dark:from-background-dark dark:to-slate-900 rounded-2xl border-2 border-dashed border-slate-300 dark:border-border-dark">
+                            <p class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-4">Live Preview</p>
+                            <div class="flex flex-wrap gap-3">
+                                <button id="color-preview-btn-primary" style="background-color: var(--brand-primary, #e71823)" class="px-6 py-3 text-white rounded-lg text-sm font-bold shadow-lg transition-transform hover:scale-105">
+                                    Primary Button
+                                </button>
+                                <button style="background-color: var(--brand-bg-light, #ffffff); color: #1f2937" class="px-6 py-3 border-2 border-slate-300 rounded-lg text-sm font-bold shadow transition-transform hover:scale-105">
+                                    Light Background
+                                </button>
+                                <button style="background-color: var(--brand-bg-dark, #211112)" class="px-6 py-3 text-white rounded-lg text-sm font-bold shadow-lg transition-transform hover:scale-105">
+                                    Dark Background
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Logo Management -->
+                <div class="bg-white dark:bg-card-dark p-6 rounded-2xl border border-slate-200 dark:border-border-dark">
+                    <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
+                        <span class="material-symbols-rounded text-primary">image</span>
+                        Logo Thương Hiệu
+                    </h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <!-- Header Logo -->
+                        <div class="space-y-3">
+                            <label class="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                                <span class="material-symbols-rounded text-[18px]">desktop_windows</span>
+                               Logo Header
+                            </label>
+                            <div class="border-2 border-dashed border-slate-300 dark:border-border-dark rounded-xl p-6 text-center bg-slate-50 dark:bg-background-dark hover:border-primary transition-colors cursor-pointer" onclick="document.getElementById('upload-logo-header').click()">
+                                <img id="preview-logo-header" src="image/Logo_X_Sneaker.png" class="h-16 mx-auto mb-4 object-contain">
+                                <input type="file" id="upload-logo-header" accept="image/*" class="hidden" onchange="window.settingsModule.uploadLogo(this.files[0], 'header')">
+                                <p class="text-xs text-slate-500 dark:text-slate-400 font-medium mb-2">Click để tải lên</p>
+                                <p class="text-[10px] text-slate-400">PNG, JPG (Max 2MB)</p>
+                                <p class="text-[10px] text-slate-400">Khuyến nghị: 200x60px</p>
+                            </div>
+                        </div>
+
+                        <!-- Favicon -->
+                        <div class="space-y-3">
+                            <label class="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                                <span class="material-symbols-rounded text-[18px]">tab</span>
+                                Favicon
+                            </label>
+                            <div class="border-2 border-dashed border-slate-300 dark:border-border-dark rounded-xl p-6 text-center bg-slate-50 dark:bg-background-dark hover:border-primary transition-colors cursor-pointer" onclick="document.getElementById('upload-favicon').click()">
+                                <img id="preview-favicon" src="image/Logo_X_Sneaker.png" class="h-12 mx-auto mb-4 object-contain">
+                                <input type="file" id="upload-favicon" accept="image/*" class="hidden" onchange="window.settingsModule.uploadLogo(this.files[0], 'favicon')">
+                                <p class="text-xs text-slate-500 dark:text-slate-400 font-medium mb-2">Click để tải lên</p>
+                                <p class="text-[10px] text-slate-400">PNG, ICO (Max 500KB)</p>
+                                <p class="text-[10px] text-slate-400">Khuyến nghị: 32x32px</p>
+                            </div>
+                        </div>
+
+                        <!-- Footer Logo -->
+                        <div class="space-y-3">
+                            <label class="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                                <span class="material-symbols-rounded text-[18px]">web</span>
+                                Logo Footer
+                            </label>
+                            <div class="border-2 border-dashed border-slate-300 dark:border-border-dark rounded-xl p-6 text-center bg-slate-50 dark:bg-background-dark hover:border-primary transition-colors cursor-pointer" onclick="document.getElementById('upload-logo-footer').click()">
+                                <img id="preview-logo-footer" src="image/Logo_X_Sneaker.png" class="h-12 mx-auto mb-4 object-contain">
+                                <input type="file" id="upload-logo-footer" accept="image/*" class="hidden" onchange="window.settingsModule.uploadLogo(this.files[0], 'footer')">
+                                <p class="text-xs text-slate-500 dark:text-slate-400 font-medium mb-2">Click để tải lên</p>
+                                <p class="text-[10px] text-slate-400">PNG, JPG (Max 2MB)</p>
+                                <p class="text-[10px] text-slate-400">Khuyến nghị: 150x50px</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Hero Slider Banners -->
+                <div class="bg-white dark:bg-card-dark p-6 rounded-2xl border border-slate-200 dark:border-border-dark">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                            <span class="material-symbols-rounded text-primary">photo_library</span>
+                            Hero Slider Banners
+                        </h3>
+                        <button onclick="document.getElementById('upload-slider-image').click()" class="px-4 py-2.5 bg-primary hover:bg-primary-600 text-white rounded-xl text-sm font-bold shadow-lg shadow-primary/25 hover:shadow-primary/40 active:scale-95 transition-all flex items-center gap-2">
+                            <span class="material-symbols-rounded text-[18px]">add_photo_alternate</span>
+                            Thêm Slide
+                        </button>
+                    </div>
+
+                    <!-- Slider Images List -->
+                    <div id="slider-images-list" class="space-y-3 mb-4">
+                        <!-- Slides will be loaded dynamically -->
+                    </div>
+
+                    <!-- Upload Zone -->
+                    <div class="border-2 border-dashed border-slate-300 dark:border-border-dark rounded-xl p-8 text-center bg-slate-50 dark:bg-background-dark hover:border-primary transition-colors cursor-pointer" onclick="document.getElementById('upload-slider-image').click()">
+                        <input type="file" id="upload-slider-image" accept="image/*" class="hidden" onchange="window.settingsModule.uploadSliderImage(this.files[0])">
+                        <span class="material-symbols-rounded text-5xl text-slate-300 dark:text-slate-600 mb-3">cloud_upload</span>
+                        <p class="text-sm text-slate-600 dark:text-slate-400 font-semibold mb-1">Kéo thả ảnh vào đây hoặc click để chọn</p>
+                        <p class="text-xs text-slate-400">PNG, JPG, WebP (Max 5MB) • Khuyến nghị: 1920x600px</p>
+                    </div>
+
+                    <div class="mt-4 p-4 bg-blue-50 dark:bg-blue-900/10 rounded-xl border border-blue-200 dark:border-blue-800">
+                        <div class="flex gap-3">
+                            <span class="material-symbols-rounded text-blue-500 flex-shrink-0">info</span>
+                            <div class="text-sm">
+                                <p class="font-semibold text-blue-900 dark:text-blue-400 mb-1">Lưu ý về Hero Slider:</p>
+                                <ul class="text-blue-700 dark:text-blue-300 space-y-1 text-xs">
+                                    <li>• Tối đa 5 slides, tối thiểu 2 slides</li>
+                                    <li>• Ảnh sẽ được tự động tối ưu qua Cloudinary</li>
+                                    <li>• Đảm bảo nội dung quan trọng nằm ở 1/3 bên trái</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex justify-end gap-3">
+                <button onclick="window.settingsModule.resetForm()" class="px-6 py-2.5 bg-white dark:bg-card-dark border border-slate-200 dark:border-border-dark rounded-xl text-sm font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-white/5 transition-all">
+                    Cancel
+                </button>
+                <button id="btn-save-settings" onclick="window.settingsModule.saveCurrentTab()" class="px-6 py-2.5 bg-primary hover:bg-primary-600 text-white rounded-xl text-sm font-bold shadow-lg shadow-primary/25 hover:shadow-primary/40 active:scale-95 transition-all flex items-center gap-2">
+                    <span class="material-symbols-rounded text-[18px]">save</span>
+                    Save Changes
+                </button>
+            </div>
+
+            <!-- Toast Notification Container -->
+            <div id="toast-container" class="fixed top-24 right-8 z-50 space-y-2"></div>
+            `,
+
+            cms: `
+            <!-- Page Header -->
+            <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+                <div>
+                    <h2 class="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">Content Management</h2>
+                    <div class="flex items-center gap-2 mt-2 text-sm text-slate-500 dark:text-slate-400">
+                        <span>Dashboard</span>
+                        <span class="material-symbols-rounded text-[14px]">chevron_right</span>
+                        <span class="text-primary font-semibold">CMS</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CMS Sub-Tabs -->
+            <div class="flex items-center gap-2 p-1 bg-slate-100 dark:bg-card-dark rounded-xl w-fit">
+                <button class="cms-tab-btn px-6 py-3 bg-white dark:bg-background-dark text-primary border-b-2 border-primary text-sm font-bold rounded-lg shadow-sm transition-all" data-target="cms-about-content">
+                    <span class="material-symbols-rounded text-[18px] mr-2 align-middle">info</span>About Us
+                </button>
+                <button class="cms-tab-btn px-6 py-3 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white text-sm font-medium rounded-lg transition-all" data-target="cms-contact-content">
+                    <span class="material-symbols-rounded text-[18px] mr-2 align-middle">contact_mail</span>Contact Info
+                </button>
+            </div>
+
+            <!-- About Us Content -->
+            <div id="cms-about-content" class="cms-tab-content space-y-6">
+                <div class="bg-white dark:bg-card-dark p-6 rounded-2xl border border-slate-200 dark:border-border-dark">
+                    <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
+                        <span class="material-symbols-rounded text-primary">image</span>
+                        Hero Image
+                    </h3>
+                    
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Upload Image</label>
+                                <div class="relative border-2 border-dashed border-slate-300 dark:border-border-dark rounded-xl p-4 hover:border-primary transition-colors cursor-pointer" onclick="document.getElementById('cms-about-hero-file').click()">
+                                    <input type="file" id="cms-about-hero-file" accept="image/*" class="hidden">
+                                    <div class="text-center">
+                                        <span class="material-symbols-rounded text-4xl text-slate-300 dark:text-slate-600 block mb-2">cloud_upload</span>
+                                        <p class="text-sm text-slate-600 dark:text-slate-400 font-semibold">Click to upload hero image</p>
+                                        <p class="text-xs text-slate-400 mt-1">PNG, JPG, WebP (Recommended: 1920x800px)</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Or Image URL</label>
+                                <input type="url" id="cms-about-hero-url" placeholder="https://example.com/image.jpg" class="w-full px-4 py-2.5 bg-slate-50 dark:bg-background-dark border border-slate-200 dark:border-border-dark rounded-xl text-sm font-medium">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Preview</label>
+                            <div class="aspect-video bg-slate-100 dark:bg-slate-800 rounded-xl overflow-hidden border border-slate-200 dark:border-border-dark">
+                                <img id="cms-about-hero-preview" src="https://placehold.co/800x400?text=Hero+Image" class="w-full h-full object-cover">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white dark:bg-card-dark p-6 rounded-2xl border border-slate-200 dark:border-border-dark">
+                    <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
+                        <span class="material-symbols-rounded text-primary">article</span>
+                        About Content
+                    </h3>
+                    
+                    <div class="space-y-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Title</label>
+                                <input type="text" id="cms-about-title" placeholder="Our Story" class="w-full px-4 py-2.5 bg-slate-50 dark:bg-background-dark border border-slate-200 dark:border-border-dark rounded-xl text-sm font-medium">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Subtitle</label>
+                                <input type="text" id="cms-about-subtitle" placeholder="Delivering excellence since..." class="w-full px-4 py-2.5 bg-slate-50 dark:bg-background-dark border border-slate-200 dark:border-border-dark rounded-xl text-sm font-medium">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Our Story</label>
+                            <textarea id="cms-about-story" rows="4" placeholder="Tell your brand's story..." class="w-full px-4 py-2.5 bg-slate-50 dark:bg-background-dark border border-slate-200 dark:border-border-dark rounded-xl text-sm font-medium"></textarea>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Mission</label>
+                            <textarea id="cms-about-mission" rows="3" placeholder="Our mission statement..." class="w-full px-4 py-2.5 bg-slate-50 dark:bg-background-dark border border-slate-200 dark:border-border-dark rounded-xl text-sm font-medium"></textarea>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Quality Commitment</label>
+                            <textarea id="cms-about-quality" rows="3" placeholder="Our quality standards..." class="w-full px-4 py-2.5 bg-slate-50 dark:bg-background-dark border border-slate-200 dark:border-border-dark rounded-xl text-sm font-medium"></textarea>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Community</label>
+                            <textarea id="cms-about-community" rows="3" placeholder="Community involvement..." class="w-full px-4 py-2.5 bg-slate-50 dark:bg-background-dark border border-slate-200 dark:border-border-dark rounded-xl text-sm font-medium"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contact Info Content -->
+            <div id="cms-contact-content" class="cms-tab-content hidden space-y-6">
+                <div class="bg-white dark:bg-card-dark p-6 rounded-2xl border border-slate-200 dark:border-border-dark">
+                    <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
+                        <span class="material-symbols-rounded text-primary">contact_phone</span>
+                        Contact Information
+                    </h3>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2 flex items-center gap-2">
+                                <span class="material-symbols-rounded text-[18px]">phone</span> Phone Number
+                            </label>
+                            <input type="tel" id="cms-contact-phone" placeholder="+84 123 456 789" class="w-full px-4 py-2.5 bg-slate-50 dark:bg-background-dark border border-slate-200 dark:border-border-dark rounded-xl text-sm font-medium">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2 flex items-center gap-2">
+                                <span class="material-symbols-rounded text-[18px]">email</span> Email Address
+                            </label>
+                            <input type="email" id="cms-contact-email" placeholder="contact@xsneaker.com" class="w-full px-4 py-2.5 bg-slate-50 dark:bg-background-dark border border-slate-200 dark:border-border-dark rounded-xl text-sm font-medium">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2 flex items-center gap-2">
+                                <span class="material-symbols-rounded text-[18px]">location_on</span> Address
+                            </label>
+                            <textarea id="cms-contact-address" rows="3" placeholder="123 Street Name, District, City, Vietnam" class="w-full px-4 py-2.5 bg-slate-50 dark:bg-background-dark border border-slate-200 dark:border-border-dark rounded-xl text-sm font-medium"></textarea>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2 flex items-center gap-2">
+                                <span class="material-symbols-rounded text-[18px]">map</span> Map Image URL (Optional)
+                            </label>
+                            <input type="url" id="cms-contact-map" placeholder="https://example.com/map.jpg" class="w-full px-4 py-2.5 bg-slate-50 dark:bg-background-dark border border-slate-200 dark:border-border-dark rounded-xl text-sm font-medium">
+                            <p class="text-xs text-slate-500 mt-2">Screenshot from Google Maps or custom map image</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1226,10 +1741,11 @@
             <!-- Action Buttons -->
             <div class="flex justify-end gap-3">
                 <button class="px-6 py-2.5 bg-white dark:bg-card-dark border border-slate-200 dark:border-border-dark rounded-xl text-sm font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-white/5 transition-all">
-                    Cancel
+                    Reset
                 </button>
-                <button class="px-6 py-2.5 bg-primary hover:bg-primary-600 text-white rounded-xl text-sm font-bold shadow-lg shadow-primary/25 hover:shadow-primary/40 active:scale-95 transition-all">
-                    Save Changes
+                <button id="btn-save-cms" class="px-6 py-2.5 bg-primary hover:bg-primary-600 text-white rounded-xl text-sm font-bold shadow-lg shadow-primary/25 hover:shadow-primary/40 active:scale-95 transition-all flex items-center gap-2">
+                    <span class="material-symbols-rounded text-[18px]">save</span>
+                    Save Changes  
                 </button>
             </div>
             `
@@ -1272,10 +1788,10 @@
                     }
                 }
 
-                // Reload data if switching to dashboard tab
-                if (tabName === 'dashboard' && window.dashboardModule) {
+                // Reload data if switching to blog tab
+                if (tabName === 'blog' && window.blogModule) {
                     setTimeout(() => {
-                        window.dashboardModule.reload();
+                        window.blogModule.reload();
                     }, 100);
                 }
 
@@ -1297,6 +1813,24 @@
                         window.usersModule.reload();
                     }, 100);
                 }
+
+                if (tabName === 'reports' && window.reportsModule) {
+                    setTimeout(() => {
+                        window.reportsModule.reload();
+                    }, 100);
+                }
+
+                if (tabName === 'settings' && window.settingsModule) {
+                    setTimeout(() => {
+                        window.settingsModule.initSettings();
+                    }, 100);
+                }
+
+                if (tabName === 'cms' && window.cmsModule) {
+                    setTimeout(() => {
+                        window.cmsModule.initCMS();
+                    }, 100);
+                }
             }
         }
 
@@ -1311,15 +1845,78 @@
             });
             
             // Load default tab (dashboard)
-            loadTab('dashboard');
+            loadTab('blog');
         });
     </script>
 
+    <!-- Blog Modal -->
+    <div id="blog-modal" class="fixed inset-0 z-[60] hidden items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+        <div class="bg-white dark:bg-card-dark rounded-2xl w-full max-w-4xl shadow-2xl max-h-[90vh] flex flex-col">
+            <div class="p-6 border-b border-slate-100 dark:border-border-dark flex items-center justify-between">
+                <h3 id="blog-modal-title" class="text-xl font-bold text-slate-900 dark:text-white">Create New Post</h3>
+                <button id="btn-close-blog-modal" class="p-2 text-slate-400 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-500/10 rounded-full transition-all">
+                    <span class="material-symbols-rounded">close</span>
+                </button>
+            </div>
+            <div class="flex-1 overflow-y-auto p-6">
+                <form id="blog-form" onsubmit="window.blogModule.saveBlog(event)" class="space-y-6">
+                    <input type="hidden" id="blog-id">
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <div class="lg:col-span-2 space-y-4">
+                            <div>
+                                <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Title</label>
+                                <input type="text" id="blog-title" required class="w-full px-4 py-2 bg-slate-50 dark:bg-background-dark border border-slate-200 dark:border-border-dark rounded-xl text-sm" placeholder="Post title">
+                            </div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Author</label>
+                                    <input type="text" id="blog-author" class="w-full px-4 py-2 bg-slate-50 dark:bg-background-dark border border-slate-200 dark:border-border-dark rounded-xl text-sm" placeholder="Author name">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Category</label>
+                                    <input type="text" id="blog-category" class="w-full px-4 py-2 bg-slate-50 dark:bg-background-dark border border-slate-200 dark:border-border-dark rounded-xl text-sm" placeholder="Category">
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Summary</label>
+                                <textarea id="blog-summary" rows="3" class="w-full px-4 py-2 bg-slate-50 dark:bg-background-dark border border-slate-200 dark:border-border-dark rounded-xl text-sm" placeholder="Brief summary..."></textarea>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Content</label>
+                                <textarea id="blog-content" rows="10" class="w-full px-4 py-2 bg-slate-50 dark:bg-background-dark border border-slate-200 dark:border-border-dark rounded-xl text-sm font-mono" placeholder="HTML or Text content..."></textarea>
+                            </div>
+                        </div>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Featured Image</label>
+                                <div class="relative group">
+                                    <div id="blog-image-preview" class="w-full aspect-video bg-slate-100 dark:bg-slate-800 rounded-xl border-2 border-dashed border-slate-300 dark:border-slate-700 flex flex-col items-center justify-center overflow-hidden">
+                                        <span class="material-symbols-rounded text-slate-400 text-4xl">image</span>
+                                        <p class="text-xs text-slate-400 mt-2">Click to upload</p>
+                                    </div>
+                                    <input type="file" id="blog-image-file" accept="image/*" class="absolute inset-0 opacity-0 cursor-pointer">
+                                </div>
+                                <input type="text" id="blog-image-url" class="mt-2 w-full px-4 py-2 bg-slate-50 dark:bg-background-dark border border-slate-200 dark:border-border-dark rounded-xl text-xs" placeholder="Or parse image URL">
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="p-6 border-t border-slate-100 dark:border-border-dark flex justify-end gap-3">
+                <button id="btn-cancel-blog" class="px-6 py-2.5 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-xl text-sm font-bold hover:bg-slate-200 dark:hover:bg-slate-700 transition-all">Cancel</button>
+                <button type="submit" form="blog-form" class="px-6 py-2.5 bg-primary hover:bg-primary-600 text-white rounded-xl text-sm font-bold shadow-lg shadow-primary/25 hover:shadow-primary/40 active:scale-95 transition-all">Publish Post</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Firebase Dashboard Module -->
-    <script type="module" src="js/admin/dashboard.js"></script>
     <script type="module" src="js/admin/orders.js"></script>
     <script type="module" src="js/admin/products.js"></script>
     <script type="module" src="js/admin/users.js"></script>
+    <script type="module" src="js/admin/blog.js"></script>
+    <script type="module" src="js/admin/reports.js"></script>
+    <script type="module" src="js/admin/cms.js"></script>
+    <script type="module" src="js/admin/settings.js"></script>
 
 </body>
 </html>

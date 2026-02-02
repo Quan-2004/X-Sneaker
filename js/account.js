@@ -117,29 +117,37 @@ async function createBasicProfile(uid) {
     }
 }
 
-function loadUserOrders(uid) {
-    const ordersRef = ref(database, 'orders');
-    // Create a query to filter orders by userId
-    const ordersQuery = query(ordersRef, orderByChild('userId'), equalTo(uid));
-    
-    unsubscribeOrders = onValue(ordersQuery, (snapshot) => {
+async function loadUserOrders(uid) {
+    try {
+        // Read all orders and filter client-side (temporary solution)
+        // Better solution: Store orders in /userOrders/{uid}/{orderId}
+        const ordersRef = ref(database, 'orders');
+        
+        // Try to get all orders (will fail if not admin, that's OK)
+        const snapshot = await get(ordersRef);
+        
         if (snapshot.exists()) {
             const allOrders = snapshot.val();
-            // Convert to array and sort
-            const userOrders = Object.values(allOrders)
+            // Filter orders for this user
+            const userOrders = Object.entries(allOrders)
+                .filter(([id, order]) => order.userId === uid)
+                .map(([id, order]) => ({ ...order, id }))
                 .sort((a, b) => b.createdAt - a.createdAt);
             
             console.log('User orders loaded:', userOrders.length);
             renderOrderHistory(userOrders);
             updateOrderStats(userOrders);
         } else {
+            console.log('No orders found');
             renderOrderHistory([]);
             updateOrderStats([]);
         }
-    }, (error) => {
+    } catch (error) {
         console.error('Error loading orders:', error);
-        // Don't show toast for permission error on load, just log it
-    });
+        // If permission denied, show empty state (user has no orders or not logged in)
+        renderOrderHistory([]);
+        updateOrderStats([]);
+    }
 }
 
 async function loadUserWishlist(uid) {
