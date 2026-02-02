@@ -651,17 +651,84 @@
     }
   },
   "reviews": {
-    "rev_005": {
-      "content": "Phối màu Panda hot nhất hiện nay, form đẹp, chất lượng Nike luôn đảm bảo. Recommend!",
-      "createdAt": 1737158400000,
-      "helpful": 42,
-      "productId": "prod_006",
-      "rating": 5,
-      "title": "Dunk Panda quá xịn",
-      "userAvatar": "../image/default-avatar.jpg",
-      "userId": "user_002",
-      "userName": "Trần Thị Bình",
-      "verified": true
+    "prod_001": {
+      "review_001": {
+        "productId": "prod_001",
+        "userId": "59OCQW1Vm1csTbyG0j6fy4RjgDZ2",
+        "userEmail": "odoo221761@gmail.com",
+        "userName": "Tấn Đạt",
+        "userAvatar": null,
+        "rating": 5,
+        "title": "Giày đẹp, chất lượng tuyệt vời!",
+        "comment": "Mình đã mua đôi Air Jordan này và rất hài lòng. Chất liệu da cao cấp, đế êm ái, thiết kế iconic. Đáng đồng tiền bát gạo!",
+        "images": [],
+        "verified": true,
+        "helpful": 15,
+        "createdAt": 1736553600000,
+        "updatedAt": 1736553600000
+      },
+      "review_002": {
+        "productId": "prod_001",
+        "userId": "user_002",
+        "userEmail": "user2@example.com",
+        "userName": "Nguyễn Văn B",
+        "userAvatar": null,
+        "rating": 4,
+        "title": "Tốt nhưng hơi chật",
+        "comment": "Giày đẹp và chất lượng tốt, nhưng mình thấy hơi chật so với size thông thường. Nên order lên 0.5 size.",
+        "images": [],
+        "verified": true,
+        "helpful": 8,
+        "createdAt": 1736640000000,
+        "updatedAt": 1736640000000
+      },
+      "review_003": {
+        "productId": "prod_001",
+        "userId": "user_003",
+        "userEmail": "user3@example.com",
+        "userName": "Lê Thị C",
+        "userAvatar": null,
+        "rating": 5,
+        "title": "Siêu phẩm không thể bỏ qua",
+        "comment": "Air Jordan 1 là một trong những đôi giày kinh điển nhất. Phối màu đẹp, form chuẩn, rất dễ phối đồ. Highly recommended!",
+        "images": [],
+        "verified": false,
+        "helpful": 22,
+        "createdAt": 1736726400000,
+        "updatedAt": 1736726400000
+      }
+    },
+    "prod_008": {
+      "review_004": {
+        "productId": "prod_008",
+        "userId": "kfqe1TwgHnfnCEMhLvcVSNMDBzj2",
+        "userEmail": "quanpham4298@gmail.com",
+        "userName": "Quan Pham",
+        "userAvatar": "../image/default-avatar.jpg",
+        "rating": 5,
+        "title": "Converse classic, never out of style",
+        "comment": "Đôi giày Converse All Star trắng thật sự là item must-have. Dễ phối đồ, bền, và rất thoải mái khi đi lâu.",
+        "images": [],
+        "verified": true,
+        "helpful": 12,
+        "createdAt": 1737072000000,
+        "updatedAt": 1737072000000
+      },
+      "review_005": {
+        "productId": "prod_008",
+        "userId": "user_005",
+        "userEmail": "user5@example.com",
+        "userName": "Trần Minh D",
+        "userAvatar": null,
+        "rating": 4,
+        "title": "Tốt, giá hợp lý",
+        "comment": "Converse giá tốt, chất lượng ổn. Nhưng phải chú ý vệ sinh thường xuyên vì màu trắng dễ bẩn.",
+        "images": [],
+        "verified": true,
+        "helpful": 5,
+        "createdAt": 1737158400000,
+        "updatedAt": 1737158400000
+      }
     }
   },
   "settings": {
@@ -715,6 +782,40 @@
       "photoURL": "../image/default-avatar.jpg",
       "role": "customer",
       "uid": "kfqe1TwgHnfnCEMhLvcVSNMDBzj2"
+    }
+  },
+  "blogComments": {
+    "blog_001": {
+      "comment_001": {
+        "content": "Bài viết rất hữu ích! Mình đã áp dụng cách phối với quần jeans và trông rất đẹp.",
+        "userId": "59OCQW1Vm1csTbyG0j6fy4RjgDZ2",
+        "userEmail": "user@example.com",
+        "userName": "Nguyễn Văn A",
+        "userAvatar": null,
+        "timestamp": 1736553600000,
+        "likes": 5,
+        "parentId": null
+      },
+      "comment_002": {
+        "content": "Cảm ơn bạn! Rất vui vì bài viết hữu ích với bạn 😊",
+        "userId": "kfqe1TwgHnfnCEMhLvcVSNMDBzj2",
+        "userEmail": "quanpham4298@gmail.com",
+        "userName": "Admin",
+        "userAvatar": null,
+        "timestamp": 1736560800000,
+        "likes": 2,
+        "parentId": "comment_001"
+      },
+      "comment_003": {
+        "content": "Mình thích phong cách all-white nhưng lo bẩn quá. Có tips nào để giữ giày trắng luôn sạch không?",
+        "userId": "user_003",
+        "userEmail": "user3@example.com",
+        "userName": "Trần Thị B",
+        "userAvatar": null,
+        "timestamp": 1736640000000,
+        "likes": 8,
+        "parentId": null
+      }
     }
   },
   "wishlist": {

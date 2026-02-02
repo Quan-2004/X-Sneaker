@@ -3,6 +3,7 @@
 
 import { getFirebaseAuth, getFirebaseDatabase } from './firebase-config.js';
 import { ref, get, set, remove } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-database.js";
+import { initProductReviews } from './product-reviews.js';
 
 // Get Firebase instances
 const auth = getFirebaseAuth();
@@ -921,6 +922,9 @@ async function init() {
     // Load and render related products
     const relatedProducts = await loadRelatedProducts(product.category, productId);
     renderRelatedProducts(relatedProducts);
+    
+    // Initialize product reviews
+    await initProductReviews(productId);
     
     // Setup event listeners
     setupEventListeners();

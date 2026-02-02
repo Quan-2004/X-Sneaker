@@ -197,6 +197,67 @@
                 </div>
             </div>
         </div>
+        
+        <!-- Product Reviews Section -->
+        <div class="mt-20 mb-12">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Left: Rating Summary -->
+                <div class="lg:col-span-1">
+                    <div class="bg-white dark:bg-gray-900 rounded-2xl p-8 border border-gray-100 dark:border-gray-800 sticky top-24">
+                        <h3 class="text-2xl font-bold mb-6">Đánh Giá Sản Phẩm</h3>
+                        
+                        <!-- Overall Rating -->
+                        <div class="text-center mb-6 pb-6 border-b border-gray-100 dark:border-gray-800">
+                            <div id="average-rating" class="text-6xl font-black text-primary mb-2">0.0</div>
+                            <div class="flex justify-center items-center gap-1 mb-2" id="average-stars">
+                                <!-- Stars will be rendered dynamically -->
+                            </div>
+                            <p id="total-reviews" class="text-sm text-gray-500">0 đánh giá</p>
+                        </div>
+                        
+                        <!-- Rating Breakdown -->
+                        <div id="rating-breakdown" class="space-y-3">
+                            <!-- Rating bars will be rendered dynamically -->
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Right: Reviews List & Form -->
+                <div class="lg:col-span-2">
+                    <!-- Sort & Filter -->
+                    <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+                        <h3 class="text-xl font-bold">Tất Cả Đánh Giá</h3>
+                        <select id="review-sort" class="px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-lg text-sm font-medium bg-white dark:bg-gray-900 focus:ring-primary focus:border-primary">
+                            <option value="recent">Mới nhất</option>
+                            <option value="helpful">Hữu ích nhất</option>
+                            <option value="rating-high">Đánh giá cao nhất</option>
+                            <option value="rating-low">Đánh giá thấp nhất</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Write Review Button -->
+                    <button id="write-review-btn" class="w-full mb-6 bg-primary hover:bg-red-700 text-white py-3 rounded-lg font-bold flex items-center justify-center gap-2 transition-colors">
+                        <span class="material-symbols-outlined">edit</span>
+                        Viết Đánh Giá
+                    </button>
+                    
+                    <!-- Review Form (Hidden by default) -->
+                    <div id="review-form-container" class="hidden mb-8 bg-gray-50 dark:bg-gray-900 rounded-xl p-6 border border-gray-100 dark:border-gray-800">
+                        <!-- Form will be rendered dynamically -->
+                    </div>
+                    
+                    <!-- Reviews List -->
+                    <div id="reviews-list" class="space-y-6">
+                        <!-- Reviews will be loaded dynamically -->
+                        <div class="text-center py-12 text-gray-400">
+                            <span class="material-symbols-outlined text-5xl mb-2">rate_review</span>
+                            <p>Đang tải đánh giá...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
         <!-- Related Products -->
         <div class="mt-24 mb-12">
             <div class="flex justify-between items-end mb-8">

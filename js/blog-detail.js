@@ -3,6 +3,7 @@
 
 import { getFirebaseDatabase } from './firebase-config.js';
 import { ref, get, update } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-database.js";
+import { initComments } from './blog-comments.js';
 
 const database = getFirebaseDatabase();
 
@@ -280,6 +281,9 @@ async function init() {
         const relatedBlogs = await loadRelatedBlogs(blog.category, blogId);
         renderRelatedBlogs(relatedBlogs);
     }
+    
+    // Initialize comments system
+    await initComments(blogId);
     
     console.log('✅ Blog detail initialized');
 }

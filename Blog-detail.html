@@ -10,6 +10,7 @@
     <script src="js/tailwind-config.js"></script>
     <link rel="stylesheet" href="css/style.css" />
     <script src="js/common.js" defer></script>
+    <script type="module" src="js/blog-detail.js"></script>
   </head>
 <body class="bg-background-light dark:bg-background-dark text-[#1b0e0f] dark:text-white transition-colors duration-300">
     <!-- Header -->
@@ -98,31 +99,20 @@
             <span class="material-symbols-outlined text-xs">chevron_right</span>
             <a class="hover:text-primary transition-colors" href="Blog-list.html">Tin Tức</a>
             <span class="material-symbols-outlined text-xs">chevron_right</span>
-            <span class="text-black dark:text-white font-medium">Bài Viết</span>
+            <span class="text-black dark:text-white font-medium text-sm font-bold leading-normal">Đang tải...</span>
         </nav>
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
             <!-- Main Content Area -->
             <article class="lg:col-span-8">
-                <!-- Header Image -->
-                <div class="rounded-xl overflow-hidden mb-10 shadow-xl">
-                    <div class="w-full bg-center bg-no-repeat bg-cover aspect-video bg-gray-200" data-alt="Cinematic shot of limited edition sneakers on urban street" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBpfC4dWVoPYOuXC3QJUD8RAM3vR4FxVnVpxOxu6kK65xJR1r4GmKP-uDqugT515ttt6iZNFtwNuyrzO4JU_EzmF9qOPTtBt7aKA9cvV9CQtQh0RDRNik44o4tziEyuQxD9YAWXkPDemyRF9HjAVch8urKXmqx6jxxnJC2T2tsiKuXC4X2r7Gmo4S2NtQ7DVBJUhz-CMjqfDXPSCR7eBKusH-Z6HNdaZ6uIgw8Ruhfxh-t7Zq2NH1SJvolV_NIHHTjQvFbNj2OOylo");'>
+                <!-- Blog Header (will be populated by JS) -->
+                <div class="blog-header">
+                    <div class="animate-pulse space-y-4">
+                        <div class="h-8 bg-gray-200 dark:bg-gray-700 rounded w-3/4"></div>
+                        <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/2"></div>
                     </div>
                 </div>
-                <!-- Page Heading -->
-                <div class="mb-8">
-                    <h1 class="text-5xl md:text-6xl font-black leading-tight tracking-tight mb-6 dark:text-white">
-                        Sự Tiến Hóa Của Streetwear: Sneaker Đã Định Hình Một Thế Hệ Như Thế Nào
-                    </h1>
-                    <div class="flex items-center gap-4 text-gray-600 dark:text-gray-400">
-                        <div class="size-10 rounded-full bg-gray-200 overflow-hidden" data-alt="Author portrait">
-                            <img alt="Alex Rivera" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBykiPF6m_Np8FPW59DMAXv2uNup3tIh2-sVzwb1xMF1qLSOJBwAMA17vcYzoI_kwdJ9r3IM40JnUu4CELunFI8Dw014Aprbh59mKMetS0wdTImvsyWLvgbR06EsAvKux6SdwkOVi3gt-pODwFbDc-8ZSe4yLqCL7j2P1CwjWdPLnGO9UQU_ZB5wn5sun76Jx3vdyx4aDj4gkD1R7ZqNPoeuS3uQ1JplLk9BmcisPe8Wpv0SVcg3VduOEhuiMTh7oDOl1H9W3N2jYs"/>
-                        </div>
-                        <div>
-                            <p class="font-bold text-black dark:text-white">Bởi Alex Rivera</p>
-                            <p class="text-sm">Đăng ngày 24/10/2023 • 8 phút đọc</p>
-                        </div>
-                    </div>
-                </div>
+                <!-- Blog Image (will be populated by JS) -->
+                <div class="blog-image"></div>
                 <!-- Actions Bar -->
                 <div class="flex items-center gap-4 border-y border-gray-100 dark:border-gray-800 py-4 mb-10">
                     <span class="text-sm font-bold uppercase tracking-widest text-gray-400">Chia sẻ:</span>
@@ -139,51 +129,33 @@
                         <span class="text-sm font-medium">Sao chép</span>
                     </button>
                 </div>
-                <!-- Article Body -->
-                <div class="prose prose-xl max-w-none dark:prose-invert leading-relaxed text-lg">
-                    <p class="mb-6">
-                        Sneaker đã chuyển mình từ những đôi giày thể thao thuần túy trở thành biểu tượng địa vị tối thượng của văn hóa hiện đại. Những gì bắt đầu như một tiểu văn hóa ngách vào cuối thập niên 70 và 80, được thúc đẩy bởi bóng rổ và hip-hop, đã bùng nổ thành một hiện tượng toàn cầu trị giá hàng tỷ đô la.
-                    </p>
-                    <blockquote class="border-l-4 border-primary pl-6 py-2 my-8 italic font-medium text-2xl text-gray-800 dark:text-gray-200">
-                        "Sneaker không chỉ là giày; chúng là bức tranh cho bản sắc cá nhân và lịch sử văn hóa."
-                    </blockquote>
-                    <p class="mb-6">
-                        Trong những ngày đầu, mọi thứ thật đơn giản: giày cao cổ vải canvas và giày chạy bộ bằng da. Nhưng với sự ra đời của dòng Air Jordan vào năm 1984, cuộc chơi đã thay đổi mãi mãi. Đột nhiên, sneaker không chỉ còn là để chơi thể thao—chúng là về việc thuộc về một di sản.
-                    </p>
-                    <div class="rounded-lg overflow-hidden my-10" data-alt="Close up of classic red and black sneaker details">
-                        <img alt="Sneaker Detail" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDuG4dmVzGJWCy3BxFwprqyuWvAWf-ElEo8UNbN-EW5t1LF9MK4bH7itaF9ZtpMfOHPuRwuRCCEE5ZBHrS6mxBL9RczPccKuk8ofebkBaETUMaP3OdCniyM5QEknVSToOapDjVHoLoHAo5iHArwbPMwXH9FhXeb05hRff5dNny1wEFO8znUm2onCplh5OwTG8BQmSU77gmz7dH7rzJYD5Oe_LgjEswxcn_poXvh-8PtZ7zc2yYnWIDp48HNHMu0TdkRWbe4l5Uu8mQ"/>
+                <!-- Article Body (will be populated by JS) -->
+                <div class="blog-content prose prose-xl max-w-none dark:prose-invert leading-relaxed text-lg">
+                    <div class="animate-pulse space-y-4">
+                        <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded"></div>
+                        <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-5/6"></div>
+                        <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-4/6"></div>
                     </div>
-                    <p class="mb-6">
-                        Ngày nay, sự hợp tác giữa các nhà mốt cao cấp và thương hiệu sneaker đã xóa nhòa ranh giới giữa xa xỉ phẩm và thời trang đường phố (streetwear). Từ sự tái hiện của Virgil Abloh đối với các thiết kế kinh điển đến sức ảnh hưởng to lớn của Travis Scott lên thiết kế, sneaker tiếp tục đứng đầu trào lưu sáng tạo.
-                    </p>
                 </div>
-                <!-- Related Articles Section -->
-                <section class="mt-20 border-t border-gray-100 dark:border-gray-800 pt-12">
-                    <h3 class="text-3xl font-bold mb-8">Bài Viết Liên Quan</h3>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        <div class="group cursor-pointer">
-                            <div class="rounded-xl overflow-hidden mb-4 aspect-video bg-gray-100" data-alt="Collection of vintage basketball shoes">
-                                <img alt="Article" class="group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDhJlEiXQ4RDr-3BC1fPYEQ2mjSIszORpqYYK58tQI21H2cc1KnqJK3RfKg7DYj6SQhE5Cg_G_MnZhOf5ZqjlNEqNMivsJzdLd17hNs5EYKRNVtFH4mfr7N3v8FdcaOpUNp32stvjGb9_xVUIUQd1dFYSJYWbcJ_oX1Nr5G_oF14gZyxvz5sQwAOOHqCDt8dSOdmkg3N7-8xp4G-iKf-pZYcGD2KzjwQm--zIHleGPODVcpqa-sIK582nTVv65y5kMZcV6xpGpoTTk"/>
-                            </div>
-                            <h4 class="text-xl font-bold group-hover:text-primary transition-colors">Những Mẫu Retro Đáng Chú Ý Nhất 2024</h4>
-                            <p class="text-sm text-gray-500 mt-2">5 phút đọc • Tin tức</p>
-                        </div>
-                        <div class="group cursor-pointer">
-                            <div class="rounded-xl overflow-hidden mb-4 aspect-video bg-gray-100" data-alt="Artistic photography of modern futuristic sneakers">
-                                <img alt="Article" class="group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBZT1Dasvd-NmNKQkghkHYMhgDrCy8iWqiPmJZT4aORsLObpTFVtd1R1E-YP0HghN3a6IsgcmItRljjNCvgdZ4EM65F3S3A4RBUqYs_WZP_WBKT0-DBoP66vBnQXmkg9LrAvcS_a3o4a0q6ZuHCNqL_B-VX0g69-Fk5zo4pv641KRXcS1ftieQbk5DaThvBujEsXlUfFC_QlLbooANOOm8rHFQ9bZoBkV1UiqYT9Z07zSnDw1Et8OnBTBq2G-NH0g8HZ5RhvJpBd-g"/>
-                            </div>
-                            <h4 class="text-xl font-bold group-hover:text-primary transition-colors">Giày Dép Bền Vững: Tương Lai Xanh</h4>
-                            <p class="text-sm text-gray-500 mt-2">12 phút đọc • Bền vững</p>
-                        </div>
-                    </div>
+                <!-- Related Articles Section (will be populated by JS) -->
+                <section id="related-blogs" class="mt-20 border-t border-gray-100 dark:border-gray-800 pt-12">
+                    <!-- Related blogs will be loaded dynamically -->
                 </section>
                 <!-- Comments Section -->
-                <section class="mt-20 border-t border-gray-100 dark:border-gray-800 pt-12 pb-20">
-                    <h3 class="text-3xl font-bold mb-8">Bình Luận (12)</h3>
-                    <div class="bg-gray-50 dark:bg-gray-900 rounded-xl p-6 mb-8">
-                        <textarea class="w-full bg-white dark:bg-black border-gray-200 dark:border-gray-800 rounded-lg p-4 focus:ring-primary focus:border-primary text-base" placeholder="Tham gia thảo luận..." rows="3"></textarea>
-                        <div class="flex justify-end mt-4">
-                            <button class="bg-primary text-white px-8 py-2 rounded-lg font-bold">Đăng Bình Luận</button>
+                <section id="comments-section" class="mt-20 border-t border-gray-100 dark:border-gray-800 pt-12 pb-20">
+                    <h3 class="text-3xl font-bold mb-8">Bình Luận <span id="comments-count" class="text-gray-400">(0)</span></h3>
+                    
+                    <!-- Comment Form -->
+                    <div id="comment-form-container" class="bg-gray-50 dark:bg-gray-900 rounded-xl p-6 mb-8">
+                        <!-- Will show login prompt or comment form based on auth state -->
+                    </div>
+                    
+                    <!-- Comments List -->
+                    <div id="comments-list" class="space-y-6">
+                        <!-- Comments will be loaded dynamically -->
+                        <div class="text-center py-8 text-gray-400">
+                            <span class="material-symbols-outlined text-4xl mb-2">forum</span>
+                            <p>Đang tải bình luận...</p>
                         </div>
                     </div>
                 </section>
@@ -260,20 +232,7 @@
                         </div>
                     </div>
                 </div>
-                <!-- Newsletter Widget -->
-                <div class="bg-primary text-white rounded-xl p-8 relative overflow-hidden">
-                    <div class="relative z-10">
-                        <h4 class="text-2xl font-black mb-2">Tham Gia Club</h4>
-                        <p class="text-sm opacity-90 mb-6">Nhận thông tin ra mắt giày hàng tuần, ưu đãi độc quyền, và tin tức nội bộ trực tiếp vào hộp thư của bạn.</p>
-                        <input class="w-full bg-white/20 border-none rounded-lg py-3 px-4 placeholder:text-white/60 mb-4 focus:ring-0" placeholder="Email Của Bạn" type="email"/>
-                        <button class="w-full bg-white text-primary py-3 rounded-lg font-bold hover:shadow-lg transition-all">Đăng Ký Ngay</button>
-                    </div>
-                    <div class="absolute -right-10 -bottom-10 size-40 opacity-10">
-                        <svg fill="currentColor" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M36.7273 44C33.9891 44 31.6043 39.8386 30.3636 33.69C29.123 39.8386 26.7382 44 24 44C21.2618 44 18.877 39.8386 17.6364 33.69C16.3957 39.8386 14.0109 44 11.2727 44C7.25611 44 4 35.0457 4 24C4 12.9543 7.25611 4 11.2727 44C7.25611 44 4 35.0457 4 24C4 12.9543 7.25611 4 11.2727 44C7.25611 44 4 35.0457 4 24C4 12.9543 7.25611 4 11.2727 44C7.25611 44 4 35.0457 4 24C4 12.9543 7.25611 4 11.2727 4C14.0109 4 16.3957 8.16144 17.6364 14.31C18.877 8.16144 21.2618 4 24 4C26.7382 4 29.123 8.16144 30.3636 14.31C31.6043 8.16144 33.9891 4 36.7273 4C40.7439 4 44 12.9543 44 24C44 35.0457 40.7439 44 36.7273 44Z"></path>
-                        </svg>
-                    </div>
-                </div>
+
             </aside>
         </div>
     </main>

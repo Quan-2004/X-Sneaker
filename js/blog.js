@@ -11,6 +11,8 @@ let allBlogs = [];
 let filteredBlogs = [];
 let currentCategory = 'all';
 let currentSearchTerm = '';
+let currentPage = 1;
+const blogsPerPage = 6;
 
 // ============================================================================
 // DATA LOADING
@@ -66,7 +68,12 @@ function filterBlogs() {
     }
     
     filteredBlogs = result;
-    renderBlogs(filteredBlogs);
+    
+    // Reset to page 1 when filters change
+    currentPage = 1;
+    
+    renderCurrentPage();
+    renderPagination();
     
     // Update URL
     updateURL();
@@ -103,6 +110,7 @@ function updateURL() {
     const params = new URLSearchParams();
     if (currentCategory !== 'all') params.set('category', currentCategory);
     if (currentSearchTerm.trim()) params.set('search', currentSearchTerm);
+    if (currentPage > 1) params.set('page', currentPage);
     
     const newURL = params.toString() 
         ? `${window.location.pathname}?${params.toString()}`
@@ -115,6 +123,7 @@ function loadFromURL() {
     const params = new URLSearchParams(window.location.search);
     const category = params.get('category');
     const search = params.get('search');
+    const page = params.get('page');
     
     if (category) {
         currentCategory = category;
@@ -127,11 +136,29 @@ function loadFromURL() {
         if (searchInput) searchInput.value = search;
         filterBlogs();
     }
+    
+    if (page) {
+        currentPage = parseInt(page, 10) || 1;
+    }
 }
 
 // ============================================================================
 // RENDERING
 // ============================================================================
+
+function renderCurrentPage() {
+    const startIndex = (currentPage - 1) * blogsPerPage;
+    const endIndex = startIndex + blogsPerPage;
+    const blogsToShow = filteredBlogs.slice(startIndex, endIndex);
+    
+    renderBlogs(blogsToShow);
+    
+    // Scroll to top of blogs container
+    const container = document.getElementById('blogs-container');
+    if (container) {
+        container.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+}
 
 function renderBlogs(blogs) {
     const container = document.getElementById('blogs-container');
@@ -240,6 +267,124 @@ function showLoadingSkeleton() {
     container.innerHTML = skeletons;
 }
 
+function renderPagination() {
+    const container = document.getElementById('pagination-container');
+    if (!container) return;
+    
+    const totalPages = Math.ceil(filteredBlogs.length / blogsPerPage);
+    
+    // Hide pagination if only 1 page or no results
+    if (totalPages <= 1) {
+        container.innerHTML = '';
+        return;
+    }
+    
+    let paginationHTML = '';
+    
+    // Previous button
+    paginationHTML += `
+        <button 
+            class="pagination-btn w-10 h-10 rounded-lg border border-gray-200 dark:border-white/20 flex items-center justify-center ${currentPage === 1 ? 'text-gray-400 cursor-not-allowed' : 'hover:bg-gray-50 dark:hover:bg-white/5'}"
+            data-page="${currentPage - 1}"
+            ${currentPage === 1 ? 'disabled' : ''}>
+            <span class="material-symbols-outlined">chevron_left</span>
+        </button>
+    `;
+    
+    // Page numbers with smart truncation
+    const pageNumbers = generatePageNumbers(currentPage, totalPages);
+    
+    pageNumbers.forEach(page => {
+        if (page === '...') {
+            paginationHTML += `<span class="text-gray-400">...</span>`;
+        } else {
+            const isActive = page === currentPage;
+            paginationHTML += `
+                <button 
+                    class="pagination-btn w-10 h-10 rounded-lg flex items-center justify-center font-bold ${
+                        isActive 
+                            ? 'bg-primary text-white' 
+                            : 'border border-gray-200 dark:border-white/20 hover:bg-gray-50 dark:hover:bg-white/5'
+                    }"
+                    data-page="${page}">
+                    ${page}
+                </button>
+            `;
+        }
+    });
+    
+    // Next button
+    paginationHTML += `
+        <button 
+            class="pagination-btn w-10 h-10 rounded-lg border border-gray-200 dark:border-white/20 flex items-center justify-center ${currentPage === totalPages ? 'text-gray-400 cursor-not-allowed' : 'hover:bg-gray-50 dark:hover:bg-white/5'}"
+            data-page="${currentPage + 1}"
+            ${currentPage === totalPages ? 'disabled' : ''}>
+            <span class="material-symbols-outlined">chevron_right</span>
+        </button>
+    `;
+    
+    container.innerHTML = paginationHTML;
+    
+    // Add click event listeners to pagination buttons
+    container.querySelectorAll('.pagination-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const page = parseInt(btn.getAttribute('data-page'));
+            if (page >= 1 && page <= totalPages && page !== currentPage) {
+                goToPage(page);
+            }
+        });
+    });
+}
+
+function generatePageNumbers(current, total) {
+    const pages = [];
+    
+    // Always show first page
+    pages.push(1);
+    
+    if (total <= 7) {
+        // Show all pages if total is small
+        for (let i = 2; i <= total; i++) {
+            pages.push(i);
+        }
+    } else {
+        // Smart truncation for many pages
+        if (current <= 3) {
+            // Near start: 1 2 3 4 ... total
+            for (let i = 2; i <= 4; i++) {
+                pages.push(i);
+            }
+            pages.push('...');
+            pages.push(total);
+        } else if (current >= total - 2) {
+            // Near end: 1 ... total-3 total-2 total-1 total
+            pages.push('...');
+            for (let i = total - 3; i <= total; i++) {
+                pages.push(i);
+            }
+        } else {
+            // Middle: 1 ... current-1 current current+1 ... total
+            pages.push('...');
+            pages.push(current - 1);
+            pages.push(current);
+            pages.push(current + 1);
+            pages.push('...');
+            pages.push(total);
+        }
+    }
+    
+    return pages;
+}
+
+function goToPage(page) {
+    currentPage = page;
+    renderCurrentPage();
+    renderPagination();
+    updateURL();
+    
+    console.log(`📄 Navigated to page ${page}`);
+}
+
 // ============================================================================
 // UTILITY
 // ============================================================================
@@ -325,7 +470,8 @@ async function init() {
     
     // If no URL params, show all blogs
     if (currentCategory === 'all' && !currentSearchTerm) {
-        renderBlogs(filteredBlogs);
+        renderCurrentPage();
+        renderPagination();
     }
     
     console.log('✅ Blog list initialized');
