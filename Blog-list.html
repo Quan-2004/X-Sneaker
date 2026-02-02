@@ -132,8 +132,8 @@
                 <div class="bg-gray-50 dark:bg-white/5 p-6 rounded-xl border border-gray-100 dark:border-white/10">
                     <h4 class="text-lg font-bold mb-4">Tìm Kiếm</h4>
                     <div class="relative">
-                        <input class="w-full bg-white dark:bg-background-dark border-gray-200 dark:border-white/20 rounded-lg py-3 pl-4 pr-12 focus:ring-primary focus:border-primary" placeholder="Tìm kiếm bài viết..." type="text"/>
-                        <button class="absolute right-3 top-1/2 -translate-y-1/2 text-primary">
+                        <input id="blog-search-input" class="w-full bg-white dark:bg-background-dark border-gray-200 dark:border-white/20 rounded-lg py-3 pl-4 pr-12 focus:ring-primary focus:border-primary" placeholder="Tìm kiếm bài viết..." type="text"/>
+                        <button id="blog-search-btn" class="absolute right-3 top-1/2 -translate-y-1/2 text-primary">
                             <span class="material-symbols-outlined">search</span>
                         </button>
                     </div>
@@ -145,34 +145,31 @@
                         <p class="text-sm text-[#974e52] dark:text-gray-400">Duyệt theo chủ đề</p>
                     </div>
                     <div class="flex flex-col gap-1">
-                        <a class="flex items-center gap-3 px-3 py-3 rounded-lg hover:bg-primary/10 transition-colors group" href="#">
+                        <a class="category-filter flex items-center gap-3 px-3 py-3 rounded-lg hover:bg-primary/10 transition-colors group cursor-pointer" data-category="all">
+                            <span class="material-symbols-outlined text-primary group-hover:scale-110 transition-transform">apps</span>
+                            <span class="text-sm font-semibold">Tất Cả</span>
+                        </a>
+                        <a class="category-filter flex items-center gap-3 px-3 py-3 rounded-lg hover:bg-primary/10 transition-colors group cursor-pointer" data-category="Chăm Sóc Giày">
                             <span class="material-symbols-outlined text-primary group-hover:scale-110 transition-transform">clean_hands</span>
                             <span class="text-sm font-semibold">Chăm Sóc Giày</span>
                         </a>
-                        <a class="flex items-center gap-3 px-3 py-3 rounded-lg bg-primary/20 transition-colors group" href="#">
+                        <a class="category-filter flex items-center gap-3 px-3 py-3 rounded-lg hover:bg-primary/10 transition-colors group cursor-pointer" data-category="Xu Hướng">
                             <span class="material-symbols-outlined text-primary group-hover:scale-110 transition-transform">trending_up</span>
-                            <span class="text-sm font-bold">Xu Hướng</span>
+                            <span class="text-sm font-semibold">Xu Hướng</span>
                         </a>
-                        <a class="flex items-center gap-3 px-3 py-3 rounded-lg hover:bg-primary/10 transition-colors group" href="#">
+                        <a class="category-filter flex items-center gap-3 px-3 py-3 rounded-lg hover:bg-primary/10 transition-colors group cursor-pointer" data-category="Mẫu Mới">
                             <span class="material-symbols-outlined text-primary group-hover:scale-110 transition-transform">new_releases</span>
                             <span class="text-sm font-semibold">Mẫu Mới</span>
                         </a>
-                        <a class="flex items-center gap-3 px-3 py-3 rounded-lg hover:bg-primary/10 transition-colors group" href="#">
+                        <a class="category-filter flex items-center gap-3 px-3 py-3 rounded-lg hover:bg-primary/10 transition-colors group cursor-pointer" data-category="Phiên Bản Giới Hạn">
                             <span class="material-symbols-outlined text-primary group-hover:scale-110 transition-transform">star</span>
                             <span class="text-sm font-semibold">Phiên Bản Giới Hạn</span>
                         </a>
-                        <a class="flex items-center gap-3 px-3 py-3 rounded-lg hover:bg-primary/10 transition-colors group" href="#">
+                        <a class="category-filter flex items-center gap-3 px-3 py-3 rounded-lg hover:bg-primary/10 transition-colors group cursor-pointer" data-category="Bảo Dưỡng">
                             <span class="material-symbols-outlined text-primary group-hover:scale-110 transition-transform">build</span>
                             <span class="text-sm font-semibold">Bảo Dưỡng</span>
                         </a>
                     </div>
-                </div>
-                <!-- Newsletter Widget -->
-                <div class="bg-primary p-8 rounded-xl text-white">
-                    <h4 class="text-xl font-bold mb-2">Thông Báo Sớm</h4>
-                    <p class="text-sm text-white/80 mb-6">Đừng bỏ lỡ những mẫu giày hot sắp ra mắt. Đăng ký nhận tin ngay.</p>
-                    <input class="w-full bg-white/20 border-white/30 rounded-lg mb-3 placeholder:text-white/50 text-sm py-3 focus:ring-white" placeholder="Địa chỉ email" type="email"/>
-                    <button class="w-full bg-white text-primary font-bold py-3 rounded-lg hover:bg-gray-100 transition-colors">ĐĂNG KÝ</button>
                 </div>
             </aside>
         </div>
