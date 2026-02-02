@@ -199,3 +199,24 @@ window.saveUserChanges = function() {
 window.closeUserModal = function() {
     document.getElementById('user-edit-modal').classList.add('hidden');
 };
+// Send Email Function
+function sendEmail() {
+    alert('📧 Email feature will be implemented soon!\n\nThis will allow you to send bulk emails to customers.');
+}
+
+// Open Add User Modal
+function openAddUserModal() {
+    alert('➕ Add Customer feature will be implemented soon!\n\nYou can add new customers manually here.');
+}
+
+// Reload users data
+function reload() {
+    initUsers();
+}
+
+// Export module
+window.usersModule = {
+    reload,
+    sendEmail,
+    openAddUserModal
+};

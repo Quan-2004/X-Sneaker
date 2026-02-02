@@ -22,17 +22,21 @@ function renderTable(blogs) {
         return;
     }
 
-    // Sort by date desc
+    // Sort by publishedDate desc (or createdAt as fallback)
     const sortedBlogs = Object.entries(blogs).sort((a, b) => {
-        return new Date(b[1].createdAt) - new Date(a[1].createdAt);
+        const dateA = a[1].publishedDate || a[1].createdAt || 0;
+        const dateB = b[1].publishedDate || b[1].createdAt || 0;
+        return dateB - dateA;
     });
 
     sortedBlogs.forEach(([id, blog]) => {
         const row = document.createElement('tr');
         row.className = 'hover:bg-slate-50/80 dark:hover:bg-white/[0.02] transition-colors border-b border-slate-100 dark:border-border-dark';
         
-        const imgUrl = blog.image ? getOptimizedImageUrl(blog.image, { width: 80, height: 60, crop: 'cover' }) : 'https://placehold.co/80x60';
-        const dateStr = blog.createdAt ? new Date(blog.createdAt).toLocaleDateString('vi-VN') : 'N/A';
+        const imgUrl = blog.thumbnailImage ? getOptimizedImageUrl(blog.thumbnailImage, { width: 80, height: 60, crop: 'cover' }) : 'https://placehold.co/80x60';
+        const dateStr = blog.publishedDate ? new Date(blog.publishedDate).toLocaleDateString('vi-VN') : (blog.createdAt ? new Date(blog.createdAt).toLocaleDateString('vi-VN') : 'N/A');
+        const authorName = blog.author?.name || blog.author || 'Admin';
+        const featuredBadge = blog.featured ? '<span class="px-2 py-0.5 bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 text-[10px] font-bold rounded-full">Featured</span>' : '';
 
         row.innerHTML = `
             <td class="px-6 py-4">
@@ -41,11 +45,28 @@ function renderTable(blogs) {
                 </div>
             </td>
             <td class="px-6 py-4">
-                <p class="font-bold text-slate-900 dark:text-white line-clamp-1 max-w-[200px]">${blog.title}</p>
-                <p class="text-xs text-slate-500 line-clamp-1 max-w-[200px] mt-0.5">${blog.summary || ''}</p>
+                <div class="flex items-start gap-2">
+                    <div class="flex-1 min-w-0">
+                        <p class="font-bold text-slate-900 dark:text-white line-clamp-1 max-w-[200px]">${blog.title}</p>
+                        <p class="text-xs text-slate-500 line-clamp-1 max-w-[200px] mt-0.5">${blog.excerpt || blog.summary || ''}</p>
+                        ${blog.tags && blog.tags.length > 0 ? `<div class="flex flex-wrap gap-1 mt-1">${blog.tags.slice(0, 3).map(tag => `<span class="text-[10px] px-1.5 py-0.5 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 rounded">${tag}</span>`).join('')}</div>` : ''}
+                    </div>
+                    ${featuredBadge}
+                </div>
             </td>
-            <td class="px-6 py-4 text-slate-600 dark:text-slate-400 text-sm font-medium">${blog.author || 'Admin'}</td>
-            <td class="px-6 py-4 text-slate-500 dark:text-slate-400 text-xs font-mono">${dateStr}</td>
+            <td class="px-6 py-4">
+                <div class="flex items-center gap-2">
+                    <div class="text-sm font-medium text-slate-600 dark:text-slate-400">${authorName}</div>
+                </div>
+                <div class="text-xs text-slate-500 mt-0.5">${blog.category || 'Uncategorized'}</div>
+            </td>
+            <td class="px-6 py-4">
+                <div class="text-slate-500 dark:text-slate-400 text-xs font-mono">${dateStr}</div>
+                <div class="flex items-center gap-1 mt-1 text-[10px] text-slate-400">
+                    <span class="material-symbols-rounded text-[12px]">visibility</span>
+                    <span>${blog.views || 0} views</span>
+                </div>
+            </td>
             <td class="px-6 py-4 text-right">
                 <div class="flex items-center justify-end gap-2">
                     <button onclick="window.blogModule.openEditModal('${id}')" class="p-2 text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-500/10 rounded-lg transition-all" title="Edit">
@@ -93,9 +114,22 @@ function openModal() {
     // Reset Form
     document.getElementById('blog-form').reset();
     document.getElementById('blog-id').value = '';
+    document.getElementById('blog-slug').value = '';
+    document.getElementById('blog-author-name').value = 'Admin X-Sneaker';
+    document.getElementById('blog-author-avatar').value = 'https://ui-avatars.com/api/?name=Admin&background=FF3C3C&color=fff';
     document.getElementById('blog-image-url').value = '';
-    document.getElementById('blog-image-preview').innerHTML = '<span class="material-symbols-rounded text-slate-400 text-4xl">image</span><p class="text-xs text-slate-400 mt-2">Click to upload</p>';
+    document.getElementById('blog-featured').checked = false;
+    document.getElementById('blog-published-date').value = '';
+    
+    // Reset preview
+    document.getElementById('blog-image-preview').innerHTML = '<span class="material-symbols-rounded text-slate-400 text-5xl">add_photo_alternate</span><p class="text-xs text-slate-500 mt-2 font-semibold">Click to upload</p><p class="text-[10px] text-slate-400 mt-1">JPG, PNG, WebP (Max 2MB)</p>';
+    
+    // Hide stats section
+    const statsDiv = document.getElementById('blog-stats');
+    if (statsDiv) statsDiv.style.display = 'none';
+    
     document.getElementById('blog-modal-title').innerText = 'Create New Post';
+    document.getElementById('excerpt-count').textContent = '0';
 
     modal.classList.remove('hidden');
     modal.classList.add('flex');
@@ -115,25 +149,49 @@ function openEditModal(id) {
 
     document.getElementById('blog-id').value = id;
     document.getElementById('blog-title').value = blog.title || '';
-    document.getElementById('blog-author').value = blog.author || '';
+    document.getElementById('blog-slug').value = blog.slug || '';
+    document.getElementById('blog-author-name').value = blog.author?.name || 'Admin X-Sneaker';
+    document.getElementById('blog-author-avatar').value = blog.author?.avatar || '';
     document.getElementById('blog-category').value = blog.category || '';
-    document.getElementById('blog-summary').value = blog.summary || '';
+    document.getElementById('blog-excerpt').value = blog.excerpt || '';
     document.getElementById('blog-content').value = blog.content || '';
-    document.getElementById('blog-image-url').value = blog.image || '';
+    document.getElementById('blog-image-url').value = blog.thumbnailImage || '';
+    document.getElementById('blog-tags').value = blog.tags ? blog.tags.join(', ') : '';
+    document.getElementById('blog-featured').checked = blog.featured || false;
+    
+    // Set published date if exists
+    if (blog.publishedDate) {
+        const date = new Date(blog.publishedDate);
+        const dateStr = date.toISOString().slice(0, 16); // Format: YYYY-MM-DDTHH:mm
+        document.getElementById('blog-published-date').value = dateStr;
+    }
+    
+    // Update excerpt counter
+    const excerptCount = document.getElementById('excerpt-count');
+    if (excerptCount) {
+        excerptCount.textContent = (blog.excerpt || '').length;
+    }
 
+    // Preview image
     const previewDiv = document.getElementById('blog-image-preview');
-    if (blog.image) {
-        previewDiv.innerHTML = `<img src="${blog.image}" class="w-full h-full object-cover rounded-lg">`;
+    if (blog.thumbnailImage) {
+        previewDiv.innerHTML = `<img src="${blog.thumbnailImage}" class="w-full h-full object-cover rounded-xl">`;
     } else {
-        previewDiv.innerHTML = '<span class="material-symbols-rounded text-slate-400 text-4xl">image</span>';
+        previewDiv.innerHTML = '<span class="material-symbols-rounded text-slate-400 text-5xl">add_photo_alternate</span><p class="text-xs text-slate-500 mt-2 font-semibold">Click to upload</p>';
+    }
+    
+    // Show stats
+    const statsDiv = document.getElementById('blog-stats');
+    if (statsDiv) {
+        statsDiv.style.display = 'block';
+        document.getElementById('blog-views').textContent = blog.views || 0;
+        if (blog.createdAt) {
+            const createdDate = new Date(blog.createdAt);
+            document.getElementById('blog-created-at').textContent = createdDate.toLocaleDateString('vi-VN');
+        }
     }
 
     document.getElementById('blog-modal-title').innerText = 'Edit Post';
-    openModal();
-    // Don't reset form since we just filled it, openModal usually resets. 
-    // Fix: Separate reset logic or remove reset from openModal.
-    // Let's modify openModal to NOT reset if we are just showing it? 
-    // Actually, distinct functions:
     const modal = document.getElementById('blog-modal');
     modal.classList.remove('hidden');
     modal.classList.add('flex');
@@ -157,34 +215,55 @@ async function saveBlog(e) {
         const file = fileInput.files[0];
         let imageUrl = document.getElementById('blog-image-url').value;
 
-        // Upload image
+        // Upload image if file selected
         if (file) {
             imageUrl = await uploadAvatarDirect(file);
         }
+        
+        // Parse tags from comma-separated string
+        const tagsInput = document.getElementById('blog-tags').value;
+        const tags = tagsInput ? tagsInput.split(',').map(tag => tag.trim()).filter(tag => tag) : [];
+        
+        // Get published date or use current time
+        const publishedDateInput = document.getElementById('blog-published-date').value;
+        const publishedDate = publishedDateInput ? new Date(publishedDateInput).getTime() : Date.now();
 
         const blogData = {
             title: document.getElementById('blog-title').value,
-            author: document.getElementById('blog-author').value,
+            slug: document.getElementById('blog-slug').value,
+            author: {
+                name: document.getElementById('blog-author-name').value,
+                avatar: document.getElementById('blog-author-avatar').value || 'https://ui-avatars.com/api/?name=Admin&background=FF3C3C&color=fff'
+            },
             category: document.getElementById('blog-category').value,
-            summary: document.getElementById('blog-summary').value,
+            excerpt: document.getElementById('blog-excerpt').value,
             content: document.getElementById('blog-content').value,
-            image: imageUrl,
-            updatedAt: new Date().toISOString()
+            thumbnailImage: imageUrl,
+            tags: tags,
+            featured: document.getElementById('blog-featured').checked,
+            publishedDate: publishedDate,
+            updatedAt: Date.now()
         };
 
         if (id) {
+            // Update existing blog (keep views and createdAt)
+            const existingBlog = currentBlogs[id];
+            blogData.views = existingBlog?.views || 0;
+            blogData.createdAt = existingBlog?.createdAt || Date.now();
             await set(ref(db, `blogs/${id}`), blogData);
         } else {
-            blogData.createdAt = new Date().toISOString();
+            // Create new blog
+            blogData.createdAt = Date.now();
+            blogData.views = 0;
             await push(blogsRef, blogData);
         }
 
         closeModal();
-        alert('Post saved successfully!');
+        alert('✅ Post saved successfully!');
         
     } catch (error) {
         console.error('Error saving blog:', error);
-        alert('Failed to save post: ' + error.message);
+        alert('❌ Failed to save post: ' + error.message);
     } finally {
         submitBtn.innerHTML = originalBtnText;
         submitBtn.disabled = false;
@@ -218,17 +297,52 @@ function handleImagePreview(e) {
 function reload() {
     console.log('Blog Module: Reloading...');
     
-    // Bind Events locally if needed (e.g. form submit)
-    const form = document.getElementById('blog-form');
-    if (form) {
-        // Remove old listeners to avoid duplicates? 
-        // It's better to use onclick in HTML for simple stuff or bind once.
-        // For form submit, we can use onsubmit="window.blogModule.saveBlog(event)"
+    // Bind modal close button events
+    const btnCloseModal = document.getElementById('btn-close-blog-modal');
+    if (btnCloseModal) {
+        btnCloseModal.onclick = closeModal;
     }
     
+    const btnCancelBlog = document.getElementById('btn-cancel-blog');
+    if (btnCancelBlog) {
+        btnCancelBlog.onclick = closeModal;
+    }
+    
+    // Bind image upload preview
     const fileInput = document.getElementById('blog-image-file');
     if (fileInput) {
         fileInput.onchange = handleImagePreview;
+    }
+    
+    // Auto-generate slug from title
+    const titleInput = document.getElementById('blog-title');
+    const slugInput = document.getElementById('blog-slug');
+    if (titleInput && slugInput) {
+        titleInput.oninput = (e) => {
+            const slug = e.target.value
+                .toLowerCase()
+                .normalize('NFD').replace(/[\u0300-\u036f]/g, '') // Remove accents
+                .replace(/[đĐ]/g, 'd')
+                .replace(/[^a-z0-9\s-]/g, '')
+                .trim()
+                .replace(/\s+/g, '-')
+                .replace(/-+/g, '-');
+            slugInput.value = slug;
+        };
+    }
+    
+    // Character counter for excerpt
+    const excerptInput = document.getElementById('blog-excerpt');
+    const excerptCount = document.getElementById('excerpt-count');
+    if (excerptInput && excerptCount) {
+        excerptInput.oninput = (e) => {
+            excerptCount.textContent = e.target.value.length;
+            if (e.target.value.length > 160) {
+                excerptCount.classList.add('text-rose-500', 'font-bold');
+            } else {
+                excerptCount.classList.remove('text-rose-500', 'font-bold');
+            }
+        };
     }
 
     loadBlogs();

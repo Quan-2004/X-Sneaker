@@ -279,17 +279,19 @@ function renderTable() {
                             title="Xem chi tiết" onclick="window.ordersModule.showDetails('${order.key}')">
                             <span class="material-symbols-rounded text-[20px]">visibility</span>
                         </button>
-                        <div class="relative group/edit">
-                            <button class="p-2 text-slate-400 hover:text-primary hover:bg-slate-100 dark:hover:bg-white/5 rounded-lg transition-all" title="Cập nhật trạng thái">
+                        <div class="relative">
+                            <button class="edit-status-btn p-2 text-slate-400 hover:text-primary hover:bg-slate-100 dark:hover:bg-white/5 rounded-lg transition-all" 
+                                title="Cập nhật trạng thái" 
+                                data-order-id="${order.key}">
                                 <span class="material-symbols-rounded text-[20px]">edit_square</span>
                             </button>
                             <!-- Dropdown Menu for Status -->
-                            <div class="absolute right-0 ${dropdownPositionClass} w-40 bg-white dark:bg-card-dark rounded-xl shadow-xl border border-slate-100 dark:border-border-dark hidden group-hover/edit:block z-10 overflow-hidden">
+                            <div class="status-dropdown absolute right-0 ${dropdownPositionClass} w-40 bg-white dark:bg-card-dark rounded-xl shadow-xl border border-slate-100 dark:border-border-dark hidden z-10 overflow-hidden">
                                 <div class="py-1">
-                                    <button onclick="window.ordersModule.updateStatus('${order.key}', 'processing')" class="w-full text-left px-4 py-2 text-xs font-semibold hover:bg-slate-50 dark:hover:bg-white/5 text-yellow-600">Processing</button>
-                                    <button onclick="window.ordersModule.updateStatus('${order.key}', 'shipped')" class="w-full text-left px-4 py-2 text-xs font-semibold hover:bg-slate-50 dark:hover:bg-white/5 text-blue-600">Shipped</button>
-                                    <button onclick="window.ordersModule.updateStatus('${order.key}', 'delivered')" class="w-full text-left px-4 py-2 text-xs font-semibold hover:bg-slate-50 dark:hover:bg-white/5 text-emerald-600">Delivered</button>
-                                    <button onclick="window.ordersModule.updateStatus('${order.key}', 'cancelled')" class="w-full text-left px-4 py-2 text-xs font-semibold hover:bg-slate-50 dark:hover:bg-white/5 text-rose-600">Cancelled</button>
+                                    <button onclick="window.ordersModule.updateStatus('${order.key}', 'processing'); window.ordersModule.closeAllDropdowns();" class="w-full text-left px-4 py-2 text-xs font-semibold hover:bg-slate-50 dark:hover:bg-white/5 text-yellow-600">Processing</button>
+                                    <button onclick="window.ordersModule.updateStatus('${order.key}', 'shipped'); window.ordersModule.closeAllDropdowns();" class="w-full text-left px-4 py-2 text-xs font-semibold hover:bg-slate-50 dark:hover:bg-white/5 text-blue-600">Shipped</button>
+                                    <button onclick="window.ordersModule.updateStatus('${order.key}', 'delivered'); window.ordersModule.closeAllDropdowns();" class="w-full text-left px-4 py-2 text-xs font-semibold hover:bg-slate-50 dark:hover:bg-white/5 text-emerald-600">Delivered</button>
+                                    <button onclick="window.ordersModule.updateStatus('${order.key}', 'cancelled'); window.ordersModule.closeAllDropdowns();" class="w-full text-left px-4 py-2 text-xs font-semibold hover:bg-slate-50 dark:hover:bg-white/5 text-rose-600">Cancelled</button>
                                 </div>
                             </div>
                         </div>
@@ -298,11 +300,12 @@ function renderTable() {
             </tr>
         `;
     }).join('');
+    
+    renderPagination();
+    
+    // Setup dropdown event delegation after rendering
+    setupDropdownEvents();
 }
-
-/**
- * Render Pagination
- */
 function renderPagination() {
     const totalPages = Math.ceil(filteredOrders.length / itemsPerPage);
     const paginationContainer = document.getElementById('orders-pagination');
@@ -468,6 +471,52 @@ function closeDetails() {
     if (modal) {
         modal.classList.add('hidden');
         modal.classList.remove('flex');
+    }
+}
+
+/**
+ * Close all status dropdowns
+ */
+function closeAllDropdowns() {
+    document.querySelectorAll('.status-dropdown').forEach(dropdown => {
+        dropdown.classList.add('hidden');
+    });
+}
+
+/**
+ * Setup event delegation for dropdown toggles
+ */
+function setupDropdownEvents() {
+    const tableBody = document.getElementById('orders-table-body');
+    if (!tableBody) return;
+
+    // Remove old listener if exists
+    tableBody.removeEventListener('click', handleDropdownClick);
+    
+    // Add new listener
+    tableBody.addEventListener('click', handleDropdownClick);
+    
+    // Close dropdowns when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('.edit-status-btn') && !e.target.closest('.status-dropdown')) {
+            closeAllDropdowns();
+        }
+    });
+}
+
+function handleDropdownClick(e) {
+    const btn = e.target.closest('.edit-status-btn');
+    if (!btn) return;
+    
+    e.stopPropagation();
+    
+    // Close all other dropdowns first
+    closeAllDropdowns();
+    
+    // Toggle this dropdown
+    const dropdown = btn.nextElementSibling;
+    if (dropdown) {
+        dropdown.classList.toggle('hidden');
     }
 }
 
@@ -704,6 +753,7 @@ window.ordersModule = {
     updateStatus,
     showDetails,
     closeDetails,
+    closeAllDropdowns,
     setFilter,
     setSort,
     setPage,

@@ -28,6 +28,8 @@ const formatVND = (amount) => new Intl.NumberFormat('vi-VN', { style: 'currency'
  */
 function init() {
     console.log('Reports Module Initialized');
+    // Auto-load data on init
+    reload();
 }
 
 /**
