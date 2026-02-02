@@ -15,6 +15,8 @@ let currentProduct = null;
 let selectedColor = null;
 let selectedSize = null;
 let currentImageIndex = 0;
+let relatedProducts = []; // Store all related products
+let relatedProductsStartIndex = 0; // Current carousel position
 
 // ============================================================================
 // DATA LOADING
@@ -53,24 +55,28 @@ async function loadProductById(productId) {
 /**
  * Load related products from same category
  */
-async function loadRelatedProducts(category, currentProductId, limit = 4) {
+async function loadRelatedProducts(category, currentProductId, limit = 6) {
     try {
         const productsRef = ref(database, 'products');
         const snapshot = await get(productsRef);
         
         if (snapshot.exists()) {
             const productsData = snapshot.val();
-            const related = Object.keys(productsData)
+            // Load random products (excluding current product)
+            const allProducts = Object.keys(productsData)
                 .map(key => ({ id: key, ...productsData[key] }))
-                .filter(p => p.category === category && p.id !== currentProductId)
-                .slice(0, limit);
+                .filter(p => p.id !== currentProductId);
             
-            console.log(`✅ Loaded ${related.length} related products`);
+            // Shuffle array and take first 'limit' items
+            const shuffled = allProducts.sort(() => 0.5 - Math.random());
+            const related = shuffled.slice(0, limit);
+            
+            console.log(`✅ Loaded ${related.length} other products`);
             return related;
         }
         return [];
     } catch (error) {
-        console.error('❌ Error loading related products:', error);
+        console.error('❌ Error loading other products:', error);
         return [];
     }
 }
@@ -84,6 +90,11 @@ async function loadRelatedProducts(category, currentProductId, limit = 4) {
  */
 function renderProductData(product) {
     currentProduct = product;
+    
+    // Store color images if available
+    if (product.colorImages) {
+        currentProduct.colorImages = product.colorImages;
+    }
     
     // Update product name
     const nameEl = document.querySelector('h1');
@@ -109,6 +120,17 @@ function renderProductData(product) {
     const breadcrumbProduct = document.querySelector('.flex.flex-wrap.gap-2 span.text-\\[\\#1b0e0f\\]');
     if (breadcrumbProduct) breadcrumbProduct.textContent = product.name;
     
+    // Update gender info
+    const genderEl = document.getElementById('product-gender');
+    if (genderEl && product.gender) {
+        const genderMap = {
+            'male': 'Nam',
+            'female': 'Nữ',
+            'unisex': 'Unisex'
+        };
+        genderEl.textContent = genderMap[product.gender] || 'Unisex';
+    }
+    
     // Update gallery images
     renderGallery(product.images || []);
     
@@ -118,9 +140,8 @@ function renderProductData(product) {
     // Update sizes
     renderSizes(product.sizes || []);
     
-    // Initialize default selections
-    selectedColor = 'Đỏ Thẫm'; // Default color from first button
-    selectedSize = 'US 9'; // Default size from selected button
+    // Initialize default selections (will be set by render functions)
+    // selectedColor and selectedSize are set in renderColorVariants and renderSizes
 }
 
 /**
@@ -135,54 +156,108 @@ function renderGallery(images) {
         mainImageDiv.style.backgroundImage = `url("${images[0]}")`;
         mainImageDiv.dataset.alt = currentProduct?.name || 'Product image';
     }
+}
+
+/**
+ * Render color thumbnails - Hiển thị ảnh thumbnail cho từng màu
+ */
+function renderColorThumbnails() {
+    if (!currentProduct) return;
     
-    // Update thumbnails
-    const thumbnailContainer = document.querySelector('.grid.grid-cols-4.gap-4');
-    if (thumbnailContainer && images.length > 0) {
-        thumbnailContainer.innerHTML = images.slice(0, 4).map((img, index) => `
-            <div class="aspect-square bg-white dark:bg-gray-800 rounded-lg overflow-hidden border ${index === 0 ? 'border-2 border-primary' : 'border border-transparent hover:border-gray-300'} transition-colors cursor-pointer thumbnail-image" data-index="${index}">
-                <div class="w-full h-full bg-center bg-no-repeat bg-cover" 
-                     style='background-image: url("${img}");'
-                     data-alt="${currentProduct?.name || 'Product'} view ${index + 1}"></div>
-            </div>
-        `).join('');
-        
-        // Add remaining images indicator if more than 4
-        if (images.length > 4) {
-            const lastThumb = thumbnailContainer.lastElementChild;
-            if (lastThumb) {
-                lastThumb.innerHTML += `
-                    <div class="absolute inset-0 flex items-center justify-center text-white font-bold bg-black/30">
-                        +${images.length - 3}
-                    </div>
-                `;
-            }
+    const container = document.getElementById('color-thumbnails-container');
+    if (!container) return;
+    
+    const colors = currentProduct.colors || [];
+    const colorImages = currentProduct.colorImages || {};
+    const defaultImages = currentProduct.images || [];
+    
+    if (colors.length === 0) return;
+    
+    // Map color names to CSS colors
+    const colorMap = {
+        'Đen': '#000000',
+        'Trắng': '#FFFFFF',
+        'Đỏ': '#E30B17',
+        'Xanh Navy': '#1E3A8A',
+        'Vàng': '#FACC15'
+    };
+    
+    container.innerHTML = colors.map((colorName, index) => {
+        // Lấy ảnh đầu tiên của màu này, hoặc fallback sang default
+        let thumbnailImage = '';
+        if (colorImages[colorName] && colorImages[colorName].length > 0) {
+            thumbnailImage = colorImages[colorName][0];
+        } else if (defaultImages.length > 0) {
+            thumbnailImage = defaultImages[0];
         }
-    }
+        
+        const isSelected = selectedColor === colorName;
+        const colorValue = colorMap[colorName] || '#666666';
+        
+        return `
+            <div class="color-thumbnail relative cursor-pointer group" data-color="${colorName}">
+                <div class="aspect-square bg-white dark:bg-gray-800 rounded-lg overflow-hidden border-2 ${
+                    isSelected ? 'border-primary shadow-lg' : 'border-gray-200 dark:border-gray-700 hover:border-primary'
+                } transition-all">
+                    <div class="w-full h-full bg-center bg-no-repeat bg-cover"
+                         style='background-image: url("${thumbnailImage}");'
+                         data-alt="${currentProduct.name} - ${colorName}"></div>
+                </div>
+                <!-- Hiển thị chấm màu và tên màu -->
+                <div class="mt-2 flex items-center justify-center gap-2">
+                    <div class="w-4 h-4 rounded-full border border-gray-300" 
+                         style="background-color: ${colorValue}; ${colorValue === '#FFFFFF' ? 'border-width: 2px;' : ''}"></div>
+                    <span class="text-xs font-semibold text-gray-700 dark:text-gray-300">${colorName}</span>
+                </div>
+            </div>
+        `;
+    }).join('');
 }
 
 /**
  * Render color variants
  */
+/**
+ * Render color variants from Firebase data
+ */
 function renderColorVariants(colors) {
     if (!colors || colors.length === 0) return;
     
-    const colorContainer = document.querySelector('.flex.gap-3');
-    if (colorContainer && colorContainer.parentElement.querySelector('h3')?.textContent.includes('Màu Sắc')) {
-        colorContainer.innerHTML = colors.map((color, index) => `
-            <button class="w-10 h-10 rounded-full border ${index === 0 ? 'border-2 border-primary ring-offset-2 ring-1 ring-primary' : 'border border-gray-200'} transition-all color-btn" 
-                    style="background-color: ${color.hex || color.value || '#000'}"
-                    data-color="${color.name || `Color ${index + 1}`}"
-                    data-index="${index}">
-            </button>
-        `).join('');
+    const colorContainer = document.getElementById('color-container');
+    if (colorContainer) {
+        // Map color names to CSS colors (chỉ 5 màu cơ bản)
+        const colorMap = {
+            'Đen': '#000000',
+            'Trắng': '#FFFFFF',
+            'Đỏ': '#E30B17',
+            'Xanh Navy': '#1E3A8A',
+            'Vàng': '#FACC15'
+        };
         
-        // Set first color as selected
+        colorContainer.innerHTML = colors.map((colorName, index) => {
+            const colorValue = colorMap[colorName] || '#666666';
+            const isGradient = colorValue.includes('gradient');
+            
+            return `
+                <button class="color-btn w-10 h-10 rounded-full ${index === 0 ? 'border-2 border-primary ring-offset-2 ring-1 ring-primary' : 'border border-gray-200'} transition-all" 
+                        style="${isGradient ? 'background: ' + colorValue : 'background-color: ' + colorValue}"
+                        data-color="${colorName}"
+                        title="${colorName}">
+                </button>
+            `;
+        }).join('');
+        
+        // Set first color as selected and load its images
         if (colors.length > 0) {
-            selectedColor = colors[0].name || 'Mặc định';
+            selectedColor = colors[0];
             updateSelectedColorName(selectedColor);
+            // Load images for first color
+            loadImagesForColor(selectedColor);
         }
     }
+    
+    // Render color thumbnails
+    renderColorThumbnails();
 }
 
 /**
@@ -194,15 +269,23 @@ function renderSizes(sizes) {
     const sizeContainer = document.querySelector('.grid.grid-cols-4.gap-2');
     if (sizeContainer) {
         sizeContainer.innerHTML = sizes.map((size, index) => {
-            const isSoldOut = size.stock === 0;
+            // Size from Firebase is just a number (e.g., 37, 38, 39)
+            const sizeValue = typeof size === 'object' ? size.value : size;
+            const isSoldOut = typeof size === 'object' && size.stock === 0;
+            
             return `
-                <button class="py-3 text-center border ${index === 2 ? 'border-primary bg-primary/5 text-primary' : 'border-gray-200 dark:border-gray-700'} rounded-lg text-sm font-semibold hover:border-primary transition-all size-btn ${isSoldOut ? 'opacity-40 cursor-not-allowed' : ''}"
-                        data-size="US ${size.value || size}"
+                <button class="py-3 text-center border ${index === 0 ? 'border-primary bg-primary/5 text-primary' : 'border-gray-200 dark:border-gray-700'} rounded-lg text-sm font-semibold hover:border-primary transition-all size-btn ${isSoldOut ? 'opacity-40 cursor-not-allowed' : ''}"
+                        data-size="${sizeValue}"
                         ${isSoldOut ? 'disabled' : ''}>
-                    US ${size.value || size}
+                    ${sizeValue}
                 </button>
             `;
         }).join('');
+        
+        // Set first size as selected
+        if (sizes.length > 0) {
+            selectedSize = typeof sizes[0] === 'object' ? sizes[0].value : sizes[0];
+        }
     }
 }
 
@@ -210,15 +293,27 @@ function renderSizes(sizes) {
  * Render related products
  */
 function renderRelatedProducts(products) {
+    relatedProducts = products; // Store globally for carousel
+    relatedProductsStartIndex = 0; // Reset to start
+    renderRelatedProductsCarousel();
+}
+
+/**
+ * Render carousel view (4 products at a time)
+ */
+function renderRelatedProductsCarousel() {
     const container = document.querySelector('.grid.grid-cols-1.sm\\:grid-cols-2.lg\\:grid-cols-4.gap-6');
     if (!container) return;
     
-    if (products.length === 0) return;
+    if (relatedProducts.length === 0) return;
     
-    container.innerHTML = products.map(product => {
+    // Show 4 products at a time
+    const visibleProducts = relatedProducts.slice(relatedProductsStartIndex, relatedProductsStartIndex + 4);
+    
+    container.innerHTML = visibleProducts.map(product => {
         const mainImage = Array.isArray(product.images) && product.images.length > 0
             ? product.images[0]
-            : 'data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'400\' height=\'400\' viewBox=\'0 0 400 400\'%3E%3Crect width=\'400\' height=\'400\' fill=\'%23f3f4f6\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' font-family=\'Arial\' font-size=\'24\' fill=\'%239ca3af\' dominant-baseline=\'middle\' text-anchor=\'middle\'%3ENo Image%3C/text%3E%3C/svg%3E';
+            : 'image/coming_soon.png';
         
         return `
             <div class="group cursor-pointer">
@@ -238,6 +333,37 @@ function renderRelatedProducts(products) {
             </div>
         `;
     }).join('');
+    
+    // Update button states
+    updateCarouselButtons();
+}
+
+/**
+ * Update carousel button states (disable if at start/end)
+ */
+function updateCarouselButtons() {
+    const prevBtn = document.getElementById('related-prev-btn');
+    const nextBtn = document.getElementById('related-next-btn');
+    
+    if (prevBtn) {
+        if (relatedProductsStartIndex === 0) {
+            prevBtn.classList.add('opacity-50', 'cursor-not-allowed');
+            prevBtn.disabled = true;
+        } else {
+            prevBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+            prevBtn.disabled = false;
+        }
+    }
+    
+    if (nextBtn) {
+        if (relatedProductsStartIndex + 4 >= relatedProducts.length) {
+            nextBtn.classList.add('opacity-50', 'cursor-not-allowed');
+            nextBtn.disabled = true;
+        } else {
+            nextBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+            nextBtn.disabled = false;
+        }
+    }
 }
 
 // ============================================================================
@@ -248,6 +374,36 @@ function renderRelatedProducts(products) {
  * Setup all event listeners
  */
 function setupEventListeners() {
+    // Color thumbnails - Click để chuyển màu
+    document.addEventListener('click', (e) => {
+        const colorThumb = e.target.closest('.color-thumbnail');
+        if (colorThumb) {
+            const colorName = colorThumb.dataset.color;
+            if (colorName && colorName !== selectedColor) {
+                // Update selected color
+                selectedColor = colorName;
+                updateSelectedColorName(selectedColor);
+                
+                // Load images for this color
+                loadImagesForColor(selectedColor);
+                
+                // Update color button selection
+                document.querySelectorAll('.color-btn').forEach(btn => {
+                    if (btn.dataset.color === colorName) {
+                        btn.classList.remove('border', 'border-gray-200');
+                        btn.classList.add('border-2', 'border-primary', 'ring-offset-2', 'ring-1', 'ring-primary');
+                    } else {
+                        btn.classList.remove('border-2', 'border-primary', 'ring-offset-2', 'ring-1', 'ring-primary');
+                        btn.classList.add('border', 'border-gray-200');
+                    }
+                });
+                
+                // Update thumbnail borders
+                renderColorThumbnails();
+            }
+        }
+    });
+    
     // Gallery - Thumbnail clicks
     document.addEventListener('click', (e) => {
         const thumbnail = e.target.closest('.thumbnail-image');
@@ -271,6 +427,9 @@ function setupEventListeners() {
             
             selectedColor = colorBtn.dataset.color;
             updateSelectedColorName(selectedColor);
+            
+            // Load images for selected color
+            loadImagesForColor(selectedColor);
         }
     });
     
@@ -354,9 +513,45 @@ function updateMainImage(index) {
  * Update selected color name display
  */
 function updateSelectedColorName(colorName) {
-    const colorNameEl = document.querySelector('h3 span.text-gray-500');
+    const colorNameEl = document.getElementById('selected-color-name');
     if (colorNameEl) {
         colorNameEl.textContent = colorName;
+    }
+}
+
+/**
+ * Load images for selected color
+ */
+function loadImagesForColor(colorName) {
+    if (!currentProduct) return;
+    
+    let imagesToLoad = [];
+    
+    // Check if product has color-specific images
+    if (currentProduct.colorImages && currentProduct.colorImages[colorName]) {
+        imagesToLoad = currentProduct.colorImages[colorName];
+    } else if (currentProduct.images && currentProduct.images.length > 0) {
+        // Fallback to default images
+        imagesToLoad = currentProduct.images;
+    }
+    
+    if (imagesToLoad.length > 0) {
+        // Update gallery with new images
+        renderGallery(imagesToLoad);
+        
+        // Update color thumbnails to highlight selected color
+        renderColorThumbnails();
+        
+        // Add smooth transition effect
+        const mainImageDiv = document.querySelector('.w-full.h-full.bg-center.bg-no-repeat.bg-cover');
+        if (mainImageDiv) {
+            mainImageDiv.style.opacity = '0';
+            setTimeout(() => {
+                mainImageDiv.style.backgroundImage = `url("${imagesToLoad[0]}")`;
+                mainImageDiv.style.transition = 'opacity 0.3s ease-in-out';
+                mainImageDiv.style.opacity = '1';
+            }, 150);
+        }
     }
 }
 
@@ -628,18 +823,31 @@ function setupTabs() {
 /**
  * Setup related products carousel
  */
+/**
+ * Setup carousel navigation for related products
+ */
 function setupCarousel() {
-    const leftBtn = document.querySelector('.flex.gap-2 button:first-child');
-    const rightBtn = document.querySelector('.flex.gap-2 button:last-child');
-    const container = document.querySelector('.grid.grid-cols-1.sm\\:grid-cols-2.lg\\:grid-cols-4.gap-6');
+    const relatedSection = document.querySelector('.mt-24.mb-12');
+    if (!relatedSection) return;
     
-    if (leftBtn && rightBtn && container) {
-        leftBtn.addEventListener('click', () => {
-            container.scrollBy({ left: -300, behavior: 'smooth' });
+    const leftBtn = relatedSection.querySelector('.flex.gap-2 button:first-child');
+    const rightBtn = relatedSection.querySelector('.flex.gap-2 button:last-child');
+    
+    if (leftBtn && rightBtn) {
+        leftBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (relatedProductsStartIndex > 0) {
+                relatedProductsStartIndex = Math.max(0, relatedProductsStartIndex - 1);
+                renderRelatedProductsCarousel();
+            }
         });
         
-        rightBtn.addEventListener('click', () => {
-            container.scrollBy({ left: 300, behavior: 'smooth' });
+        rightBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (relatedProductsStartIndex + 4 < relatedProducts.length) {
+                relatedProductsStartIndex = Math.min(relatedProducts.length - 4, relatedProductsStartIndex + 1);
+                renderRelatedProductsCarousel();
+            }
         });
     }
 }

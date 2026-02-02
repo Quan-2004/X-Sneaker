@@ -16,116 +16,25 @@
   },
   "blogs": {
     "blog_001": {
-      "title": "Cách phối đồ với giày sneaker trắng - Bí quyết phong cách tối giản",
-      "slug": "cach-phoi-do-voi-giay-sneaker-trang",
-      "excerpt": "Giày sneaker trắng là item cơ bản không thể thiếu trong tủ đồ. Hãy cùng khám phá những cách phối đồ thông minh với đôi giày trắng yêu thích của bạn.",
-      "content": "<p>Giày sneaker trắng được xem là một trong những món đồ kinh điển và dễ phối nhất trong tủ đồ của bất kỳ ai.</p><p>Dù bạn theo đuổi phong cách nào, từ casual, sporty đến streetwear, một đôi giày trắng luôn là lựa chọn an toàn và sành điệu.</p><h2>1. Phối với quần jeans</h2><p>Đây là combo kinh điển và không bao giờ lỗi mốt...</p><h2>2. Style All-White</h2><p>Phong cách toàn trắng mang lại sự sang trọng, thanh lịch...</p>",
       "author": {
-        "name": "Admin X-Sneaker",
-        "avatar": "https://ui-avatars.com/api/?name=Admin&background=FF3C3C&color=fff"
+        "avatar": "https://ui-avatars.com/api/?name=Admin&background=FF3C3C&color=fff",
+        "name": "Admin X-Sneaker"
       },
-      "thumbnailImage": "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=800",
-      "publishedDate": 1736467200000,
       "category": "Phong cách",
-      "tags": ["phối đồ", "sneaker trắng", "phong cách", "thời trang"],
-      "views": 2456,
-      "featured": true
-    },
-    "blog_002": {
-      "title": "Top 10 đôi giày sneaker iconic nhất mọi thời đại",
-      "slug": "top-10-doi-giay-sneaker-iconic-nhat-moi-thoi-dai",
-      "excerpt": "Từ Air Jordan 1 đến Adidas Stan Smith, hãy cùng điểm qua những đôi giày đã làm nên lịch sử và văn hóa sneaker toàn cầu.",
-      "content": "<p>Trong thế giới sneaker, có những đôi giày không chỉ là sản phẩm thời trang mà còn là biểu tượng văn hóa, nghệ thuật và lịch sử.</p><h2>1. Nike Air Jordan 1 (1985)</h2><p>Được thiết kế bởi Peter Moore, Air Jordan 1 là đôi giày đã làm nên tên tuổi Michael Jordan...</p><h2>2. Adidas Superstar (1969)</h2><p>Từ sân bóng rổ đến văn hóa hip-hop...</p>",
-      "author": {
-        "name": "Admin X-Sneaker",
-        "avatar": "https://ui-avatars.com/api/?name=Admin&background=FF3C3C&color=fff"
-      },
-      "thumbnailImage": "https://images.unsplash.com/photo-1460353581641-37baddab0fa2?w=800",
-      "publishedDate": 1736553600000,
-      "category": "Reviews",
-      "tags": ["top 10", "iconic", "lịch sử sneaker", "review"],
-      "views": 3821,
-      "featured": true
-    },
-    "blog_003": {
-      "title": "Hướng dẫn bảo quản và vệ sinh giày sneaker đúng cách",
-      "slug": "huong-dan-bao-quan-ve-sinh-giay-sneaker",
-      "excerpt": "Bí quyết giữ giày luôn như mới, tăng tuổi thọ và giữ giá trị. Từ vệ sinh hàng ngày đến bảo quản chuyên sâu.",
-      "content": "<p>Việc bảo quản và vệ sinh giày sneaker đúng cách không chỉ giúp đôi giày của bạn luôn sạch đẹp mà còn kéo dài tuổi thọ và giữ giá trị.</p><h2>Vệ sinh theo chất liệu</h2><h3>Giày da</h3><p>Sử dụng khăn ẩm và cleaner chuyên dụng...</p><h3>Giày vải</h3><p>Có thể giặt máy với túi lưới...</p>",
-      "author": {
-        "name": "Admin X-Sneaker",
-        "avatar": "https://ui-avatars.com/api/?name=Admin&background=FF3C3C&color=fff"
-      },
-      "thumbnailImage": "https://images.unsplash.com/photo-1556906781-9a412961c28c?w=800",
-      "publishedDate": 1736640000000,
-      "category": "Hướng dẫn",
-      "tags": ["bảo quản", "vệ sinh", "chăm sóc giày", "hướng dẫn"],
-      "views": 1987,
-      "featured": false
-    },
-    "blog_004": {
-      "title": "Nike vs Adidas: Cuộc chiến của những ông lớn",
-      "slug": "nike-vs-adidas-cuoc-chien-cua-nhung-ong-lon",
-      "excerpt": "So sánh chi tiết hai đế chế sneaker lớn nhất thế giới về công nghệ, thiết kế, marketing và ảnh hưởng văn hóa.",
-      "content": "<p>Nike và Adidas - hai cái tên đã định hình ngành công nghiệp giày thể thao toàn cầu.</p><h2>Lịch sử</h2><p>Nike được thành lập năm 1964 bởi Phil Knight và Bill Bowerman. Adidas có lịch sử lâu đời hơn, từ năm 1949...</p><h2>Công nghệ</h2><p>Nike với Air và React, Adidas với Boost và Primeknit...</p>",
-      "author": {
-        "name": "Admin X-Sneaker",
-        "avatar": "https://ui-avatars.com/api/?name=Admin&background=FF3C3C&color=fff"
-      },
-      "thumbnailImage": "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=800",
-      "publishedDate": 1736726400000,
-      "category": "Tin tức",
-      "tags": ["nike", "adidas", "so sánh", "thương hiệu"],
-      "views": 4532,
-      "featured": true
-    },
-    "blog_005": {
-      "title": "Sneaker culture ở Việt Nam: Từ niche đến mainstream",
-      "slug": "sneaker-culture-o-viet-nam",
-      "excerpt": "Hành trình phát triển của cộng đồng sneakerhead Việt Nam và những xu hướng mới đang lên.",
-      "content": "<p>Văn hóa sneaker tại Việt Nam đã có sự chuyển mình đáng kể trong những năm gần đây.</p><p>Từ một sở thích nhỏ của giới trẻ, sneaker đã trở thành một phần quan trọng của ngành thời trang và văn hóa đường phố.</p><h2>Sự phát triển</h2><p>Cộng đồng sneakerhead Việt Nam ngày càng lớn mạnh với nhiều nhóm, forum...</p>",
-      "author": {
-        "name": "Admin X-Sneaker",
-        "avatar": "https://ui-avatars.com/api/?name=Admin&background=FF3C3C&color=fff"
-      },
-      "thumbnailImage": "https://images.unsplash.com/photo-1515955656352-a1fa3ffcd111?w=800",
-      "publishedDate": 1736812800000,
-      "category": "Văn hóa",
-      "tags": ["văn hóa", "việt nam", "cộng đồng", "xu hướng"],
-      "views": 2134,
-      "featured": false
-    }
-  },
-  "contact-submissions": {
-    "1737331200000-abc123": {
-      "name": "Nguyễn Văn A",
-      "email": "nguyenvana@example.com",
-      "phone": "0901234567",
-      "subject": "Liên hệ chung",
-      "message": "Xin chào, tôi muốn hỏi về sản phẩm Nike Air Jordan 1. Cho tôi biết thêm thông tin về màu sắc và size còn hàng.",
-      "submittedAt": 1737331200000,
-      "status": "pending",
-      "replied": false
-    },
-    "1737244800000-def456": {
-      "name": "Trần Thị B",
-      "email": "tranthib@example.com",
-      "phone": "0912345678",
-      "subject": "Liên hệ chung",
-      "message": "Shop có chính sách đổi trả như thế nào? Tôi muốn biết rõ hơn trước khi mua hàng.",
-      "submittedAt": 1737244800000,
-      "status": "replied",
-      "replied": true
-    },
-    "1737158400000-ghi789": {
-      "name": "Lê Văn C",
-      "email": "levanc@example.com",
-      "phone": "",
-      "subject": "Liên hệ chung",
-      "message": "Tôi ở Hà Nội, ship mất bao lâu và phí ship là bao nhiêu ạ?",
-      "submittedAt": 1737158400000,
-      "status": "replied",
-      "replied": true
+      "content": "<p>Giày sneaker trắng được xem là một trong những món đồ kinh điển và dễ phối nhất trong tủ đồ của bất kỳ ai.</p><p>Dù bạn theo đuổi phong cách nào, từ casual, sporty đến streetwear, một đôi giày trắng luôn là lựa chọn an toàn và sành điệu.</p><h2>1. Phối với quần jeans</h2><p>Đây là combo kinh điển và không bao giờ lỗi mốt...</p><h2>2. Style All-White</h2><p>Phong cách toàn trắng mang lại sự sang trọng, thanh lịch...</p>",
+      "excerpt": "Giày sneaker trắng là item cơ bản không thể thiếu trong tủ đồ. Hãy cùng khám phá những cách phối đồ thông minh với đôi giày trắng yêu thích của bạn.",
+      "featured": true,
+      "publishedDate": 1736467200000,
+      "slug": "cach-phoi-do-voi-giay-sneaker-trang",
+      "tags": [
+        "phối đồ",
+        "sneaker trắng",
+        "phong cách",
+        "thời trang"
+      ],
+      "thumbnailImage": "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=800",
+      "title": "Cách phối đồ với giày sneaker trắng - Bí quyết phong cách tối giản",
+      "views": 2456
     }
   },
   "brands": {
@@ -190,7 +99,6 @@
       ],
       "updatedAt": 1737331200000
     }
-   
   },
   "categories": {
     "cat_001": {
@@ -234,115 +142,68 @@
       "slug": "phu-kien"
     }
   },
+  "contact-submissions": {
+    "1737158400000-ghi789": {
+      "email": "levanc@example.com",
+      "message": "Tôi ở Hà Nội, ship mất bao lâu và phí ship là bao nhiêu ạ?",
+      "name": "Lê Văn C",
+      "phone": "",
+      "replied": true,
+      "status": "replied",
+      "subject": "Liên hệ chung",
+      "submittedAt": 1737158400000
+    },
+    "1737244800000-def456": {
+      "email": "tranthib@example.com",
+      "message": "Shop có chính sách đổi trả như thế nào? Tôi muốn biết rõ hơn trước khi mua hàng.",
+      "name": "Trần Thị B",
+      "phone": "0912345678",
+      "replied": true,
+      "status": "replied",
+      "subject": "Liên hệ chung",
+      "submittedAt": 1737244800000
+    },
+    "1737331200000-abc123": {
+      "email": "nguyenvana@example.com",
+      "message": "Xin chào, tôi muốn hỏi về sản phẩm Nike Air Jordan 1. Cho tôi biết thêm thông tin về màu sắc và size còn hàng.",
+      "name": "Nguyễn Văn A",
+      "phone": "0901234567",
+      "replied": false,
+      "status": "pending",
+      "subject": "Liên hệ chung",
+      "submittedAt": 1737331200000
+    }
+  },
   "orders": {
-    "order_001": {
-      "createdAt": 1705824000000,
-      "deliveredAt": 1706428800000,
+    "-OkTmt-0PQ2UwH5g8RRp": {
+      "createdAt": 1770043191122,
+      "customerInfo": {
+        "address": "12A, acs, CT",
+        "city": "CCT",
+        "email": "odoo221761@gmail.com",
+        "fullname": "tấn đạt trần",
+        "phone": "0989786756"
+      },
       "items": [
         {
+          "color": "Đỏ Thẫm",
+          "id": "prod_001",
           "image": "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/b7d9211c-26e7-431a-ac24-b0540fb3c00f/air-jordan-1-retro-high-og-shoe.png",
           "name": "Nike Air Jordan 1 Retro High OG",
           "price": 4500000,
-          "productId": "prod_001",
           "quantity": 1,
-          "size": "42"
-        },
-        {
-          "image": "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/b7d9211c-26e7-431a-ac24-b0540fb3c00f/air-force-1-07-shoe.png",
-          "name": "Nike Air Force 1 '07",
-          "price": 2850000,
-          "productId": "prod_003",
-          "quantity": 2,
-          "size": "41"
+          "size": "US 9"
         }
       ],
-      "orderId": "ORD20260115001",
-      "paymentMethod": "cod",
-      "shipping": 0,
-      "shippingAddress": {
-        "city": "TP. Hồ Chí Minh",
-        "district": "Quận 1",
-        "fullName": "Nguyễn Văn An",
-        "phone": "0901234567",
-        "street": "123 Đường Lê Lợi",
-        "ward": "Phường Bến Nghé"
-      },
-      "status": "delivered",
-      "subtotal": 10200000,
-      "tax": 816000,
-      "total": 11016000,
-      "updatedAt": 1706428800000,
-      "userId": "user_001"
-    },
-    "order_002": {
-      "createdAt": 1737072000000,
-      "items": [
-        {
-          "image": "https://images.stockx.com/images/adidas-Yeezy-Boost-350-V2-Zebra-Product.jpg",
-          "name": "Adidas Yeezy Boost 350 V2",
-          "price": 6200000,
-          "productId": "prod_002",
-          "quantity": 1,
-          "size": "39"
-        }
-      ],
-      "orderId": "ORD20260118002",
-      "paymentMethod": "banking",
-      "paymentStatus": "paid",
-      "shipping": 0,
-      "shippingAddress": {
-        "city": "TP. Hồ Chí Minh",
-        "district": "Quận 1",
-        "fullName": "Trần Thị Bình",
-        "phone": "0912345678",
-        "street": "456 Đường Nguyễn Huệ",
-        "ward": "Phường Bến Thành"
-      },
-      "status": "shipping",
-      "subtotal": 6200000,
-      "tax": 496000,
-      "total": 6696000,
-      "updatedAt": 1737244800000,
-      "userId": "user_002"
-    },
-    "order_003": {
-      "createdAt": 1737331200000,
-      "items": [
-        {
-          "image": "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/af53d53d-561f-450a-a483-70a7ceee380f/dunk-low-retro-shoe.png",
-          "name": "Nike Dunk Low Retro Panda",
-          "price": 3100000,
-          "productId": "prod_006",
-          "quantity": 1,
-          "size": "43"
-        },
-        {
-          "image": "https://www.converse.com/dw/image/v2/BCZC_PRD/on/demandware.static/-/Sites-cnv-master-catalog/default/dw9f7c0e9e/images/a_107/M9160_A_107X1.jpg",
-          "name": "Converse Chuck Taylor All Star Classic",
-          "price": 1450000,
-          "productId": "prod_005",
-          "quantity": 1,
-          "size": "42"
-        }
-      ],
-      "orderId": "ORD20260120003",
-      "paymentMethod": "momo",
-      "paymentStatus": "paid",
-      "shipping": 0,
-      "shippingAddress": {
-        "city": "TP. Hồ Chí Minh",
-        "district": "Quận 1",
-        "fullName": "Lê Hoàng Minh",
-        "phone": "0923456789",
-        "street": "789 Đường Điện Biên Phủ",
-        "ward": "Phường Đa Kao"
-      },
+      "orderId": "ORD-1770043191122",
+      "paymentMethod": "COD",
       "status": "processing",
-      "subtotal": 4550000,
-      "tax": 364000,
-      "total": 4914000,
-      "updatedAt": 1737331200000,
-      "userId": "user_003"
+      "subtotal": 4500000,
+      "tax": 360000,
+      "total": 4860000,
+      "updatedAt": 1770043191122,
+      "userEmail": "odoo221761@gmail.com",
+      "userId": "59OCQW1Vm1csTbyG0j6fy4RjgDZ2"
     }
   },
   "products": {
@@ -350,26 +211,195 @@
       "brand": "Nike",
       "category": "basketball",
       "colors": [
-        "Đỏ/Trắng/Đen"
+        "Đỏ",
+        "Đen",
+        "Trắng"
       ],
-      "createdAt": 1705651200000,
-      "description": "Giày Nike Air Jordan 1 Retro High OG - Biểu tượng bóng rổ huyền thoại với thiết kế cổ điển, chất liệu da cao cấp và đệm Air thoải mái. Phối màu Chicago đỏ-trắng-đen kinh điển.",
-      "discount": 18,
+      "colorImages": {
+        "Đỏ": [
+          "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/b7d9211c-26e7-431a-ac24-b0540fb3c00f/air-jordan-1-retro-high-og-shoe.png",
+          "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/9d4a4bb7-2f5f-4cc1-a0ba-3fc0e0da5b9b/air-jordan-1-retro-high-og-shoe.png"
+        ],
+        "Đen": [
+          "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/3f6f8b2f-9c24-4e7d-a9e3-2e0d8c8c8c8c/air-jordan-1-retro-high-og-black-shoe.png",
+          "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/4f6f8b2f-9c24-4e7d-a9e3-2e0d8c8c8c8c/air-jordan-1-retro-high-og-black-shoe.png"
+        ],
+        "Trắng": [
+          "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/5f6f8b2f-9c24-4e7d-a9e3-2e0d8c8c8c8c/air-jordan-1-retro-high-og-white-shoe.png",
+          "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/6f6f8b2f-9c24-4e7d-a9e3-2e0d8c8c8c8c/air-jordan-1-retro-high-og-white-shoe.png"
+        ]
+      },
+      "createdAt": 1735689600000,
+      "description": "Nike Air Jordan 1 Retro High OG - Huyền thoại bóng rổ với thiết kế iconic từ năm 1985. Chất liệu da cao cấp, đế Air-Sole êm ái, phong cách cổ điển vượt thời gian.",
+      "discount": 0,
       "featured": true,
       "gender": "unisex",
       "images": [
         "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/b7d9211c-26e7-431a-ac24-b0540fb3c00f/air-jordan-1-retro-high-og-shoe.png",
-        "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/5cf27545-3e0a-4dd5-a9af-e7b23bf9fdde/air-jordan-1-retro-high-og-shoe.png",
-        "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/00375837-849f-4f17-ba24-d201d27be49b/air-jordan-1-retro-high-og-shoe.png"
+        "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/9d4a4bb7-2f5f-4cc1-a0ba-3fc0e0da5b9b/air-jordan-1-retro-high-og-shoe.png"
       ],
       "isBestSeller": true,
       "isNew": false,
       "name": "Nike Air Jordan 1 Retro High OG",
-      "originalPrice": 5500000,
+      "originalPrice": 4500000,
       "price": 4500000,
-      "rating": 4.8,
-      "reviews": 89,
+      "rating": 4.9,
+      "reviews": 524,
       "sizes": [
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45
+      ],
+      "sold": 412,
+      "stock": 48,
+      "updatedAt": 1737331200000
+    },
+    "prod_002": {
+      "brand": "Adidas",
+      "category": "lifestyle",
+      "colors": [
+        "Trắng",
+        "Đen",
+        "Xanh Navy"
+      ],
+      "colorImages": {
+        "Trắng": [
+          "https://assets.adidas.com/images/h_840,f_auto,q_auto,fl_lossy,c_fill,g_auto/f44e8c5e8b4b4b4f9a8eadd800e8f8f8/Superstar_Shoes_White_EG4958_01_standard.jpg",
+          "https://assets.adidas.com/images/h_840,f_auto,q_auto,fl_lossy,c_fill,g_auto/f55e8c5e8b4b4b4f9a8eadd800e8f8f8/Superstar_Shoes_White_EG4958_02_standard.jpg"
+        ],
+        "Đen": [
+          "https://assets.adidas.com/images/h_840,f_auto,q_auto,fl_lossy,c_fill,g_auto/g44e8c5e8b4b4b4f9a8eadd800e8f8f8/Superstar_Shoes_Black_EG4959_01_standard.jpg",
+          "https://assets.adidas.com/images/h_840,f_auto,q_auto,fl_lossy,c_fill,g_auto/g55e8c5e8b4b4b4f9a8eadd800e8f8f8/Superstar_Shoes_Black_EG4959_02_standard.jpg"
+        ],
+        "Xanh Navy": [
+          "https://assets.adidas.com/images/h_840,f_auto,q_auto,fl_lossy,c_fill,g_auto/h44e8c5e8b4b4b4f9a8eadd800e8f8f8/Superstar_Shoes_Navy_EG4960_01_standard.jpg",
+          "https://assets.adidas.com/images/h_840,f_auto,q_auto,fl_lossy,c_fill,g_auto/h55e8c5e8b4b4b4f9a8eadd800e8f8f8/Superstar_Shoes_Navy_EG4960_02_standard.jpg"
+        ]
+      },
+      "createdAt": 1735776000000,
+      "description": "Adidas Superstar - Giày lifestyle huyền thoại với mũi shell toe đặc trưng. Thiết kế vintage, chất liệu da mềm mại, thoải mái cho mọi hoạt động hàng ngày.",
+      "discount": 10,
+      "featured": true,
+      "gender": "unisex",
+      "images": [
+        "https://assets.adidas.com/images/h_840,f_auto,q_auto,fl_lossy,c_fill,g_auto/f44e8c5e8b4b4b4f9a8eadd800e8f8f8/Superstar_Shoes_White_EG4958_01_standard.jpg"
+      ],
+      "isBestSeller": true,
+      "isNew": false,
+      "name": "Adidas Superstar Classic",
+      "originalPrice": 2800000,
+      "price": 2520000,
+      "rating": 4.7,
+      "reviews": 389,
+      "sizes": [
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43
+      ],
+      "sold": 356,
+      "stock": 82,
+      "updatedAt": 1737244800000
+    },
+    "prod_003": {
+      "brand": "Nike",
+      "category": "running",
+      "colors": [
+        "Đen",
+        "Trắng",
+        "Xanh Navy"
+      ],
+      "colorImages": {
+        "Đen": [
+          "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/b8d51c7a-6c28-4ffd-8c1a-2b8e8f8f8f8f/air-zoom-pegasus-40-road-running-shoes.png",
+          "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/c8d51c7a-6c28-4ffd-8c1a-2b8e8f8f8f8f/air-zoom-pegasus-40-road-running-shoes.png"
+        ],
+        "Trắng": [
+          "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/d8d51c7a-6c28-4ffd-8c1a-2b8e8f8f8f8f/air-zoom-pegasus-40-white-running-shoes.png",
+          "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/e8d51c7a-6c28-4ffd-8c1a-2b8e8f8f8f8f/air-zoom-pegasus-40-white-running-shoes.png"
+        ],
+        "Xanh Navy": [
+          "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/f8d51c7a-6c28-4ffd-8c1a-2b8e8f8f8f8f/air-zoom-pegasus-40-navy-running-shoes.png",
+          "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/g8d51c7a-6c28-4ffd-8c1a-2b8e8f8f8f8f/air-zoom-pegasus-40-navy-running-shoes.png"
+        ]
+      },
+      "createdAt": 1735862400000,
+      "description": "Nike Air Zoom Pegasus 40 - Giày chạy bộ với công nghệ Air Zoom phản hồi nhanh, upper Flyknit thoáng khí. Thiết kế cho vận động viên muốn tốc độ và sự thoải mái.",
+      "discount": 15,
+      "featured": true,
+      "gender": "male",
+      "images": [
+        "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/b8d51c7a-6c28-4ffd-8c1a-2b8e8f8f8f8f/air-zoom-pegasus-40-road-running-shoes.png"
+      ],
+      "isBestSeller": false,
+      "isNew": true,
+      "name": "Nike Air Zoom Pegasus 40",
+      "originalPrice": 3600000,
+      "price": 3060000,
+      "rating": 4.8,
+      "reviews": 267,
+      "sizes": [
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45
+      ],
+      "sold": 198,
+      "stock": 65,
+      "updatedAt": 1737158400000
+    },
+    "prod_004": {
+      "brand": "New Balance",
+      "category": "lifestyle",
+      "colors": [
+        "Trắng",
+        "Đen",
+        "Xanh Navy"
+      ],
+      "colorImages": {
+        "Trắng": [
+          "https://nb.scene7.com/is/image/NB/bb550pwg_nb_02_i?$pdpflexf2$",
+          "https://nb.scene7.com/is/image/NB/bb550pwg_nb_03_i?$pdpflexf2$"
+        ],
+        "Đen": [
+          "https://nb.scene7.com/is/image/NB/bb550bwb_nb_02_i?$pdpflexf2$",
+          "https://nb.scene7.com/is/image/NB/bb550bwb_nb_03_i?$pdpflexf2$"
+        ],
+        "Xanh Navy": [
+          "https://nb.scene7.com/is/image/NB/bb550pwb_nb_02_i?$pdpflexf2$",
+          "https://nb.scene7.com/is/image/NB/bb550pwb_nb_03_i?$pdpflexf2$"
+        ]
+      },
+      "createdAt": 1735948800000,
+      "description": "New Balance 550 - Retro basketball silhouette với thiết kế đơn giản, sang trọng. Chất liệu da cao cấp, đế cao su bền bỉ. Phong cách vintage trendy.",
+      "discount": 0,
+      "featured": true,
+      "gender": "unisex",
+      "images": [
+        "https://nb.scene7.com/is/image/NB/bb550pwg_nb_02_i?$pdpflexf2$",
+        "https://nb.scene7.com/is/image/NB/bb550pwg_nb_03_i?$pdpflexf2$"
+      ],
+      "isBestSeller": true,
+      "isNew": false,
+      "name": "New Balance 550 White Green",
+      "originalPrice": 3200000,
+      "price": 3200000,
+      "rating": 4.7,
+      "reviews": 312,
+      "sizes": [
+        37,
         38,
         39,
         40,
@@ -378,31 +408,97 @@
         43,
         44
       ],
-      "sold": 128,
-      "stock": 45,
-      "updatedAt": 1737331200000
+      "sold": 289,
+      "stock": 71,
+      "updatedAt": 1737072000000
     },
     "prod_005": {
-      "brand": "Converse",
+      "brand": "Adidas",
+      "category": "running",
+      "colors": [
+        "Đen",
+        "Trắng",
+        "Xanh Navy"
+      ],
+      "colorImages": {
+        "Đen": [
+          "https://assets.adidas.com/images/h_840,f_auto,q_auto,fl_lossy,c_fill,g_auto/f8f8c5e8b4b4b4f9a8eadd800e8f8f8f/Ultraboost_23_Shoes_Black_HQ3831_01_standard.jpg",
+          "https://assets.adidas.com/images/h_840,f_auto,q_auto,fl_lossy,c_fill,g_auto/f9f8c5e8b4b4b4f9a8eadd800e8f8f8f/Ultraboost_23_Shoes_Black_HQ3831_02_standard.jpg"
+        ],
+        "Trắng": [
+          "https://assets.adidas.com/images/h_840,f_auto,q_auto,fl_lossy,c_fill,g_auto/g8f8c5e8b4b4b4f9a8eadd800e8f8f8f/Ultraboost_23_Shoes_White_HQ3832_01_standard.jpg",
+          "https://assets.adidas.com/images/h_840,f_auto,q_auto,fl_lossy,c_fill,g_auto/g9f8c5e8b4b4b4f9a8eadd800e8f8f8f/Ultraboost_23_Shoes_White_HQ3832_02_standard.jpg"
+        ],
+        "Xanh Navy": [
+          "https://assets.adidas.com/images/h_840,f_auto,q_auto,fl_lossy,c_fill,g_auto/h8f8c5e8b4b4b4f9a8eadd800e8f8f8f/Ultraboost_23_Shoes_Navy_HQ3833_01_standard.jpg",
+          "https://assets.adidas.com/images/h_840,f_auto,q_auto,fl_lossy,c_fill,g_auto/h9f8c5e8b4b4b4f9a8eadd800e8f8f8f/Ultraboost_23_Shoes_Navy_HQ3833_02_standard.jpg"
+        ]
+      },
+      "createdAt": 1736035200000,
+      "description": "Adidas Ultraboost 23 - Giày chạy bộ đỉnh cao với đế Boost đàn hồi tuyệt vời. Upper Primeknit+ ôm sát chân, hỗ trợ năng lượng mỗi bước chạy.",
+      "discount": 20,
+      "featured": true,
+      "gender": "female",
+      "images": [
+        "https://assets.adidas.com/images/h_840,f_auto,q_auto,fl_lossy,c_fill,g_auto/f8f8c5e8b4b4b4f9a8eadd800e8f8f8f/Ultraboost_23_Shoes_Black_HQ3831_01_standard.jpg"
+      ],
+      "isBestSeller": false,
+      "isNew": true,
+      "name": "Adidas Ultraboost 23",
+      "originalPrice": 4800000,
+      "price": 3840000,
+      "rating": 4.9,
+      "reviews": 445,
+      "sizes": [
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42
+      ],
+      "sold": 234,
+      "stock": 54,
+      "updatedAt": 1736985600000
+    },
+    "prod_006": {
+      "brand": "Nike",
       "category": "lifestyle",
       "colors": [
-        "Đen"
+        "Đen",
+        "Trắng",
+        "Đỏ"
       ],
-      "createdAt": 1705910400000,
-      "description": "Converse Chuck Taylor All Star - Giày vải classic đời đầu, thiết kế đơn giản vượt thời gian, màu đen cơ bản dễ phối. Phù hợp mọi phong cách.",
+      "colorImages": {
+        "Đen": [
+          "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/a8d5c7e9-9b4c-4f5f-8a2b-8e8f8f8f8f8f/dunk-low-retro-shoes.png",
+          "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/b8d5c7e9-9b4c-4f5f-8a2b-8e8f8f8f8f8f/dunk-low-retro-shoes.png"
+        ],
+        "Trắng": [
+          "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/i8d5c7e9-9b4c-4f5f-8a2b-8e8f8f8f8f8f/dunk-low-white-shoe.png",
+          "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/j8d5c7e9-9b4c-4f5f-8a2b-8e8f8f8f8f8f/dunk-low-white-shoe.png"
+        ],
+        "Đỏ": [
+          "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/k8d5c7e9-9b4c-4f5f-8a2b-8e8f8f8f8f8f/dunk-low-red-shoe.png",
+          "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/l8d5c7e9-9b4c-4f5f-8a2b-8e8f8f8f8f8f/dunk-low-red-shoe.png"
+        ]
+      },
+      "createdAt": 1736121600000,
+      "description": "Nike Dunk Low - Giày lifestyle với thiết kế retro từ bóng rổ. Màu Panda (đen trắng) hot trend, dễ phối đồ. Chất liệu da tốt, form chuẩn.",
       "discount": 0,
-      "featured": false,
+      "featured": true,
       "gender": "unisex",
       "images": [
-        "https://www.converse.com/dw/image/v2/BCZC_PRD/on/demandware.static/-/Sites-cnv-master-catalog/default/dw9f7c0e9e/images/a_107/M9160_A_107X1.jpg"
+        "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/a8d5c7e9-9b4c-4f5f-8a2b-8e8f8f8f8f8f/dunk-low-retro-shoes.png"
       ],
       "isBestSeller": true,
       "isNew": false,
-      "name": "Converse Chuck Taylor All Star Classic",
-      "originalPrice": 1450000,
-      "price": 1450000,
-      "rating": 4.5,
-      "reviews": 312,
+      "name": "Nike Dunk Low Panda",
+      "originalPrice": 2900000,
+      "price": 2900000,
+      "rating": 4.8,
+      "reviews": 578,
       "sizes": [
         36,
         37,
@@ -414,57 +510,44 @@
         43,
         44
       ],
-      "sold": 456,
-      "stock": 120,
-      "updatedAt": 1737072000000
-    },
-    "prod_006": {
-      "brand": "Nike",
-      "category": "lifestyle",
-      "colors": [
-        "Đen/Trắng"
-      ],
-      "createdAt": 1705996800000,
-      "description": "Nike Dunk Low Panda - Phối màu đen trắng siêu hot, thiết kế low-top năng động, chất liệu da và synthetic cao cấp. Một trong những mẫu Dunk được yêu thích nhất.",
-      "discount": 0,
-      "featured": true,
-      "gender": "unisex",
-      "images": [
-        "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/af53d53d-561f-450a-a483-70a7ceee380f/dunk-low-retro-shoe.png"
-      ],
-      "isBestSeller": true,
-      "isNew": false,
-      "name": "Nike Dunk Low Retro Panda",
-      "originalPrice": 3100000,
-      "price": 3100000,
-      "rating": 4.8,
-      "reviews": 178,
-      "sizes": [
-        38,
-        39,
-        40,
-        41,
-        42,
-        43,
-        44
-      ],
-      "sold": 234,
-      "stock": 62,
-      "updatedAt": 1737244800000
+      "sold": 623,
+      "stock": 103,
+      "updatedAt": 1737417600000
     },
     "prod_007": {
       "brand": "Vans",
       "category": "lifestyle",
       "colors": [
-        "Đen/Trắng"
+        "Đen",
+        "Trắng",
+        "Đỏ",
+        "Xanh Navy"
       ],
+      "colorImages": {
+        "Đen": [
+          "https://res.cloudinary.com/dvcebine7/image/upload/v1770018745/download_a3q3do.jpg",
+          "https://images.vans.com/is/image/Vans/D3HY28-ALT1?wid=800"
+        ],
+        "Trắng": [
+          "https://images.vans.com/is/image/Vans/VN000D3HW00-HERO?wid=800",
+          "https://images.vans.com/is/image/Vans/VN000D3HW00-ALT1?wid=800"
+        ],
+        "Đỏ": [
+          "https://images.vans.com/is/image/Vans/VN0A5FCBA7Q-HERO?wid=800",
+          "https://images.vans.com/is/image/Vans/VN0A5FCBA7Q-ALT1?wid=800"
+        ],
+        "Xanh Navy": [
+          "https://images.vans.com/is/image/Vans/VN0A38G1Q9W-HERO?wid=800",
+          "https://images.vans.com/is/image/Vans/VN0A38G1Q9W-ALT1?wid=800"
+        ]
+      },
       "createdAt": 1706083200000,
       "description": "Vans Old Skool - Biểu tượng skate classic với sọc Jazz Stripe đặc trưng, màu đen trắng cơ bản, đế waffle grip tốt. Phong cách streetwear bất hủ.",
       "discount": 0,
       "featured": false,
       "gender": "unisex",
       "images": [
-        "https://images.unsplash.com/photo-1543508282-6319a3e2621f?w=800"
+        "https://res.cloudinary.com/dvcebine7/image/upload/v1770018745/download_a3q3do.jpg"
       ],
       "isBestSeller": true,
       "isNew": false,
@@ -488,71 +571,67 @@
       "updatedAt": 1737158400000
     },
     "prod_008": {
-      "brand": "Nike",
-      "category": "running",
+      "brand": "Converse",
+      "category": "lifestyle",
       "colors": [
-        "Xanh dương/Trắng"
+        "Đen",
+        "Trắng",
+        "Đỏ",
+        "Xanh Navy",
+        "Vàng"
       ],
-      "createdAt": 1736640000000,
-      "description": "Nike Air Zoom Pegasus 40 - Giày chạy bộ hàng đầu với công nghệ Air Zoom đệm khí, React foam êm ái, upper lưới thoáng khí. Lý tưởng cho runner mọi cấp độ.",
-      "discount": 14,
+      "colorImages": {
+        "Đen": [
+          "https://www.converse.com/dw/image/v2/BCZC_PRD/on/demandware.static/-/Sites-cnv-master-catalog/default/dw4b8a8f8f/images/a_08/M9160_A_08X1.jpg",
+          "https://www.converse.com/dw/image/v2/BCZC_PRD/on/demandware.static/-/Sites-cnv-master-catalog/default/dw5b8a8f8f/images/a_08/M9160_A_08X2.jpg"
+        ],
+        "Trắng": [
+          "https://www.converse.com/dw/image/v2/BCZC_PRD/on/demandware.static/-/Sites-cnv-master-catalog/default/dw6b8a8f8f/images/a_08/M7652_A_08X1.jpg",
+          "https://www.converse.com/dw/image/v2/BCZC_PRD/on/demandware.static/-/Sites-cnv-master-catalog/default/dw7b8a8f8f/images/a_08/M7652_A_08X2.jpg"
+        ],
+        "Đỏ": [
+          "https://www.converse.com/dw/image/v2/BCZC_PRD/on/demandware.static/-/Sites-cnv-master-catalog/default/dw8b8a8f8f/images/a_08/M9621_A_08X1.jpg",
+          "https://www.converse.com/dw/image/v2/BCZC_PRD/on/demandware.static/-/Sites-cnv-master-catalog/default/dw9b8a8f8f/images/a_08/M9621_A_08X2.jpg"
+        ],
+        "Xanh Navy": [
+          "https://www.converse.com/dw/image/v2/BCZC_PRD/on/demandware.static/-/Sites-cnv-master-catalog/default/dw0b8a8f8f/images/a_08/M9697_A_08X1.jpg",
+          "https://www.converse.com/dw/image/v2/BCZC_PRD/on/demandware.static/-/Sites-cnv-master-catalog/default/dw1b8a8f8f/images/a_08/M9697_A_08X2.jpg"
+        ],
+        "Vàng": [
+          "https://www.converse.com/dw/image/v2/BCZC_PRD/on/demandware.static/-/Sites-cnv-master-catalog/default/dw2b8a8f8f/images/a_08/170369C_A_08X1.jpg",
+          "https://www.converse.com/dw/image/v2/BCZC_PRD/on/demandware.static/-/Sites-cnv-master-catalog/default/dw3b8a8f8f/images/a_08/170369C_A_08X2.jpg"
+        ]
+      },
+      "createdAt": 1736294400000,
+      "description": "Converse Chuck Taylor All Star - Icon bất hủ của văn hóa đường phố. Thiết kế canvas cổ điển, thoải mái, dễ phối đồ. Must-have item trong tủ giày.",
+      "discount": 5,
       "featured": false,
-      "gender": "men",
+      "gender": "unisex",
       "images": [
-        "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/5c7e2c1f-e0c1-4e2c-9f6d-1f8b1c5e7e5e/pegasus-40-running-shoes.png"
+        "https://www.converse.com/dw/image/v2/BCZC_PRD/on/demandware.static/-/Sites-cnv-master-catalog/default/dw4b8a8f8f/images/a_08/M9160_A_08X1.jpg"
       ],
-      "isBestSeller": false,
-      "isNew": true,
-      "name": "Nike Pegasus 40 Running",
-      "originalPrice": 4200000,
-      "price": 3600000,
-      "rating": 4.7,
-      "reviews": 54,
+      "isBestSeller": true,
+      "isNew": false,
+      "name": "Converse Chuck Taylor All Star Classic",
+      "originalPrice": 1200000,
+      "price": 1140000,
+      "rating": 4.5,
+      "reviews": 892,
       "sizes": [
-        40,
-        41,
-        42,
-        43,
-        44,
-        45
-      ],
-      "sold": 76,
-      "stock": 48,
-      "updatedAt": 1737331200000
-    },
-    "prod_009": {
-      "brand": "Adidas",
-      "category": "running",
-      "colors": [
-        "Hồng/Trắng"
-      ],
-      "createdAt": 1736726400000,
-      "description": "Adidas Ultraboost 22 phiên bản nữ - Công nghệ Boost đỉnh cao, Primeknit+ ôm chân, thiết kế dành riêng cho hình dáng bàn chân nữ. Thoải mái tối đa cho chạy đường dài.",
-      "discount": 13,
-      "featured": false,
-      "gender": "women",
-      "images": [
-        "https://assets.adidas.com/images/h_840,f_auto,q_auto,fl_lossy,c_fill,g_auto/fbaf991a88e64870a3e9ad7800abcec6_9366/Ultraboost_22_Shoes_Black_GZ0127_01_standard.jpg"
-      ],
-      "isBestSeller": false,
-      "isNew": true,
-      "name": "Adidas Ultraboost 22 Women",
-      "originalPrice": 5500000,
-      "price": 4800000,
-      "rating": 4.9,
-      "reviews": 43,
-      "sizes": [
+        35,
         36,
         37,
         38,
         39,
         40,
         41,
-        42
+        42,
+        43,
+        44
       ],
-      "sold": 52,
-      "stock": 38,
-      "updatedAt": 1737244800000
+      "sold": 1245,
+      "stock": 187,
+      "updatedAt": 1737504000000
     }
   },
   "promotions": {
@@ -569,85 +648,9 @@
       "usageCount": 234,
       "usageLimit": 1000,
       "value": 15
-    },
-    "promo_002": {
-      "active": true,
-      "code": "FLASHSALE",
-      "description": "Giảm 200k cho đơn từ 2 triệu",
-      "endDate": 1737417600000,
-      "maxDiscount": 200000,
-      "minOrder": 2000000,
-      "name": "Flash Sale cuối tuần",
-      "startDate": 1737158400000,
-      "type": "fixed",
-      "usageCount": 156,
-      "usageLimit": 500,
-      "value": 200000
-    },
-    "promo_003": {
-      "active": true,
-      "code": "FREESHIP",
-      "description": "Free ship toàn quốc cho đơn từ 500k",
-      "endDate": 1740844800000,
-      "maxDiscount": 50000,
-      "minOrder": 500000,
-      "name": "Miễn phí vận chuyển",
-      "startDate": 1735689600000,
-      "type": "freeship",
-      "usageCount": 1234,
-      "usageLimit": 10000,
-      "value": 0
     }
   },
   "reviews": {
-    "rev_001": {
-      "content": "Mình đã mua Jordan 1 và cực kỳ hài lòng. Da thật, form chuẩn, đi rất êm. Đáng đồng tiền bát gạo!",
-      "createdAt": 1706515200000,
-      "helpful": 23,
-      "productId": "prod_001",
-      "rating": 5,
-      "title": "Chất lượng tuyệt vời!",
-      "userAvatar": "../image/default-avatar.jpg",
-      "userId": "user_001",
-      "userName": "Nguyễn Văn An",
-      "verified": true
-    },
-    "rev_002": {
-      "content": "Giày đẹp, chất lượng tốt nhưng form hơi nhỏ. Nên lên size cho thoải mái nhé các bạn.",
-      "createdAt": 1706601600000,
-      "helpful": 15,
-      "productId": "prod_001",
-      "rating": 4,
-      "title": "Đẹp nhưng hơi chật",
-      "userAvatar": "../image/default-avatar.jpg",
-      "userId": "user_002",
-      "userName": "Trần Thị Bình",
-      "verified": true
-    },
-    "rev_003": {
-      "content": "Đế Boost êm như mây, upper co giãn ôm chân, thiết kế đẹp mắt. Giá hơi cao nhưng xứng đáng!",
-      "createdAt": 1737072000000,
-      "helpful": 34,
-      "productId": "prod_002",
-      "rating": 5,
-      "title": "Yeezy đỉnh của chóp!",
-      "userAvatar": "../image/default-avatar.jpg",
-      "userId": "user_003",
-      "userName": "Lê Hoàng Minh",
-      "verified": true
-    },
-    "rev_004": {
-      "content": "AF1 trắng là giày kinh điển, dễ phối đồ, bền, đẹp. Ai cũng nên có một đôi trong tủ giày.",
-      "createdAt": 1706774400000,
-      "helpful": 67,
-      "productId": "prod_003",
-      "rating": 5,
-      "title": "Must-have cho mọi người",
-      "userAvatar": "../image/default-avatar.jpg",
-      "userId": "user_001",
-      "userName": "Nguyễn Văn An",
-      "verified": true
-    },
     "rev_005": {
       "content": "Phối màu Panda hot nhất hiện nay, form đẹp, chất lượng Nike luôn đảm bảo. Recommend!",
       "createdAt": 1737158400000,
@@ -691,6 +694,17 @@
     }
   },
   "users": {
+    "59OCQW1Vm1csTbyG0j6fy4RjgDZ2": {
+      "createdAt": 1770045298495,
+      "displayName": "tấn đạt trần",
+      "email": "odoo221761@gmail.com",
+      "lastLogin": 1770045298495,
+      "loyaltyPoints": 0,
+      "membershipTier": "Member",
+      "photoURL": "https://res.cloudinary.com/dvcebine7/image/upload/v1770019980/Upload-Preset/lh8htgwxarokqpfwcjss.png",
+      "role": "customer",
+      "uid": "59OCQW1Vm1csTbyG0j6fy4RjgDZ2"
+    },
     "kfqe1TwgHnfnCEMhLvcVSNMDBzj2": {
       "createdAt": 1768896053347,
       "displayName": "quan12",
@@ -701,31 +715,17 @@
       "photoURL": "../image/default-avatar.jpg",
       "role": "customer",
       "uid": "kfqe1TwgHnfnCEMhLvcVSNMDBzj2"
-    },
-    "user_001": {
-      "address": {
-        "city": "TP. Hồ Chí Minh",
-        "district": "Quận 1",
-        "street": "123 Đường Lê Lợi",
-        "ward": "Phường Bến Nghé"
-      },
-      "avatarUrl": "../image/default-avatar.jpg",
-      "createdAt": 1705737600000,
-      "email": "nguyen.van.an@gmail.com",
-      "fullName": "Nguyễn Văn An",
-      "lastLogin": 1737331200000,
-      "phone": "0901234567",
-      "role": "customer"
     }
   },
   "wishlist": {
-    "user_001": {
-      "items": [
-        "prod_002",
-        "prod_008",
-        "prod_009"
-      ],
-      "updatedAt": 1737331200000
+    "59OCQW1Vm1csTbyG0j6fy4RjgDZ2": {
+      "prod_001": {
+        "addedAt": 1770043165030,
+        "id": "prod_001",
+        "image": "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/b7d9211c-26e7-431a-ac24-b0540fb3c00f/air-jordan-1-retro-high-og-shoe.png",
+        "name": "Nike Air Jordan 1 Retro High OG",
+        "price": 4500000
+      }
     }
   }
 }
