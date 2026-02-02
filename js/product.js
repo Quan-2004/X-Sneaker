@@ -17,11 +17,15 @@ let currentFilters = {
     genders: [],
     sizes: [],
     priceMin: 0,
-    priceMax: 10000000 // 10 million VND
+    priceMax: 10000000, // 10 million VND
+    searchTerm: '' // Add search term to filters
 };
 let currentPage = 1;
 let itemsPerPage = 12;
 let currentSort = 'popular'; // popular, price-asc, price-desc, newest
+let searchTimeout = null;
+const RECENT_SEARCHES_KEY = 'x-sneaker-product-recent-searches';
+const MAX_RECENT_SEARCHES = 5;
 
 // ============================================================================
 // DATA LOADING
@@ -96,6 +100,18 @@ async function loadCategories() {
 
 function applyFilters() {
     let filtered = [...allProducts];
+
+    // Filter by search term
+    if (currentFilters.searchTerm) {
+        const searchLower = currentFilters.searchTerm.toLowerCase();
+        filtered = filtered.filter(p => {
+            const nameMatch = p.name?.toLowerCase().includes(searchLower);
+            const brandMatch = p.brand?.toLowerCase().includes(searchLower);
+            const categoryMatch = p.category?.toLowerCase().includes(searchLower);
+            const descMatch = p.description?.toLowerCase().includes(searchLower);
+            return nameMatch || brandMatch || categoryMatch || descMatch;
+        });
+    }
 
     // Filter by category
     if (currentFilters.categories.length > 0) {
@@ -281,11 +297,19 @@ async function init() {
         loadCategories()
     ]);
 
-    // Initial render
-    renderProducts(allProducts);
-
     // Setup event listeners for filters
     setupFilterListeners();
+    
+    // Setup search functionality
+    setupSearchFunctionality();
+    
+    // Check for URL params (search or other filters)
+    loadFromURLParams();
+
+    // Initial render (will be updated by loadFromURLParams if search param exists)
+    if (!currentFilters.searchTerm) {
+        renderProducts(allProducts);
+    }
 
     console.log('✅ Product listing page initialized');
 }
@@ -538,5 +562,240 @@ function renderPagination(totalItems) {
 
 // Run on page load
 document.addEventListener('DOMContentLoaded', init);
+
+// ============================================================================
+// SEARCH FUNCTIONALITY
+// ============================================================================
+
+function setupSearchFunctionality() {
+    const searchInput = document.getElementById('product-search-input');
+    const clearSearchBtn = document.getElementById('clear-search-btn');
+    const clearSearchFilterBtn = document.getElementById('clear-search-filter-btn');
+    const recentSearchesSection = document.getElementById('recent-searches-section');
+    const recentSearchesList = document.getElementById('recent-searches-list');
+    const clearRecentBtn = document.getElementById('clear-recent-btn');
+    const trendingTags = document.querySelectorAll('.trending-tag');
+    const activeSearchInfo = document.getElementById('active-search-info');
+    const searchTermDisplay = document.getElementById('search-term-display');
+    const searchSuggestions = document.getElementById('search-suggestions');
+
+    if (!searchInput) return;
+
+    // Display recent searches on load
+    displayRecentSearches();
+
+    // Search input handler with debounce
+    searchInput.addEventListener('input', (e) => {
+        const searchTerm = e.target.value.trim();
+        
+        // Show/hide clear button
+        if (searchTerm) {
+            clearSearchBtn?.classList.remove('hidden');
+        } else {
+            clearSearchBtn?.classList.add('hidden');
+        }
+
+        // Debounce search
+        if (searchTimeout) {
+            clearTimeout(searchTimeout);
+        }
+
+        searchTimeout = setTimeout(() => {
+            performSearch(searchTerm);
+        }, 500);
+    });
+
+    // Enter key to search immediately
+    searchInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            if (searchTimeout) {
+                clearTimeout(searchTimeout);
+            }
+            const searchTerm = searchInput.value.trim();
+            performSearch(searchTerm);
+        }
+    });
+
+    // Clear search button
+    clearSearchBtn?.addEventListener('click', () => {
+        searchInput.value = '';
+        clearSearchBtn.classList.add('hidden');
+        currentFilters.searchTerm = '';
+        activeSearchInfo?.classList.add('hidden');
+        searchSuggestions?.classList.remove('hidden');
+        updateURL();
+        const filtered = applyFilters();
+        renderProducts(filtered);
+        searchInput.focus();
+    });
+
+    // Clear search filter (from active search info)
+    clearSearchFilterBtn?.addEventListener('click', () => {
+        searchInput.value = '';
+        clearSearchBtn?.classList.add('hidden');
+        currentFilters.searchTerm = '';
+        activeSearchInfo?.classList.add('hidden');
+        searchSuggestions?.classList.remove('hidden');
+        updateURL();
+        const filtered = applyFilters();
+        renderProducts(filtered);
+    });
+
+    // Clear recent searches
+    clearRecentBtn?.addEventListener('click', () => {
+        localStorage.removeItem(RECENT_SEARCHES_KEY);
+        displayRecentSearches();
+        if (window.showToast) {
+            window.showToast('Đã xóa lịch sử tìm kiếm', 'success');
+        }
+    });
+
+    // Trending tags click
+    trendingTags.forEach(tag => {
+        tag.addEventListener('click', () => {
+            const searchTerm = tag.textContent.trim();
+            searchInput.value = searchTerm;
+            clearSearchBtn?.classList.remove('hidden');
+            performSearch(searchTerm);
+        });
+    });
+
+    // Recent search tags (will be added dynamically)
+    document.addEventListener('click', (e) => {
+        if (e.target.closest('.recent-search-tag')) {
+            const tag = e.target.closest('.recent-search-tag');
+            const searchTerm = tag.textContent.trim();
+            searchInput.value = searchTerm;
+            clearSearchBtn?.classList.remove('hidden');
+            performSearch(searchTerm);
+        }
+    });
+}
+
+function performSearch(searchTerm) {
+    const activeSearchInfo = document.getElementById('active-search-info');
+    const searchTermDisplay = document.getElementById('search-term-display');
+    const searchSuggestions = document.getElementById('search-suggestions');
+
+    if (!searchTerm) {
+        currentFilters.searchTerm = '';
+        activeSearchInfo?.classList.add('hidden');
+        searchSuggestions?.classList.remove('hidden');
+        updateURL();
+        const filtered = applyFilters();
+        renderProducts(filtered);
+        return;
+    }
+
+    // Save to recent searches
+    saveRecentSearch(searchTerm);
+
+    // Update filter
+    currentFilters.searchTerm = searchTerm;
+    
+    // Show active search info
+    if (activeSearchInfo && searchTermDisplay) {
+        searchTermDisplay.textContent = searchTerm;
+        activeSearchInfo.classList.remove('hidden');
+    }
+
+    // Hide suggestions
+    searchSuggestions?.classList.add('hidden');
+
+    // Update URL
+    updateURL();
+
+    // Reset to first page
+    currentPage = 1;
+
+    // Apply filter and render
+    const filtered = applyFilters();
+    renderProducts(filtered);
+
+    // Update recent searches display
+    displayRecentSearches();
+}
+
+function saveRecentSearch(searchTerm) {
+    if (!searchTerm || searchTerm.length < 2) return;
+
+    let recentSearches = getRecentSearches();
+    
+    // Remove duplicate if exists
+    recentSearches = recentSearches.filter(term => term.toLowerCase() !== searchTerm.toLowerCase());
+    
+    // Add to beginning
+    recentSearches.unshift(searchTerm);
+    
+    // Limit to MAX_RECENT_SEARCHES
+    recentSearches = recentSearches.slice(0, MAX_RECENT_SEARCHES);
+    
+    // Save to localStorage
+    localStorage.setItem(RECENT_SEARCHES_KEY, JSON.stringify(recentSearches));
+}
+
+function getRecentSearches() {
+    try {
+        const stored = localStorage.getItem(RECENT_SEARCHES_KEY);
+        return stored ? JSON.parse(stored) : [];
+    } catch (error) {
+        console.error('Error loading recent searches:', error);
+        return [];
+    }
+}
+
+function displayRecentSearches() {
+    const recentSearchesSection = document.getElementById('recent-searches-section');
+    const recentSearchesList = document.getElementById('recent-searches-list');
+    
+    if (!recentSearchesList) return;
+
+    const recentSearches = getRecentSearches();
+
+    if (recentSearches.length === 0) {
+        recentSearchesSection?.classList.add('hidden');
+        return;
+    }
+
+    recentSearchesSection?.classList.remove('hidden');
+
+    recentSearchesList.innerHTML = recentSearches.map(term => `
+        <button class="recent-search-tag px-4 py-2 rounded-full bg-gray-100 dark:bg-gray-800 text-sm font-medium hover:bg-primary hover:text-white transition-all flex items-center gap-2">
+            <span class="material-symbols-outlined text-sm">history</span>
+            ${term}
+        </button>
+    `).join('');
+}
+
+function loadFromURLParams() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const searchParam = urlParams.get('search');
+    
+    if (searchParam) {
+        const searchInput = document.getElementById('product-search-input');
+        const clearSearchBtn = document.getElementById('clear-search-btn');
+        
+        if (searchInput) {
+            searchInput.value = searchParam;
+            clearSearchBtn?.classList.remove('hidden');
+        }
+        
+        performSearch(searchParam);
+    }
+}
+
+function updateURL() {
+    const params = new URLSearchParams();
+    
+    if (currentFilters.searchTerm) {
+        params.set('search', currentFilters.searchTerm);
+    }
+    
+    const newURL = params.toString() 
+        ? `${window.location.pathname}?${params.toString()}`
+        : window.location.pathname;
+    
+    window.history.replaceState({}, '', newURL);
+}
 
 console.log('✅ Product module loaded');

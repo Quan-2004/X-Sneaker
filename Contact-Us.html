@@ -12,6 +12,7 @@
     <script src="js/common.js" defer></script>
     <script type="module" src="js/contact.js"></script>
     <script type="module" src="js/cms-frontend.js"></script>
+    <script type="module" src="js/search.js"></script>
   </head>
 <body class="bg-background-light dark:bg-background-dark text-[#1b0e0f] dark:text-white transition-colors duration-300">
     <!-- Header -->
@@ -96,14 +97,16 @@
     <main class="flex-grow">
         <!-- Top Section: Map -->
         <section class="w-full h-[400px] relative">
-            <div class="absolute inset-0 bg-gray-200">
-                <div id="contact-map-bg" class="w-full h-full bg-center bg-no-repeat bg-cover" data-alt="Google Maps view of New York Fashion District" data-location="New York, USA" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuC5QY_WOCjaYQgz2yZwdmq5WU72bRIhBnYBHmdX-tmXca-23juO5mb7YnkkIjOELwYVutQNUm3gn-_v6pY8DnBc-_wXs8DuYIyYk_9GwawAkCBJOYvw9BZT9czz4BE8eoNLcoDkmZDVQLzDmUlwgqjpgZHzzc7DeWkfKhIVa1TjUKWz8pXSB49wsiaIQcMuSMRWW1Mouv6zAEQbQ6GiMscAdPpXdLh6xRYKDftyNoziw0OZ9N83Sfsx3YvZxqjU0wSJ_qT1aL2DNDs");'>
-                </div>
-                <!-- Custom Red Marker Overlay -->
-                <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-                    <span class="material-symbols-outlined text-primary text-5xl drop-shadow-lg">location_on</span>
-                </div>
-            </div>
+            <iframe 
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3928.841426878562!2d105.76747607585322!3d10.029984190072857!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31a0883e3c854745%3A0xa0bc10bf8d4f0896!2sLOTTE%20Mart%20C%E1%BA%A7n%20Th%C6%A1!5e0!3m2!1svi!2s!4v1738438100000!5m2!1svi!2s" 
+                width="100%" 
+                height="100%" 
+                style="border:0;" 
+                allowfullscreen="" 
+                loading="lazy" 
+                referrerpolicy="no-referrer-when-downgrade"
+                title="Bản đồ vị trí X-Sneaker - LOTTE Mart Cần Thơ, 84 Đ. Mậu Thân, Phường Cái Khế, Ninh Kiều, Cần Thơ">
+            </iframe>
         </section>
         <!-- Two Column Layout Content Area -->
         <section class="max-w-[1200px] mx-auto px-6 py-16 grid md:grid-cols-2 gap-16">
@@ -120,7 +123,7 @@
                         </div>
                         <div>
                             <p class="text-xs font-bold uppercase text-gray-400 tracking-widest">Điện Thoại</p>
-                            <p id="contact-phone" class="text-lg font-bold text-brand-black dark:text-white">+84 (800) X-SNEAKR</p>
+                            <p id="contact-phone" class="text-lg font-bold text-brand-black dark:text-white">+84 902888999</p>
                         </div>
                     </div>
                     <div class="flex items-start gap-4 p-4 border border-gray-100 dark:border-gray-800 rounded-lg hover:border-primary/50 transition-colors group">
@@ -129,7 +132,7 @@
                         </div>
                         <div>
                             <p class="text-xs font-bold uppercase text-gray-400 tracking-widest">Email</p>
-                            <p id="contact-email" class="text-lg font-bold text-brand-black dark:text-white">support@x-sneaker.vn</p>
+                            <p id="contact-email" class="text-lg font-bold text-brand-black dark:text-white">xsneaker@gmail.com</p>
                         </div>
                     </div>
                     <div class="flex items-start gap-4 p-4 border border-gray-100 dark:border-gray-800 rounded-lg hover:border-primary/50 transition-colors group">
@@ -138,32 +141,8 @@
                         </div>
                         <div>
                             <p class="text-xs font-bold uppercase text-gray-400 tracking-widest">Địa Chỉ</p>
-                            <p id="contact-address" class="text-lg font-bold text-brand-black dark:text-white">123 Đường Hype, Quận 1, TP.HCM</p>
+                            <p id="contact-address" class="text-lg font-bold text-brand-black dark:text-white">168 Nguyễn Văn Cừ Nối Dài, An Bình, Ninh Kiều, Cần Thơ, Việt Nam</p>
                         </div>
-                    </div>
-                </div>
-                <!-- Social Bar -->
-                <div>
-                    <p class="text-sm font-bold uppercase text-gray-400 tracking-widest mb-4">Kết nối với chúng tôi</p>
-                    <div class="flex gap-4">
-                        <a class="flex flex-col items-center gap-2 group" href="#">
-                            <div class="rounded-full bg-gray-100 dark:bg-gray-800 p-4 text-brand-black dark:text-white group-hover:bg-primary group-hover:text-white transition-all">
-                                <span class="material-symbols-outlined">public</span>
-                            </div>
-                            <p class="text-xs font-bold group-hover:text-primary">Instagram</p>
-                        </a>
-                        <a class="flex flex-col items-center gap-2 group" href="#">
-                            <div class="rounded-full bg-gray-100 dark:bg-gray-800 p-4 text-brand-black dark:text-white group-hover:bg-primary group-hover:text-white transition-all">
-                                <span class="material-symbols-outlined">share</span>
-                            </div>
-                            <p class="text-xs font-bold group-hover:text-primary">Twitter</p>
-                        </a>
-                        <a class="flex flex-col items-center gap-2 group" href="#">
-                            <div class="rounded-full bg-gray-100 dark:bg-gray-800 p-4 text-brand-black dark:text-white group-hover:bg-primary group-hover:text-white transition-all">
-                                <span class="material-symbols-outlined">smart_display</span>
-                            </div>
-                            <p class="text-xs font-bold group-hover:text-primary">TikTok</p>
-                        </a>
                     </div>
                 </div>
             </div>

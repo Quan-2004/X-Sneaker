@@ -35,16 +35,29 @@ async function submitContactForm(formData) {
             throw new Error('Email không hợp lệ');
         }
         
+        // Check if database is available
+        if (!database) {
+            throw new Error('Không thể kết nối đến database. Vui lòng thử lại sau.');
+        }
+        
         // Save to Firebase
         const contactsRef = ref(database, 'contact-submissions');
         const newSubmissionRef = push(contactsRef);
         await set(newSubmissionRef, submission);
         
-        console.log('✅ Contact form submitted successfully');
+        console.log('✅ Contact form submitted successfully:', newSubmissionRef.key);
         return { success: true, id: newSubmissionRef.key };
         
     } catch (error) {
         console.error('❌ Error submitting contact form:', error);
+        
+        // Provide more specific error messages
+        if (error.code === 'PERMISSION_DENIED') {
+            throw new Error('Không có quyền gửi tin nhắn. Vui lòng thử lại sau.');
+        } else if (error.message.includes('network')) {
+            throw new Error('Lỗi kết nối mạng. Vui lòng kiểm tra kết nối internet.');
+        }
+        
         throw error;
     }
 }
@@ -56,7 +69,7 @@ async function submitContactForm(formData) {
 function setupContactForm() {
     const form = document.getElementById('contact-form');
     if (!form) {
-        console.warn('Contact form not found');
+        console.warn('⚠️ Contact form not found');
         return;
     }
     
@@ -66,7 +79,15 @@ function setupContactForm() {
         const submitBtn = form.querySelector('button[type="submit"]');
         const originalBtnText = submitBtn.innerHTML;
         
+        // Hide any previous errors
+        const errorDiv = document.getElementById('form-error');
+        if (errorDiv) {
+            errorDiv.classList.add('hidden');
+        }
+        
         try {
+            console.log('📧 Submitting contact form...');
+            
             // Show loading state
             submitBtn.disabled = true;
             submitBtn.innerHTML = `
@@ -77,10 +98,19 @@ function setupContactForm() {
             // Get form data
             const formData = new FormData(form);
             
+            console.log('📋 Form data:', {
+                name: formData.get('name'),
+                email: formData.get('email'),
+                phone: formData.get('phone'),
+                message: formData.get('message')?.substring(0, 50) + '...'
+            });
+            
             // Submit to Firebase
             const result = await submitContactForm(formData);
             
             if (result.success) {
+                console.log('✅ Form submitted successfully!');
+                
                 // Show success message
                 showSuccessMessage();
                 
@@ -94,11 +124,18 @@ function setupContactForm() {
             }
             
         } catch (error) {
-            // Show error message
-            showErrorMessage(error.message);
+            console.error('❌ Form submission error:', error);
             
+            // Show error message
+            const errorMessage = error.message || 'Có lỗi xảy ra. Vui lòng thử lại.';
+            showErrorMessage(errorMessage);
+            
+            // Show toast notification
             if (window.showToast) {
-                window.showToast(error.message || 'Có lỗi xảy ra. Vui lòng thử lại.', 'error');
+                window.showToast(errorMessage, 'error');
+            } else {
+                // Fallback if showToast not available
+                alert(errorMessage);
             }
         } finally {
             // Restore button
@@ -140,14 +177,27 @@ function showErrorMessage(message) {
     const errorDiv = document.getElementById('form-error');
     
     if (errorDiv) {
-        errorDiv.textContent = message;
+        errorDiv.innerHTML = `
+            <div class="flex items-start gap-3">
+                <span class="material-symbols-outlined text-red-600 dark:text-red-400 flex-shrink-0">error</span>
+                <div>
+                    <p class="font-bold text-sm">Lỗi gửi tin nhắn</p>
+                    <p class="text-sm mt-1">${message}</p>
+                </div>
+            </div>
+        `;
         errorDiv.classList.remove('hidden');
         
-        // Auto hide after 5 seconds
+        // Scroll to error
+        errorDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        
+        // Auto hide after 8 seconds
         setTimeout(() => {
             errorDiv.classList.add('hidden');
-        }, 5000);
+        }, 8000);
     } else {
+        // Fallback if error div doesn't exist
+        console.error('Error div not found, showing alert');
         alert(message);
     }
 }

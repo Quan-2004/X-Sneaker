@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="css/style.css" />
     <script src="js/common.js" defer></script>
     <script type="module" src="js/product.js"></script>
+    <script type="module" src="js/search.js"></script>
   </head>
 <body class="bg-background-light dark:bg-background-dark text-[#1b0e0f] dark:text-white transition-colors duration-300">
     <!-- Header -->
@@ -93,6 +94,71 @@
     </header>
 
     <main class="max-w-[1440px] mx-auto min-h-screen">
+        <!-- Search Section -->
+        <div class="px-6 lg:px-20 pt-8 pb-4">
+            <div class="max-w-4xl mx-auto">
+                <!-- Search Input -->
+                <div class="relative mb-6">
+                    <span class="material-symbols-outlined absolute left-6 top-1/2 -translate-y-1/2 text-gray-400 text-2xl">search</span>
+                    <input
+                        id="product-search-input"
+                        type="text"
+                        placeholder="Tìm kiếm sản phẩm, thương hiệu..."
+                        class="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl py-4 pl-16 pr-12 text-base font-medium focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
+                        autocomplete="off"
+                    />
+                    <button id="clear-search-btn" class="hidden absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors">
+                        <span class="material-symbols-outlined text-xl">close</span>
+                    </button>
+                </div>
+
+                <!-- Recent Searches & Trending Tags -->
+                <div id="search-suggestions" class="space-y-4">
+                    <!-- Recent Searches -->
+                    <div id="recent-searches-section" class="hidden">
+                        <div class="flex items-center justify-between mb-3">
+                            <h4 class="text-xs font-bold uppercase tracking-widest text-gray-500 flex items-center gap-2">
+                                <span class="material-symbols-outlined text-sm">history</span>
+                                Tìm kiếm gần đây
+                            </h4>
+                            <button id="clear-recent-btn" class="text-xs font-bold uppercase tracking-wider text-gray-400 hover:text-primary transition-colors">
+                                Xóa
+                            </button>
+                        </div>
+                        <div id="recent-searches-list" class="flex flex-wrap gap-2"></div>
+                    </div>
+
+                    <!-- Trending Searches -->
+                    <div>
+                        <h4 class="text-xs font-bold uppercase tracking-widest text-gray-500 mb-3 flex items-center gap-2">
+                            <span class="material-symbols-outlined text-sm">trending_up</span>
+                            Xu hướng tìm kiếm
+                        </h4>
+                        <div class="flex flex-wrap gap-2">
+                            <button class="trending-tag px-4 py-2 rounded-full bg-gray-100 dark:bg-gray-800 text-sm font-medium hover:bg-primary hover:text-white transition-all">Air Jordan</button>
+                            <button class="trending-tag px-4 py-2 rounded-full bg-gray-100 dark:bg-gray-800 text-sm font-medium hover:bg-primary hover:text-white transition-all">Nike Dunk</button>
+                            <button class="trending-tag px-4 py-2 rounded-full bg-gray-100 dark:bg-gray-800 text-sm font-medium hover:bg-primary hover:text-white transition-all">Adidas Yeezy</button>
+                            <button class="trending-tag px-4 py-2 rounded-full bg-gray-100 dark:bg-gray-800 text-sm font-medium hover:bg-primary hover:text-white transition-all">New Balance</button>
+                            <button class="trending-tag px-4 py-2 rounded-full bg-gray-100 dark:bg-gray-800 text-sm font-medium hover:bg-primary hover:text-white transition-all">Converse</button>
+                            <button class="trending-tag px-4 py-2 rounded-full bg-gray-100 dark:bg-gray-800 text-sm font-medium hover:bg-primary hover:text-white transition-all">Vans</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Active Search Info -->
+                <div id="active-search-info" class="hidden mt-4 p-4 bg-primary/10 rounded-lg flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary">search</span>
+                        <span class="font-medium">Kết quả tìm kiếm cho: <span id="search-term-display" class="text-primary font-bold"></span></span>
+                    </div>
+                    <button id="clear-search-filter-btn" class="text-sm font-semibold text-primary hover:text-primary/80 transition-colors flex items-center gap-1">
+                        <span>Xóa tìm kiếm</span>
+                        <span class="material-symbols-outlined text-sm">close</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
         <!-- Top Utility Bar (Breadcrumbs & Sort) -->
         <div class="flex flex-col md:flex-row md:items-center justify-between px-6 lg:px-20 py-6">
             <div class="flex items-center gap-2 text-sm text-gray-500 mb-4 md:mb-0">
