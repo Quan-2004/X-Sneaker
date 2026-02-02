@@ -760,9 +760,12 @@ function displayRecentSearches() {
     recentSearchesSection?.classList.remove('hidden');
 
     recentSearchesList.innerHTML = recentSearches.map(term => `
-        <button class="recent-search-tag px-4 py-2 rounded-full bg-gray-100 dark:bg-gray-800 text-sm font-medium hover:bg-primary hover:text-white transition-all flex items-center gap-2">
-            <span class="material-symbols-outlined text-sm">history</span>
-            ${term}
+        <button class="recent-search-tag group w-full px-3 py-2 rounded-lg bg-white dark:bg-gray-700 text-xs font-semibold hover:bg-primary hover:text-white transition-all shadow-sm text-left flex items-center justify-between border border-gray-200 dark:border-gray-600">
+            <span class="flex items-center gap-2 truncate">
+                <span class="material-symbols-outlined text-sm">schedule</span>
+                <span class="truncate">${term}</span>
+            </span>
+            <span class="material-symbols-outlined text-sm opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">arrow_forward</span>
         </button>
     `).join('');
 }

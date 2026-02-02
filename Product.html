@@ -94,73 +94,8 @@
     </header>
 
     <main class="max-w-[1440px] mx-auto min-h-screen">
-        <!-- Search Section -->
-        <div class="px-6 lg:px-20 pt-8 pb-4">
-            <div class="max-w-4xl mx-auto">
-                <!-- Search Input -->
-                <div class="relative mb-6">
-                    <span class="material-symbols-outlined absolute left-6 top-1/2 -translate-y-1/2 text-gray-400 text-2xl">search</span>
-                    <input
-                        id="product-search-input"
-                        type="text"
-                        placeholder="Tìm kiếm sản phẩm, thương hiệu..."
-                        class="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl py-4 pl-16 pr-12 text-base font-medium focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
-                        autocomplete="off"
-                    />
-                    <button id="clear-search-btn" class="hidden absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors">
-                        <span class="material-symbols-outlined text-xl">close</span>
-                    </button>
-                </div>
-
-                <!-- Recent Searches & Trending Tags -->
-                <div id="search-suggestions" class="space-y-4">
-                    <!-- Recent Searches -->
-                    <div id="recent-searches-section" class="hidden">
-                        <div class="flex items-center justify-between mb-3">
-                            <h4 class="text-xs font-bold uppercase tracking-widest text-gray-500 flex items-center gap-2">
-                                <span class="material-symbols-outlined text-sm">history</span>
-                                Tìm kiếm gần đây
-                            </h4>
-                            <button id="clear-recent-btn" class="text-xs font-bold uppercase tracking-wider text-gray-400 hover:text-primary transition-colors">
-                                Xóa
-                            </button>
-                        </div>
-                        <div id="recent-searches-list" class="flex flex-wrap gap-2"></div>
-                    </div>
-
-                    <!-- Trending Searches -->
-                    <div>
-                        <h4 class="text-xs font-bold uppercase tracking-widest text-gray-500 mb-3 flex items-center gap-2">
-                            <span class="material-symbols-outlined text-sm">trending_up</span>
-                            Xu hướng tìm kiếm
-                        </h4>
-                        <div class="flex flex-wrap gap-2">
-                            <button class="trending-tag px-4 py-2 rounded-full bg-gray-100 dark:bg-gray-800 text-sm font-medium hover:bg-primary hover:text-white transition-all">Air Jordan</button>
-                            <button class="trending-tag px-4 py-2 rounded-full bg-gray-100 dark:bg-gray-800 text-sm font-medium hover:bg-primary hover:text-white transition-all">Nike Dunk</button>
-                            <button class="trending-tag px-4 py-2 rounded-full bg-gray-100 dark:bg-gray-800 text-sm font-medium hover:bg-primary hover:text-white transition-all">Adidas Yeezy</button>
-                            <button class="trending-tag px-4 py-2 rounded-full bg-gray-100 dark:bg-gray-800 text-sm font-medium hover:bg-primary hover:text-white transition-all">New Balance</button>
-                            <button class="trending-tag px-4 py-2 rounded-full bg-gray-100 dark:bg-gray-800 text-sm font-medium hover:bg-primary hover:text-white transition-all">Converse</button>
-                            <button class="trending-tag px-4 py-2 rounded-full bg-gray-100 dark:bg-gray-800 text-sm font-medium hover:bg-primary hover:text-white transition-all">Vans</button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Active Search Info -->
-                <div id="active-search-info" class="hidden mt-4 p-4 bg-primary/10 rounded-lg flex items-center justify-between">
-                    <div class="flex items-center gap-2">
-                        <span class="material-symbols-outlined text-primary">search</span>
-                        <span class="font-medium">Kết quả tìm kiếm cho: <span id="search-term-display" class="text-primary font-bold"></span></span>
-                    </div>
-                    <button id="clear-search-filter-btn" class="text-sm font-semibold text-primary hover:text-primary/80 transition-colors flex items-center gap-1">
-                        <span>Xóa tìm kiếm</span>
-                        <span class="material-symbols-outlined text-sm">close</span>
-                    </button>
-                </div>
-            </div>
-        </div>
-
         <!-- Top Utility Bar (Breadcrumbs & Sort) -->
-        <div class="flex flex-col md:flex-row md:items-center justify-between px-6 lg:px-20 py-6">
+        <div class="flex flex-col md:flex-row md:items-center justify-between px-6 lg:px-20 py-6 border-b border-gray-100 dark:border-gray-800">
             <div class="flex items-center gap-2 text-sm text-gray-500 mb-4 md:mb-0">
                 <a class="hover:text-primary transition-colors" href="index.html">Trang chủ</a>
                 <span class="material-symbols-outlined text-base">chevron_right</span>
@@ -176,9 +111,83 @@
                 </div>
             </div>
         </div>
-        <div class="flex flex-col lg:flex-row px-6 lg:px-20 pb-20 gap-10">
-            <!-- Sidebar Filters -->
-            <aside class="w-full lg:w-64 flex-shrink-0 space-y-8">
+        
+        <div class="flex flex-col lg:flex-row px-6 lg:px-20 pb-20 gap-10 pt-8">
+            <!-- Sidebar: Search + Filters -->
+            <aside class="w-full lg:w-80 flex-shrink-0 space-y-6">
+                <!-- Search Section -->
+                <div class="bg-gradient-to-br from-gray-50 to-white dark:from-gray-900 dark:to-gray-800 rounded-xl p-5 shadow-sm border border-gray-100 dark:border-gray-700">
+                    <h3 class="text-sm font-bold uppercase tracking-widest mb-4 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary text-base">search</span>
+                        Tìm Kiếm
+                    </h3>
+                    
+                    <!-- Search Input -->
+                    <div class="relative mb-4">
+                        <div class="relative group">
+                            <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-primary text-lg transition-colors z-10">search</span>
+                            <input
+                                id="product-search-input"
+                                type="text"
+                                placeholder="Tìm sản phẩm..."
+                                class="w-full bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 rounded-lg py-2.5 pl-10 pr-10 text-sm font-medium shadow-sm hover:shadow-md focus:shadow-lg focus:border-primary focus:ring-2 focus:ring-primary/10 outline-none transition-all duration-300"
+                                autocomplete="off"
+                            />
+                            <button id="clear-search-btn" class="hidden absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full">
+                                <span class="material-symbols-outlined text-base">close</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Active Search Info -->
+                    <div id="active-search-info" class="hidden mb-4 bg-gradient-to-r from-primary/10 to-transparent border-l-4 border-primary rounded-lg p-3">
+                        <div class="flex items-center justify-between gap-2">
+                            <div class="flex items-center gap-2 min-w-0">
+                                <span class="material-symbols-outlined text-primary text-base flex-shrink-0">search</span>
+                                <div class="min-w-0">
+                                    <p class="text-xs text-gray-600 dark:text-gray-400 font-medium">Tìm kiếm:</p>
+                                    <p class="font-bold text-sm text-primary truncate" id="search-term-display"></p>
+                                </div>
+                            </div>
+                            <button id="clear-search-filter-btn" class="flex-shrink-0 p-1.5 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition-all shadow-sm border border-gray-200 dark:border-gray-700">
+                                <span class="material-symbols-outlined text-sm text-gray-600 dark:text-gray-400">close</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Trending & Recent -->
+                    <div id="search-suggestions" class="space-y-4">
+                        <!-- Recent Searches -->
+                        <div id="recent-searches-section" class="hidden">
+                            <div class="flex items-center justify-between mb-2">
+                                <h4 class="text-xs font-bold uppercase tracking-wider text-gray-600 dark:text-gray-400 flex items-center gap-1.5">
+                                    <span class="material-symbols-outlined text-xs">history</span>
+                                    Gần đây
+                                </h4>
+                                <button id="clear-recent-btn" class="text-xs font-semibold text-gray-400 hover:text-primary transition-colors">
+                                    Xóa
+                                </button>
+                            </div>
+                            <div id="recent-searches-list" class="flex flex-col gap-1.5"></div>
+                        </div>
+
+                        <!-- Trending -->
+                        <div>
+                            <h4 class="text-xs font-bold uppercase tracking-wider text-gray-600 dark:text-gray-400 mb-2 flex items-center gap-1.5">
+                                <span class="material-symbols-outlined text-xs">trending_up</span>
+                                Xu hướng
+                            </h4>
+                            <div class="flex flex-wrap gap-1.5">
+                                <button class="trending-tag px-3 py-1.5 rounded-lg bg-white dark:bg-gray-700 text-xs font-semibold hover:bg-primary hover:text-white transition-all shadow-sm border border-gray-200 dark:border-gray-600">Air Jordan</button>
+                                <button class="trending-tag px-3 py-1.5 rounded-lg bg-white dark:bg-gray-700 text-xs font-semibold hover:bg-primary hover:text-white transition-all shadow-sm border border-gray-200 dark:border-gray-600">Nike Dunk</button>
+                                <button class="trending-tag px-3 py-1.5 rounded-lg bg-white dark:bg-gray-700 text-xs font-semibold hover:bg-primary hover:text-white transition-all shadow-sm border border-gray-200 dark:border-gray-600">Yeezy</button>
+                                <button class="trending-tag px-3 py-1.5 rounded-lg bg-white dark:bg-gray-700 text-xs font-semibold hover:bg-primary hover:text-white transition-all shadow-sm border border-gray-200 dark:border-gray-600">New Balance</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Filters -->
                 <div>
                     <h3 class="text-sm font-bold uppercase tracking-widest mb-4 flex items-center justify-between">
                         Danh Mục
@@ -270,11 +279,13 @@
                     Xóa Bộ Lọc
                 </button>
             </aside>
+            
             <!-- Product Grid -->
             <section class="flex-1">
                 <div id="products-container" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-8">
                     <!-- Products will be dynamically rendered here by product.js -->
                 </div>
+                
                 <!-- Pagination -->
                 <div class="mt-16 flex items-center justify-center gap-4">
                 <div class="mt-16 flex items-center justify-center gap-4">
