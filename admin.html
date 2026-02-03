@@ -2457,27 +2457,39 @@
                                 <label class="block text-sm font-bold text-slate-800 dark:text-slate-200 mb-2">
                                     <span class="material-symbols-rounded text-[16px] align-middle mr-1 text-amber-600">shopping_bag</span>
                                     Sản phẩm trong bài
+                                    <span class="text-xs bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 px-2 py-1 rounded-full font-bold ml-2">Tối đa 3</span>
                                 </label>
                                 <div class="space-y-3">
                                     <!-- Search Products -->
                                     <div class="relative">
                                         <input type="text" id="blog-product-search" 
                                             class="w-full px-4 py-3 pl-10 bg-amber-50 dark:bg-slate-800 border border-amber-200 dark:border-slate-600 rounded-lg text-sm text-slate-800 dark:text-slate-100" 
-                                            placeholder="Tìm kiếm sản phẩm để thêm...">
+                                            placeholder="Nhập tên sản phẩm để tìm kiếm...">
                                         <span class="material-symbols-rounded absolute left-3 top-3 text-amber-500 text-[20px]">search</span>
                                     </div>
                                     
                                     <!-- Search Results Dropdown -->
-                                    <div id="blog-product-results" class="hidden max-h-64 overflow-y-auto bg-white dark:bg-slate-800 border border-amber-200 dark:border-slate-600 rounded-lg shadow-lg">
+                                    <div id="blog-product-results" class="hidden max-h-64 overflow-y-auto bg-white dark:bg-slate-800 border border-amber-200 dark:border-slate-600 rounded-lg shadow-xl z-20 relative">
                                         <!-- Dynamic search results will be inserted here -->
                                     </div>
                                     
-                                    <!-- Selected Products -->
-                                    <div id="blog-selected-products" class="space-y-2">
-                                        <!-- Selected products will appear here -->
+                                    <!-- Selected Products Display -->
+                                    <div class="space-y-2">
+                                        <div class="flex items-center justify-between">
+                                            <p class="text-sm font-medium text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                                                <span class="material-symbols-rounded text-[16px] text-green-600">check_circle</span>
+                                                Đã chọn:
+                                            </p>
+                                            <p class="text-xs text-slate-500 bg-slate-100 dark:bg-slate-700 px-2 py-1 rounded-full font-bold">
+                                                <span id="selected-count">0</span>/3 sản phẩm
+                                            </p>
+                                        </div>
+                                        <div id="blog-selected-products" class="min-h-[60px] bg-slate-50 dark:bg-slate-900/50 rounded-xl p-3 border border-dashed border-slate-300 dark:border-slate-600">
+                                            <p class="text-xs text-slate-400 italic py-2">Chưa chọn sản phẩm nào</p>
+                                        </div>
                                     </div>
                                 </div>
-                                <p class="text-xs text-slate-600 dark:text-slate-400 mt-2">Chọn tối đa 3 sản phẩm để hiển thị trong sidebar bài viết</p>
+                                <p class="text-xs text-slate-600 dark:text-slate-400 mt-2">Các sản phẩm đã chọn sẽ hiển thị trong sidebar bài viết</p>
                             </div>
                         </div>
 

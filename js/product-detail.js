@@ -32,6 +32,14 @@ function getProductIdFromUrl() {
 }
 
 /**
+ * Get blog ID from URL parameter (if coming from blog)
+ */
+function getBlogIdFromUrl() {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get('blog');
+}
+
+/**
  * Load product by ID from Firebase
  */
 async function loadProductById(productId) {
@@ -79,6 +87,78 @@ async function loadRelatedProducts(category, currentProductId, limit = 6) {
     } catch (error) {
         console.error('❌ Error loading other products:', error);
         return [];
+    }
+}
+
+/**
+ * Load blog data by ID
+ */
+async function loadBlogById(blogId) {
+    try {
+        const blogRef = ref(database, `blogs/${blogId}`);
+        const snapshot = await get(blogRef);
+        
+        if (snapshot.exists()) {
+            const blogData = { id: blogId, ...snapshot.val() };
+            console.log('✅ Blog loaded:', blogData);
+            return blogData;
+        } else {
+            console.warn('⚠️ Blog not found:', blogId);
+            return null;
+        }
+    } catch (error) {
+        console.error('❌ Error loading blog:', error);
+        return null;
+    }
+}
+
+/**
+ * Load featured products from blog
+ */
+async function loadFeaturedProductsFromBlog(blogId, currentProductId, limit = 6) {
+    try {
+        const blog = await loadBlogById(blogId);
+        if (!blog || !blog.featuredProducts || blog.featuredProducts.length === 0) {
+            console.log('📝 No featured products in blog, loading random products');
+            return await loadRelatedProducts(null, currentProductId, limit);
+        }
+        
+        const productsRef = ref(database, 'products');
+        const snapshot = await get(productsRef);
+        
+        if (snapshot.exists()) {
+            const productsData = snapshot.val();
+            
+            // Load featured products from blog (excluding current product)
+            const featuredProducts = blog.featuredProducts
+                .filter(productId => productId !== currentProductId)
+                .map(productId => {
+                    const product = productsData[productId];
+                    return product ? { id: productId, ...product } : null;
+                })
+                .filter(p => p !== null);
+            
+            // If we need more products to reach the limit, add random ones
+            if (featuredProducts.length < limit) {
+                const remainingLimit = limit - featuredProducts.length;
+                const randomProducts = await loadRelatedProducts(null, currentProductId, remainingLimit * 2);
+                
+                // Filter out already featured products
+                const additionalProducts = randomProducts
+                    .filter(p => !featuredProducts.find(fp => fp.id === p.id))
+                    .slice(0, remainingLimit);
+                
+                featuredProducts.push(...additionalProducts);
+            }
+            
+            console.log(`✅ Loaded ${featuredProducts.length} products from blog (${blog.featuredProducts.length} featured)`);
+            return featuredProducts.slice(0, limit);
+        }
+        
+        return [];
+    } catch (error) {
+        console.error('❌ Error loading featured products from blog:', error);
+        return await loadRelatedProducts(null, currentProductId, limit);
     }
 }
 
@@ -901,6 +981,7 @@ async function init() {
     console.log('🚀 Initializing product detail page...');
     
     const productId = getProductIdFromUrl();
+    const blogId = getBlogIdFromUrl();
     
     if (!productId) {
         console.error('❌ No product ID in URL');
@@ -919,8 +1000,25 @@ async function init() {
     // Render product
     renderProductData(product);
     
-    // Load and render related products
-    const relatedProducts = await loadRelatedProducts(product.category, productId);
+    // Load and render related products (prioritize blog featured products if available)
+    let relatedProducts;
+    if (blogId) {
+        console.log(`📝 Loading featured products from blog: ${blogId}`);
+        relatedProducts = await loadFeaturedProductsFromBlog(blogId, productId);
+        
+        // Update the related products title if coming from blog
+        const relatedTitle = document.querySelector('h2');
+        if (relatedTitle && relatedTitle.textContent === 'Sản Phẩm Khác') {
+            relatedTitle.textContent = 'Sản Phẩm Được Đề Xuất';
+            const relatedSubtitle = relatedTitle.nextElementSibling;
+            if (relatedSubtitle) {
+                relatedSubtitle.textContent = 'Các sản phẩm liên quan được giới thiệu trong bài viết.';
+            }
+        }
+    } else {
+        relatedProducts = await loadRelatedProducts(product.category, productId);
+    }
+    
     renderRelatedProducts(relatedProducts);
     
     // Initialize product reviews

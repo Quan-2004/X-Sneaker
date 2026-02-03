@@ -465,23 +465,35 @@ function renderProductResults(results) {
     if (!container) return;
     
     if (results.length === 0) {
-        container.innerHTML = '<p class="p-4 text-sm text-slate-500">Không tìm thấy sản phẩm</p>';
+        container.innerHTML = '<p class="p-4 text-sm text-slate-500 text-center">Không tìm thấy sản phẩm nào</p>';
         container.classList.remove('hidden');
         return;
     }
     
-    container.innerHTML = results.map(product => `
-        <div class="p-3 hover:bg-amber-50 dark:hover:bg-slate-700 cursor-pointer border-b border-amber-100 dark:border-slate-600 last:border-0 flex items-center gap-3" 
-             onclick="window.blogModule.addProduct('${product.id}', '${escapeHtml(product.name)}', '${product.images?.[0] || ''}', ${product.price})">
-            <img src="${product.images?.[0] || 'image/coming_soon.png'}" 
-                 class="w-12 h-12 object-cover rounded-lg bg-slate-100" 
-                 onerror="this.src='image/coming_soon.png'">
-            <div class="flex-1 min-w-0">
-                <p class="font-semibold text-sm text-slate-800 dark:text-white truncate">${product.name}</p>
-                <p class="text-xs text-slate-500">${formatPrice(product.price)}₫</p>
-            </div>
+    container.innerHTML = `
+        <div class="p-2 border-b border-amber-200 dark:border-slate-600 bg-amber-100 dark:bg-slate-700">
+            <p class="text-xs font-bold text-amber-700 dark:text-amber-400">Tìm thấy ${results.length} sản phẩm</p>
         </div>
-    `).join('');
+        ${results.map(product => `
+            <div class="p-3 hover:bg-amber-100 dark:hover:bg-slate-700 cursor-pointer border-b border-amber-100 dark:border-slate-600 last:border-0 flex items-center gap-3 transition-colors" 
+                 onclick="window.blogModule.addProduct('${product.id}', '${escapeHtml(product.name)}', '${product.images?.[0] || ''}', ${product.price})">
+                <img src="${product.images?.[0] || 'image/coming_soon.png'}" 
+                     class="w-12 h-12 object-cover rounded-lg bg-slate-100 border border-amber-200 dark:border-slate-600" 
+                     onerror="this.src='image/coming_soon.png'">
+                <div class="flex-1 min-w-0">
+                    <p class="font-semibold text-sm text-slate-800 dark:text-white truncate" title="${product.name}">${product.name}</p>
+                    <p class="text-xs text-slate-500">${product.brand || 'N/A'} • ${product.category || 'Sneakers'}</p>
+                    <div class="flex items-center gap-2 mt-1">
+                        <p class="text-xs font-bold text-amber-600 dark:text-amber-400">${formatPrice(product.price)}₫</p>
+                        <span class="text-[10px] bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-400 px-1.5 py-0.5 rounded-full">
+                            ID: ${product.id}
+                        </span>
+                    </div>
+                </div>
+                <span class="material-symbols-rounded text-amber-500 text-[20px]">add_circle</span>
+            </div>
+        `).join('')}
+    `;
     
     container.classList.remove('hidden');
 }
@@ -489,12 +501,14 @@ function renderProductResults(results) {
 function addProduct(id, name, image, price) {
     // Check limit
     if (selectedProducts.length >= 3) {
-        alert('Chỉ có thể chọn tối đa 3 sản phẩm!');
+        // Show toast notification
+        showToast('Chỉ có thể chọn tối đa 3 sản phẩm!', 'warning');
         return;
     }
     
     // Check duplicate
     if (selectedProducts.find(p => p.id === id)) {
+        showToast('Sản phẩm đã được chọn!', 'info');
         return;
     }
     
@@ -505,16 +519,59 @@ function addProduct(id, name, image, price) {
     const searchInput = document.getElementById('blog-product-search');
     if (searchInput) searchInput.value = '';
     document.getElementById('blog-product-results').classList.add('hidden');
+    
+    // Show success toast
+    showToast(`Đã thêm "${name}" vào danh sách sản phẩm`, 'success');
+}
+
+// Simple toast notification function
+function showToast(message, type = 'info') {
+    // Create toast element
+    const toast = document.createElement('div');
+    toast.className = `fixed top-4 right-4 z-50 px-4 py-3 rounded-lg shadow-lg text-white text-sm font-medium transform translate-x-full transition-transform duration-300 ${
+        type === 'success' ? 'bg-green-600' : 
+        type === 'warning' ? 'bg-yellow-600' : 
+        type === 'error' ? 'bg-red-600' : 'bg-blue-600'
+    }`;
+    toast.textContent = message;
+    
+    // Add to DOM
+    document.body.appendChild(toast);
+    
+    // Show toast
+    setTimeout(() => {
+        toast.classList.remove('translate-x-full');
+    }, 100);
+    
+    // Hide and remove toast
+    setTimeout(() => {
+        toast.classList.add('translate-x-full');
+        setTimeout(() => {
+            document.body.removeChild(toast);
+        }, 300);
+    }, 3000);
 }
 
 function removeProduct(id) {
+    const product = selectedProducts.find(p => p.id === id);
     selectedProducts = selectedProducts.filter(p => p.id !== id);
     renderSelectedProducts();
+    
+    if (product) {
+        showToast(`Đã xóa "${product.name}" khỏi danh sách`, 'info');
+    }
 }
 
 function renderSelectedProducts() {
     const container = document.getElementById('blog-selected-products');
+    const countElement = document.getElementById('selected-count');
+    
     if (!container) return;
+    
+    // Update count
+    if (countElement) {
+        countElement.textContent = selectedProducts.length;
+    }
     
     if (selectedProducts.length === 0) {
         container.innerHTML = '<p class="text-xs text-slate-400 italic py-2">Chưa chọn sản phẩm nào</p>';
@@ -522,17 +579,19 @@ function renderSelectedProducts() {
     }
     
     container.innerHTML = selectedProducts.map(product => `
-        <div class="flex items-center gap-3 p-3 bg-amber-50 dark:bg-slate-800 rounded-lg border border-amber-200 dark:border-slate-600">
+        <div class="flex items-center gap-3 p-3 bg-amber-50 dark:bg-slate-800 rounded-lg border border-amber-200 dark:border-slate-600 transition-all hover:shadow-md">
             <img src="${product.image || 'image/coming_soon.png'}" 
-                 class="w-12 h-12 object-cover rounded-lg" 
+                 class="w-12 h-12 object-cover rounded-lg border border-amber-200 dark:border-slate-600" 
                  onerror="this.src='image/coming_soon.png'">
             <div class="flex-1 min-w-0">
-                <p class="font-semibold text-sm text-slate-800 dark:text-white truncate">${product.name}</p>
+                <p class="font-semibold text-sm text-slate-800 dark:text-white truncate" title="${product.name}">${product.name}</p>
                 <p class="text-xs text-slate-500">${formatPrice(product.price)}₫</p>
+                <p class="text-[10px] text-amber-600 dark:text-amber-400 font-medium">ID: ${product.id}</p>
             </div>
             <button type="button" onclick="window.blogModule.removeProduct('${product.id}')" 
-                    class="text-slate-400 hover:text-red-600 transition-colors">
-                <span class="material-symbols-rounded text-[18px]">close</span>
+                    class="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-full transition-all" 
+                    title="Xóa sản phẩm">
+                <span class="material-symbols-rounded text-[16px]">close</span>
             </button>
         </div>
     `).join('');

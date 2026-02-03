@@ -317,6 +317,10 @@ function renderFeaturedProducts(products) {
     const container = document.getElementById('sidebar-products');
     if (!container) return;
     
+    // Get current blog ID from URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const blogId = urlParams.get('id');
+    
     if (products.length === 0) {
         container.innerHTML = `
             <h4 class="text-xl font-bold mb-6 flex items-center gap-2">
@@ -335,7 +339,7 @@ function renderFeaturedProducts(products) {
         </h4>
         <div class="space-y-6">
             ${products.map(product => `
-                <a href="Product-detail.html?id=${product.id}" class="flex gap-4 group cursor-pointer">
+                <a href="Product-detail.html?id=${product.id}${blogId ? `&blog=${blogId}` : ''}" class="flex gap-4 group cursor-pointer">
                     <div class="size-20 bg-gray-50 rounded-lg overflow-hidden flex-shrink-0">
                         <img alt="${product.name}" 
                              src="${product.images?.[0] || 'image/coming_soon.png'}"
