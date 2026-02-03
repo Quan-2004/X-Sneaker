@@ -266,11 +266,298 @@ function setText(id, val) {
     if (el) el.textContent = val;
 }
 
+/**
+ * Export Report to PDF
+ */
+async function exportPDF() {
+    try {
+        window.showNotification('Đang chuẩn bị xuất báo cáo PDF...', 'info');
+        
+        // Get current report data
+        const period = document.getElementById('report-period')?.value || '30';
+        const periodText = {
+            '7': '7 ngày qua',
+            '30': '30 ngày qua',
+            'year': 'Năm nay',
+            'all': 'Tất cả thời gian'
+        }[period] || '30 ngày qua';
+
+        const revenue = document.getElementById('report-revenue')?.textContent || '0đ';
+        const aov = document.getElementById('report-aov')?.textContent || '0đ';
+        const orders = document.getElementById('report-orders')?.textContent || '0';
+
+        // Create HTML content for PDF
+        const reportContent = `
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <meta charset="utf-8">
+                <title>Báo Cáo Doanh Thu - X-Sneaker</title>
+                <style>
+                    body {
+                        font-family: Arial, sans-serif;
+                        padding: 40px;
+                        color: #333;
+                    }
+                    .header {
+                        text-align: center;
+                        margin-bottom: 40px;
+                        border-bottom: 3px solid #e71823;
+                        padding-bottom: 20px;
+                    }
+                    .logo {
+                        font-size: 32px;
+                        font-weight: bold;
+                        color: #e71823;
+                        margin-bottom: 10px;
+                    }
+                    .report-title {
+                        font-size: 24px;
+                        font-weight: bold;
+                        margin: 20px 0 10px 0;
+                    }
+                    .period {
+                        font-size: 16px;
+                        color: #666;
+                        margin-bottom: 5px;
+                    }
+                    .generated-date {
+                        font-size: 14px;
+                        color: #999;
+                    }
+                    .metrics {
+                        display: grid;
+                        grid-template-columns: repeat(3, 1fr);
+                        gap: 20px;
+                        margin: 40px 0;
+                    }
+                    .metric-card {
+                        background: #f8f9fa;
+                        padding: 20px;
+                        border-radius: 8px;
+                        border-left: 4px solid #e71823;
+                    }
+                    .metric-label {
+                        font-size: 12px;
+                        text-transform: uppercase;
+                        color: #666;
+                        font-weight: bold;
+                        margin-bottom: 8px;
+                    }
+                    .metric-value {
+                        font-size: 28px;
+                        font-weight: bold;
+                        color: #e71823;
+                    }
+                    .table-section {
+                        margin-top: 40px;
+                    }
+                    .section-title {
+                        font-size: 18px;
+                        font-weight: bold;
+                        margin-bottom: 15px;
+                        color: #333;
+                    }
+                    table {
+                        width: 100%;
+                        border-collapse: collapse;
+                        margin-top: 10px;
+                    }
+                    th {
+                        background: #e71823;
+                        color: white;
+                        padding: 12px;
+                        text-align: left;
+                        font-weight: bold;
+                    }
+                    td {
+                        padding: 10px 12px;
+                        border-bottom: 1px solid #ddd;
+                    }
+                    tr:nth-child(even) {
+                        background: #f8f9fa;
+                    }
+                    .footer {
+                        margin-top: 60px;
+                        text-align: center;
+                        font-size: 12px;
+                        color: #999;
+                        border-top: 1px solid #ddd;
+                        padding-top: 20px;
+                    }
+                </style>
+            </head>
+            <body>
+                <div class="header">
+                    <div class="logo">X-SNEAKER</div>
+                    <div class="report-title">BÁO CÁO DOANH THU & PHÂN TÍCH</div>
+                    <div class="period">Kỳ báo cáo: ${periodText}</div>
+                    <div class="generated-date">Ngày xuất: ${new Date().toLocaleDateString('vi-VN')} ${new Date().toLocaleTimeString('vi-VN')}</div>
+                </div>
+
+                <div class="metrics">
+                    <div class="metric-card">
+                        <div class="metric-label">Tổng Doanh Thu</div>
+                        <div class="metric-value">${revenue}</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Giá Trị Đơn TB</div>
+                        <div class="metric-value">${aov}</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Tổng Đơn Hàng</div>
+                        <div class="metric-value">${orders}</div>
+                    </div>
+                </div>
+
+                <div class="table-section">
+                    <div class="section-title">Top 5 Sản Phẩm Bán Chạy</div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Sản phẩm</th>
+                                <th>Số lượng bán</th>
+                                <th>Doanh thu</th>
+                            </tr>
+                        </thead>
+                        <tbody id="pdf-products-table">
+                            ${getTopProductsHTML()}
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="footer">
+                    <p>© ${new Date().getFullYear()} X-Sneaker. Báo cáo được tạo tự động từ hệ thống quản lý.</p>
+                    <p>Mọi thắc mắc vui lòng liên hệ: support@x-sneaker.com</p>
+                </div>
+            </body>
+            </html>
+        `;
+
+        // Create and download PDF
+        const blob = new Blob([reportContent], { type: 'text/html' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `Bao_Cao_Doanh_Thu_${new Date().toISOString().split('T')[0]}.html`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+
+        window.showNotification('Đã xuất báo cáo HTML thành công! Bạn có thể mở file và in ra PDF.', 'success');
+    } catch (error) {
+        console.error('Error exporting PDF:', error);
+        window.showNotification('Lỗi khi xuất báo cáo PDF', 'error');
+    }
+}
+
+/**
+ * Export Report to Excel (CSV format)
+ */
+function exportExcel() {
+    try {
+        window.showNotification('Đang chuẩn bị xuất báo cáo Excel...', 'info');
+        
+        // Prepare CSV data
+        let csvContent = '\uFEFF'; // UTF-8 BOM for Excel
+        
+        // Header
+        csvContent += 'BÁO CÁO DOANH THU - X-SNEAKER\n';
+        csvContent += `Kỳ báo cáo: ${getPeriodText()}\n`;
+        csvContent += `Ngày xuất: ${new Date().toLocaleDateString('vi-VN')} ${new Date().toLocaleTimeString('vi-VN')}\n\n`;
+        
+        // Summary metrics
+        csvContent += 'TỔNG QUAN\n';
+        csvContent += 'Chỉ số,Giá trị\n';
+        csvContent += `Tổng Doanh Thu,${document.getElementById('report-revenue')?.textContent || '0'}\n`;
+        csvContent += `Giá Trị Đơn Trung Bình,${document.getElementById('report-aov')?.textContent || '0'}\n`;
+        csvContent += `Tổng Đơn Hàng,${document.getElementById('report-orders')?.textContent || '0'}\n\n`;
+        
+        // Top Products
+        csvContent += 'TOP SẢN PHẨM BÁN CHẠY\n';
+        csvContent += 'STT,Tên Sản Phẩm,Số Lượng Bán,Doanh Thu\n';
+        
+        const topProductsRows = document.querySelectorAll('#report-top-products tr');
+        topProductsRows.forEach((row, index) => {
+            const cells = row.querySelectorAll('td');
+            if (cells.length >= 3) {
+                const name = cells[0].textContent.trim();
+                const qty = cells[1].textContent.trim();
+                const revenue = cells[2].textContent.trim();
+                csvContent += `${index + 1},"${name}",${qty},${revenue}\n`;
+            }
+        });
+        
+        // Create and download CSV
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `Bao_Cao_Doanh_Thu_${new Date().toISOString().split('T')[0]}.csv`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+        
+        window.showNotification('Đã xuất báo cáo Excel thành công!', 'success');
+    } catch (error) {
+        console.error('Error exporting Excel:', error);
+        window.showNotification('Lỗi khi xuất báo cáo Excel', 'error');
+    }
+}
+
+/**
+ * Get period text
+ */
+function getPeriodText() {
+    const period = document.getElementById('report-period')?.value || '30';
+    const periodMap = {
+        '7': '7 ngày qua',
+        '30': '30 ngày qua',
+        'year': 'Năm nay',
+        'all': 'Tất cả thời gian'
+    };
+    return periodMap[period] || '30 ngày qua';
+}
+
+/**
+ * Get top products HTML for PDF
+ */
+function getTopProductsHTML() {
+    const rows = document.querySelectorAll('#report-top-products tr');
+    let html = '';
+    
+    rows.forEach(row => {
+        const cells = row.querySelectorAll('td');
+        if (cells.length >= 3) {
+            const name = cells[0].textContent.trim();
+            const qty = cells[1].textContent.trim();
+            const revenue = cells[2].textContent.trim();
+            html += `
+                <tr>
+                    <td>${name}</td>
+                    <td>${qty}</td>
+                    <td>${revenue}</td>
+                </tr>
+            `;
+        }
+    });
+    
+    if (!html) {
+        html = '<tr><td colspan="3">Không có dữ liệu</td></tr>';
+    }
+    
+    return html;
+}
+
 // Export
 window.reportsModule = {
     init,
     reload,
-    updatePeriod
+    updatePeriod,
+    exportPDF,
+    exportExcel
 };
 
 // Start

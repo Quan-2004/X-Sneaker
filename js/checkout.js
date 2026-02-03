@@ -1,6 +1,6 @@
 /**
  * Checkout Logic
- * Handles cart summary display and order placement (COD & VNPay)
+ * Handles cart summary display and order placement (COD)
  */
 
 import { initAuthStateObserver, getUserData } from './auth.js';
@@ -16,8 +16,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const taxEl = document.getElementById('checkout-tax');
     const totalEl = document.getElementById('checkout-total');
     const checkoutForm = document.getElementById('checkout-form');
-
-    // --- VNPAY RETURN HANDLING - REMOVED ---
 
     // Auto-fill User Data
     // Auto-fill User Data
@@ -153,7 +151,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     total: _currentTotal,
                     subtotal: _currentTotal / (1 + TAX_RATE),
                     tax: _currentTotal - (_currentTotal / (1 + TAX_RATE)),
-                    paymentMethod: paymentMethod === 'cod' ? 'COD' : 'VNPay',
+                    paymentMethod: 'COD',
                     status: 'processing',
                     createdAt: Date.now(),
                     updatedAt: Date.now()

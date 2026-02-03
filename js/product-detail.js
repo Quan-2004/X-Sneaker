@@ -7,8 +7,6 @@ import { initProductReviews } from './product-reviews.js';
 
 // Get Firebase instances
 const auth = getFirebaseAuth();
-
-// Get Firebase database instance
 const database = getFirebaseDatabase();
 
 // Global state
@@ -66,7 +64,6 @@ async function loadProductById(productId) {
  */
 async function loadFeaturedProductsFromBlog(blogId, currentProductId, limit = 6) {
     try {
-        // Load blog data
         const blogRef = ref(database, `blogs/${blogId}`);
         const blogSnapshot = await get(blogRef);
         
@@ -77,13 +74,11 @@ async function loadFeaturedProductsFromBlog(blogId, currentProductId, limit = 6)
         
         const blogData = blogSnapshot.val();
         
-        // Check if blog has featured products
         if (!blogData.featuredProducts || blogData.featuredProducts.length === 0) {
             console.log('⚠️ No featured products in blog, loading random products');
             return await loadRelatedProducts('', currentProductId, limit);
         }
         
-        // Load all products
         const productsRef = ref(database, 'products');
         const productsSnapshot = await get(productsRef);
         
@@ -93,22 +88,19 @@ async function loadFeaturedProductsFromBlog(blogId, currentProductId, limit = 6)
         
         const productsData = productsSnapshot.val();
         
-        // Get featured products from blog (excluding current product)
         const featuredProducts = blogData.featuredProducts
-            .filter(productId => productId !== currentProductId) // Exclude current product
+            .filter(productId => productId !== currentProductId)
             .map(productId => {
                 const product = productsData[productId];
                 return product ? { id: productId, ...product } : null;
             })
             .filter(p => p !== null);
         
-        // If we have enough featured products, return them
         if (featuredProducts.length >= 3) {
             console.log(`✅ Loaded ${featuredProducts.length} featured products from blog`);
             return featuredProducts.slice(0, limit);
         }
         
-        // If not enough featured products, mix with random products
         const allProducts = Object.keys(productsData)
             .map(key => ({ id: key, ...productsData[key] }))
             .filter(p => p.id !== currentProductId && !featuredProducts.find(fp => fp.id === p.id));
@@ -135,12 +127,10 @@ async function loadRelatedProducts(category, currentProductId, limit = 6) {
         
         if (snapshot.exists()) {
             const productsData = snapshot.val();
-            // Load random products (excluding current product)
             const allProducts = Object.keys(productsData)
                 .map(key => ({ id: key, ...productsData[key] }))
                 .filter(p => p.id !== currentProductId);
             
-            // Shuffle array and take first 'limit' items
             const shuffled = allProducts.sort(() => 0.5 - Math.random());
             const related = shuffled.slice(0, limit);
             
@@ -154,78 +144,6 @@ async function loadRelatedProducts(category, currentProductId, limit = 6) {
     }
 }
 
-/**
- * Load blog data by ID
- */
-async function loadBlogById(blogId) {
-    try {
-        const blogRef = ref(database, `blogs/${blogId}`);
-        const snapshot = await get(blogRef);
-        
-        if (snapshot.exists()) {
-            const blogData = { id: blogId, ...snapshot.val() };
-            console.log('✅ Blog loaded:', blogData);
-            return blogData;
-        } else {
-            console.warn('⚠️ Blog not found:', blogId);
-            return null;
-        }
-    } catch (error) {
-        console.error('❌ Error loading blog:', error);
-        return null;
-    }
-}
-
-/**
- * Load featured products from blog
- */
-async function loadFeaturedProductsFromBlog(blogId, currentProductId, limit = 6) {
-    try {
-        const blog = await loadBlogById(blogId);
-        if (!blog || !blog.featuredProducts || blog.featuredProducts.length === 0) {
-            console.log('📝 No featured products in blog, loading random products');
-            return await loadRelatedProducts(null, currentProductId, limit);
-        }
-        
-        const productsRef = ref(database, 'products');
-        const snapshot = await get(productsRef);
-        
-        if (snapshot.exists()) {
-            const productsData = snapshot.val();
-            
-            // Load featured products from blog (excluding current product)
-            const featuredProducts = blog.featuredProducts
-                .filter(productId => productId !== currentProductId)
-                .map(productId => {
-                    const product = productsData[productId];
-                    return product ? { id: productId, ...product } : null;
-                })
-                .filter(p => p !== null);
-            
-            // If we need more products to reach the limit, add random ones
-            if (featuredProducts.length < limit) {
-                const remainingLimit = limit - featuredProducts.length;
-                const randomProducts = await loadRelatedProducts(null, currentProductId, remainingLimit * 2);
-                
-                // Filter out already featured products
-                const additionalProducts = randomProducts
-                    .filter(p => !featuredProducts.find(fp => fp.id === p.id))
-                    .slice(0, remainingLimit);
-                
-                featuredProducts.push(...additionalProducts);
-            }
-            
-            console.log(`✅ Loaded ${featuredProducts.length} products from blog (${blog.featuredProducts.length} featured)`);
-            return featuredProducts.slice(0, limit);
-        }
-        
-        return [];
-    } catch (error) {
-        console.error('❌ Error loading featured products from blog:', error);
-        return await loadRelatedProducts(null, currentProductId, limit);
-    }
-}
-
 // ============================================================================
 // RENDERING
 // ============================================================================
@@ -236,75 +154,152 @@ async function loadFeaturedProductsFromBlog(blogId, currentProductId, limit = 6)
 function renderProductData(product) {
     currentProduct = product;
     
-    // Store color images if available
-    if (product.colorImages) {
-        currentProduct.colorImages = product.colorImages;
-    }
-    
     // Update product name
-    const nameEl = document.querySelector('h1');
+    const nameEl = document.getElementById('product-name');
     if (nameEl) nameEl.textContent = product.name;
     
     // Update description
-    const descEl = document.querySelector('p.text-gray-500.dark\\:text-gray-400.text-lg');
+    const descEl = document.getElementById('product-description');
     if (descEl) descEl.textContent = product.description || 'Giày thể thao cao cấp';
     
-    // Update price
-    const priceEl = document.querySelector('.text-primary.text-3xl');
-    if (priceEl) priceEl.textContent = formatPrice(product.price);
-    
-    // Update original price if discount exists
-    const originalPriceEl = document.querySelector('.text-gray-400.line-through');
-    if (product.originalPrice && originalPriceEl) {
-        originalPriceEl.textContent = formatPrice(product.originalPrice);
-    } else if (originalPriceEl) {
-        originalPriceEl.style.display = 'none';
+    // Update price container
+    const priceContainer = document.getElementById('product-price');
+    if (priceContainer) {
+        if (product.originalPrice && product.originalPrice > product.price) {
+            priceContainer.innerHTML = `
+                <span class="text-primary text-3xl font-bold">${formatPrice(product.price)}</span>
+                <span class="text-gray-400 line-through text-lg">${formatPrice(product.originalPrice)}</span>
+            `;
+        } else {
+            priceContainer.innerHTML = `
+                <span class="text-primary text-3xl font-bold">${formatPrice(product.price)}</span>
+            `;
+        }
     }
     
     // Update breadcrumb
-    const breadcrumbProduct = document.querySelector('.flex.flex-wrap.gap-2 span.text-\\[\\#1b0e0f\\]');
-    if (breadcrumbProduct) breadcrumbProduct.textContent = product.name;
+    const breadcrumbsContainer = document.getElementById('breadcrumbs');
+    if (breadcrumbsContainer) {
+        const categoryName = product.category || 'Giày';
+        breadcrumbsContainer.innerHTML = `
+            <a class="text-gray-500 hover:text-primary transition-colors font-medium" href="index.html">Trang chủ</a>
+            <span class="text-gray-400">/</span>
+            <a class="text-gray-500 hover:text-primary transition-colors font-medium" href="Product.html">Sản phẩm</a>
+            <span class="text-gray-400">/</span>
+            <a class="text-gray-500 hover:text-primary transition-colors font-medium" href="Product.html?category=${categoryName}">${categoryName}</a>
+            <span class="text-gray-400">/</span>
+            <span class="text-[#1b0e0f] dark:text-white font-bold">${product.name}</span>
+        `;
+    }
     
     // Update gender info
-    const genderEl = document.getElementById('product-gender');
-    if (genderEl && product.gender) {
+    const genderContainer = document.getElementById('gender-info');
+    if (genderContainer && product.gender) {
         const genderMap = {
             'male': 'Nam',
             'female': 'Nữ',
             'unisex': 'Unisex'
         };
-        genderEl.textContent = genderMap[product.gender] || 'Unisex';
+        const genderDisplay = genderMap[product.gender] || 'Unisex';
+        genderContainer.innerHTML = `
+            <div class="flex items-center gap-2 text-sm">
+                <span class="material-symbols-outlined text-gray-400">person</span>
+                <span class="text-gray-500 dark:text-gray-400">Giới tính:</span>
+                <span class="font-semibold text-[#1b0e0f] dark:text-white">${genderDisplay}</span>
+            </div>
+        `;
     }
     
-    // Update gallery images
-    renderGallery(product.images || []);
+    // Update badges and rating
+    const badgesContainer = document.getElementById('product-badges');
+    if (badgesContainer) {
+        const isNew = product.isNew || false;
+        const rating = product.averageRating || 0;
+        const reviewCount = product.reviewCount || 0;
+        
+        let badgesHTML = '';
+        if (isNew) {
+            badgesHTML += '<span class="bg-primary/10 text-primary text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider">Hàng Mới</span>';
+        }
+        
+        if (rating > 0) {
+            const fullStars = Math.floor(rating);
+            const hasHalfStar = rating % 1 >= 0.5;
+            const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+            
+            badgesHTML += `
+                <div class="flex items-center text-amber-500">
+                    ${Array(fullStars).fill('<span class="material-symbols-outlined text-sm">star</span>').join('')}
+                    ${hasHalfStar ? '<span class="material-symbols-outlined text-sm">star_half</span>' : ''}
+                    ${Array(emptyStars).fill('<span class="material-symbols-outlined text-sm text-gray-300">star</span>').join('')}
+                    <span class="text-xs text-gray-500 dark:text-gray-400 ml-1 font-medium">(${reviewCount} Đánh giá)</span>
+                </div>
+            `;
+        }
+        
+        badgesContainer.innerHTML = badgesHTML;
+    }
     
-    // Update color variants
+    // Render main image container first
+    const mainImageContainer = document.getElementById('main-image-container');
+    if (mainImageContainer && !mainImageContainer.querySelector('.main-product-image')) {
+        mainImageContainer.innerHTML = `
+            <div class="main-product-image w-full h-full bg-center bg-no-repeat bg-cover hover:scale-105 transition-transform duration-500 cursor-zoom-in" 
+                 style="background-image: url('');"
+                 data-alt="${product.name}"></div>
+        `;
+    }
+    
+    // Render color variants first
     renderColorVariants(product.colors || []);
     
-    // Update sizes
-    renderSizes(product.sizes || []);
-    
-    // Initialize default selections (will be set by render functions)
-    // selectedColor and selectedSize are set in renderColorVariants and renderSizes
+    // Sizes will be rendered after color selection
 }
 
 /**
- * Render product gallery
+ * Render color variants
  */
-function renderGallery(images) {
-    if (!images || images.length === 0) return;
+function renderColorVariants(colors) {
+    if (!colors || colors.length === 0) return;
     
-    // Update main image
-    const mainImageDiv = document.querySelector('.w-full.h-full.bg-center.bg-no-repeat.bg-cover');
-    if (mainImageDiv) {
-        mainImageDiv.style.backgroundImage = `url("${images[0]}")`;
-        mainImageDiv.dataset.alt = currentProduct?.name || 'Product image';
+    const colorContainer = document.getElementById('color-container');
+    if (!colorContainer) return;
+    
+    const colorMap = {
+        'Đen': '#000000',
+        'Trắng': '#FFFFFF',
+        'Đỏ': '#E30B17',
+        'Xanh Navy': '#1E3A8A',
+        'Vàng': '#FACC15'
+    };
+    
+    colorContainer.innerHTML = colors.map((colorName, index) => {
+        const colorValue = colorMap[colorName] || '#666666';
+        const isFirst = index === 0;
+        
+        return `
+            <button class="color-btn w-10 h-10 rounded-full ${
+                isFirst ? 'border-2 border-primary ring-offset-2 ring-1 ring-primary' : 'border border-gray-200'
+            } transition-all ${colorValue === '#FFFFFF' ? 'shadow-md' : ''}" 
+                    style="background-color: ${colorValue}"
+                    data-color="${colorName}"
+                    title="${colorName}">
+            </button>
+        `;
+    }).join('');
+    
+    // Set first color as selected
+    if (colors.length > 0) {
+        selectedColor = colors[0];
+        updateSelectedColorName(selectedColor);
+        loadImagesForColor(selectedColor);
+        renderColorThumbnails();
+        renderSizesForColor(selectedColor);
     }
 }
 
 /**
- * Render color thumbnails - Hiển thị ảnh thumbnail cho từng màu
+ * Render color thumbnails
  */
 function renderColorThumbnails() {
     if (!currentProduct) return;
@@ -318,7 +313,6 @@ function renderColorThumbnails() {
     
     if (colors.length === 0) return;
     
-    // Map color names to CSS colors
     const colorMap = {
         'Đen': '#000000',
         'Trắng': '#FFFFFF',
@@ -327,11 +321,11 @@ function renderColorThumbnails() {
         'Vàng': '#FACC15'
     };
     
-    container.innerHTML = colors.map((colorName, index) => {
-        // Lấy ảnh đầu tiên của màu này, hoặc fallback sang default
+    container.innerHTML = colors.map((colorName) => {
+        // Get image for this color
         let thumbnailImage = '';
-        if (colorImages[colorName] && colorImages[colorName].length > 0) {
-            thumbnailImage = colorImages[colorName][0];
+        if (colorImages[colorName]) {
+            thumbnailImage = colorImages[colorName];
         } else if (defaultImages.length > 0) {
             thumbnailImage = defaultImages[0];
         }
@@ -344,11 +338,16 @@ function renderColorThumbnails() {
                 <div class="aspect-square bg-white dark:bg-gray-800 rounded-lg overflow-hidden border-2 ${
                     isSelected ? 'border-primary shadow-lg' : 'border-gray-200 dark:border-gray-700 hover:border-primary'
                 } transition-all">
-                    <div class="w-full h-full bg-center bg-no-repeat bg-cover"
-                         style='background-image: url("${thumbnailImage}");'
-                         data-alt="${currentProduct.name} - ${colorName}"></div>
+                    ${thumbnailImage ? `
+                        <div class="w-full h-full bg-center bg-no-repeat bg-cover"
+                             style='background-image: url("${thumbnailImage}");'
+                             data-alt="${currentProduct.name} - ${colorName}"></div>
+                    ` : `
+                        <div class="w-full h-full flex items-center justify-center text-gray-400">
+                            <span class="material-symbols-outlined">image</span>
+                        </div>
+                    `}
                 </div>
-                <!-- Hiển thị chấm màu và tên màu -->
                 <div class="mt-2 flex items-center justify-center gap-2">
                     <div class="w-4 h-4 rounded-full border border-gray-300" 
                          style="background-color: ${colorValue}; ${colorValue === '#FFFFFF' ? 'border-width: 2px;' : ''}"></div>
@@ -360,77 +359,106 @@ function renderColorThumbnails() {
 }
 
 /**
- * Render color variants
+ * Render sizes for selected color based on inventory
  */
-/**
- * Render color variants from Firebase data
- */
-function renderColorVariants(colors) {
-    if (!colors || colors.length === 0) return;
+function renderSizesForColor(color) {
+    if (!currentProduct || !color) return;
     
-    const colorContainer = document.getElementById('color-container');
-    if (colorContainer) {
-        // Map color names to CSS colors (chỉ 5 màu cơ bản)
-        const colorMap = {
-            'Đen': '#000000',
-            'Trắng': '#FFFFFF',
-            'Đỏ': '#E30B17',
-            'Xanh Navy': '#1E3A8A',
-            'Vàng': '#FACC15'
-        };
-        
-        colorContainer.innerHTML = colors.map((colorName, index) => {
-            const colorValue = colorMap[colorName] || '#666666';
-            const isGradient = colorValue.includes('gradient');
-            
-            return `
-                <button class="color-btn w-10 h-10 rounded-full ${index === 0 ? 'border-2 border-primary ring-offset-2 ring-1 ring-primary' : 'border border-gray-200'} transition-all" 
-                        style="${isGradient ? 'background: ' + colorValue : 'background-color: ' + colorValue}"
-                        data-color="${colorName}"
-                        title="${colorName}">
-                </button>
-            `;
-        }).join('');
-        
-        // Set first color as selected and load its images
-        if (colors.length > 0) {
-            selectedColor = colors[0];
-            updateSelectedColorName(selectedColor);
-            // Load images for first color
-            loadImagesForColor(selectedColor);
-        }
+    const sizeContainer = document.getElementById('size-container');
+    if (!sizeContainer) return;
+    
+    const sizes = currentProduct.sizes || [];
+    const inventory = currentProduct.inventory || {};
+    const colorInventory = inventory[color] || {};
+    
+    if (sizes.length === 0) {
+        sizeContainer.innerHTML = '<p class="col-span-4 text-gray-500 text-sm">Không có size</p>';
+        return;
     }
     
-    // Render color thumbnails
-    renderColorThumbnails();
+    sizeContainer.innerHTML = sizes.map((size, index) => {
+        const sizeValue = typeof size === 'object' ? size.value : size;
+        const stock = colorInventory[sizeValue] || 0;
+        const isSoldOut = stock === 0;
+        const isFirst = index === 0 && !isSoldOut;
+        
+        return `
+            <button class="size-btn py-3 text-center border ${
+                isFirst ? 'border-primary bg-primary/5 text-primary' : 'border-gray-200 dark:border-gray-700'
+            } rounded-lg text-sm font-semibold hover:border-primary transition-all ${
+                isSoldOut ? 'opacity-40 cursor-not-allowed bg-gray-50 dark:bg-gray-900' : ''
+            }"
+                    data-size="${sizeValue}"
+                    data-stock="${stock}"
+                    ${isSoldOut ? 'disabled' : ''}>
+                ${sizeValue}
+                ${stock > 0 && stock < 5 ? `<span class="block text-[10px] text-orange-500">Còn ${stock}</span>` : ''}
+            </button>
+        `;
+    }).join('');
+    
+    // Set first available size as selected
+    const firstAvailableSize = sizes.find(s => {
+        const sizeValue = typeof s === 'object' ? s.value : s;
+        return (colorInventory[sizeValue] || 0) > 0;
+    });
+    
+    if (firstAvailableSize) {
+        selectedSize = typeof firstAvailableSize === 'object' ? firstAvailableSize.value : firstAvailableSize;
+    } else {
+        selectedSize = null;
+    }
 }
 
 /**
- * Render size options
+ * Load images for selected color
  */
-function renderSizes(sizes) {
-    if (!sizes || sizes.length === 0) return;
+function loadImagesForColor(colorName) {
+    if (!currentProduct) return;
     
-    const sizeContainer = document.querySelector('.grid.grid-cols-4.gap-2');
-    if (sizeContainer) {
-        sizeContainer.innerHTML = sizes.map((size, index) => {
-            // Size from Firebase is just a number (e.g., 37, 38, 39)
-            const sizeValue = typeof size === 'object' ? size.value : size;
-            const isSoldOut = typeof size === 'object' && size.stock === 0;
+    let imageToLoad = '';
+    
+    // Check if product has color-specific image
+    if (currentProduct.colorImages && currentProduct.colorImages[colorName]) {
+        imageToLoad = currentProduct.colorImages[colorName];
+    } else if (currentProduct.images && currentProduct.images.length > 0) {
+        imageToLoad = currentProduct.images[0];
+    }
+    
+    if (imageToLoad) {
+        const mainImageDiv = document.querySelector('.main-product-image');
+        if (mainImageDiv) {
+            // Show loading state
+            mainImageDiv.style.opacity = '0.3';
+            mainImageDiv.style.filter = 'blur(10px)';
             
-            return `
-                <button class="py-3 text-center border ${index === 0 ? 'border-primary bg-primary/5 text-primary' : 'border-gray-200 dark:border-gray-700'} rounded-lg text-sm font-semibold hover:border-primary transition-all size-btn ${isSoldOut ? 'opacity-40 cursor-not-allowed' : ''}"
-                        data-size="${sizeValue}"
-                        ${isSoldOut ? 'disabled' : ''}>
-                    ${sizeValue}
-                </button>
-            `;
-        }).join('');
-        
-        // Set first size as selected
-        if (sizes.length > 0) {
-            selectedSize = typeof sizes[0] === 'object' ? sizes[0].value : sizes[0];
+            // Preload image
+            const img = new Image();
+            img.onload = () => {
+                setTimeout(() => {
+                    mainImageDiv.style.backgroundImage = `url("${imageToLoad}")`;
+                    mainImageDiv.style.transition = 'all 0.4s ease-in-out';
+                    mainImageDiv.style.opacity = '1';
+                    mainImageDiv.style.filter = 'blur(0)';
+                }, 100);
+            };
+            img.onerror = () => {
+                // Fallback on error
+                mainImageDiv.style.opacity = '1';
+                mainImageDiv.style.filter = 'blur(0)';
+            };
+            img.src = imageToLoad;
         }
+    }
+}
+
+/**
+ * Update selected color name display
+ */
+function updateSelectedColorName(colorName) {
+    const colorNameEl = document.getElementById('selected-color-name');
+    if (colorNameEl) {
+        colorNameEl.textContent = colorName;
     }
 }
 
@@ -438,8 +466,8 @@ function renderSizes(sizes) {
  * Render related products
  */
 function renderRelatedProducts(products) {
-    relatedProducts = products; // Store globally for carousel
-    relatedProductsStartIndex = 0; // Reset to start
+    relatedProducts = products;
+    relatedProductsStartIndex = 0;
     renderRelatedProductsCarousel();
 }
 
@@ -450,9 +478,11 @@ function renderRelatedProductsCarousel() {
     const container = document.querySelector('.grid.grid-cols-1.sm\\:grid-cols-2.lg\\:grid-cols-4.gap-6');
     if (!container) return;
     
-    if (relatedProducts.length === 0) return;
+    if (relatedProducts.length === 0) {
+        container.innerHTML = '<p class="col-span-4 text-center text-gray-500">Không có sản phẩm liên quan</p>';
+        return;
+    }
     
-    // Show 4 products at a time
     const visibleProducts = relatedProducts.slice(relatedProductsStartIndex, relatedProductsStartIndex + 4);
     
     container.innerHTML = visibleProducts.map(product => {
@@ -479,12 +509,11 @@ function renderRelatedProductsCarousel() {
         `;
     }).join('');
     
-    // Update button states
     updateCarouselButtons();
 }
 
 /**
- * Update carousel button states (disable if at start/end)
+ * Update carousel button states
  */
 function updateCarouselButtons() {
     const prevBtn = document.getElementById('related-prev-btn');
@@ -519,62 +548,25 @@ function updateCarouselButtons() {
  * Setup all event listeners
  */
 function setupEventListeners() {
-    // Color thumbnails - Click để chuyển màu
+    // Color thumbnails click
     document.addEventListener('click', (e) => {
         const colorThumb = e.target.closest('.color-thumbnail');
         if (colorThumb) {
             const colorName = colorThumb.dataset.color;
             if (colorName && colorName !== selectedColor) {
-                // Update selected color
-                selectedColor = colorName;
-                updateSelectedColorName(selectedColor);
-                
-                // Load images for this color
-                loadImagesForColor(selectedColor);
-                
-                // Update color button selection
-                document.querySelectorAll('.color-btn').forEach(btn => {
-                    if (btn.dataset.color === colorName) {
-                        btn.classList.remove('border', 'border-gray-200');
-                        btn.classList.add('border-2', 'border-primary', 'ring-offset-2', 'ring-1', 'ring-primary');
-                    } else {
-                        btn.classList.remove('border-2', 'border-primary', 'ring-offset-2', 'ring-1', 'ring-primary');
-                        btn.classList.add('border', 'border-gray-200');
-                    }
-                });
-                
-                // Update thumbnail borders
-                renderColorThumbnails();
+                selectColor(colorName);
             }
         }
     });
     
-    // Gallery - Thumbnail clicks
-    document.addEventListener('click', (e) => {
-        const thumbnail = e.target.closest('.thumbnail-image');
-        if (thumbnail) {
-            const index = parseInt(thumbnail.dataset.index);
-            updateMainImage(index);
-        }
-    });
-    
-    // Color selection
+    // Color button click
     document.addEventListener('click', (e) => {
         const colorBtn = e.target.closest('.color-btn');
         if (colorBtn) {
-            document.querySelectorAll('.color-btn').forEach(btn => {
-                btn.classList.remove('border-2', 'border-primary', 'ring-offset-2', 'ring-1', 'ring-primary');
-                btn.classList.add('border', 'border-gray-200');
-            });
-            
-            colorBtn.classList.remove('border', 'border-gray-200');
-            colorBtn.classList.add('border-2', 'border-primary', 'ring-offset-2', 'ring-1', 'ring-primary');
-            
-            selectedColor = colorBtn.dataset.color;
-            updateSelectedColorName(selectedColor);
-            
-            // Load images for selected color
-            loadImagesForColor(selectedColor);
+            const colorName = colorBtn.dataset.color;
+            if (colorName) {
+                selectColor(colorName);
+            }
         }
     });
     
@@ -623,81 +615,38 @@ function setupEventListeners() {
         }
     });
     
-    // Product tabs
-    setupTabs();
-    
     // Related products carousel
     setupCarousel();
 }
 
 /**
- * Update main image
+ * Select a color
  */
-function updateMainImage(index) {
-    if (!currentProduct || !currentProduct.images) return;
+function selectColor(colorName) {
+    selectedColor = colorName;
     
-    currentImageIndex = index;
-    const mainImageDiv = document.querySelector('.w-full.h-full.bg-center.bg-no-repeat.bg-cover');
-    if (mainImageDiv && currentProduct.images[index]) {
-        mainImageDiv.style.backgroundImage = `url("${currentProduct.images[index]}")`;
-    }
-    
-    // Update thumbnail borders
-    document.querySelectorAll('.thumbnail-image').forEach((thumb, i) => {
-        if (i === index) {
-            thumb.classList.remove('border-transparent', 'hover:border-gray-300');
-            thumb.classList.add('border-2', 'border-primary');
+    // Update color buttons
+    document.querySelectorAll('.color-btn').forEach(btn => {
+        if (btn.dataset.color === colorName) {
+            btn.classList.remove('border', 'border-gray-200');
+            btn.classList.add('border-2', 'border-primary', 'ring-offset-2', 'ring-1', 'ring-primary');
         } else {
-            thumb.classList.remove('border-2', 'border-primary');
-            thumb.classList.add('border', 'border-transparent', 'hover:border-gray-300');
+            btn.classList.remove('border-2', 'border-primary', 'ring-offset-2', 'ring-1', 'ring-primary');
+            btn.classList.add('border', 'border-gray-200');
         }
     });
-}
-
-/**
- * Update selected color name display
- */
-function updateSelectedColorName(colorName) {
-    const colorNameEl = document.getElementById('selected-color-name');
-    if (colorNameEl) {
-        colorNameEl.textContent = colorName;
-    }
-}
-
-/**
- * Load images for selected color
- */
-function loadImagesForColor(colorName) {
-    if (!currentProduct) return;
     
-    let imagesToLoad = [];
+    // Update selected color name
+    updateSelectedColorName(colorName);
     
-    // Check if product has color-specific images
-    if (currentProduct.colorImages && currentProduct.colorImages[colorName]) {
-        imagesToLoad = currentProduct.colorImages[colorName];
-    } else if (currentProduct.images && currentProduct.images.length > 0) {
-        // Fallback to default images
-        imagesToLoad = currentProduct.images;
-    }
+    // Load images for this color
+    loadImagesForColor(colorName);
     
-    if (imagesToLoad.length > 0) {
-        // Update gallery with new images
-        renderGallery(imagesToLoad);
-        
-        // Update color thumbnails to highlight selected color
-        renderColorThumbnails();
-        
-        // Add smooth transition effect
-        const mainImageDiv = document.querySelector('.w-full.h-full.bg-center.bg-no-repeat.bg-cover');
-        if (mainImageDiv) {
-            mainImageDiv.style.opacity = '0';
-            setTimeout(() => {
-                mainImageDiv.style.backgroundImage = `url("${imagesToLoad[0]}")`;
-                mainImageDiv.style.transition = 'opacity 0.3s ease-in-out';
-                mainImageDiv.style.opacity = '1';
-            }, 150);
-        }
-    }
+    // Update thumbnails
+    renderColorThumbnails();
+    
+    // Render sizes for this color
+    renderSizesForColor(colorName);
 }
 
 /**
@@ -705,29 +654,54 @@ function loadImagesForColor(colorName) {
  */
 function handleAddToCart() {
     if (!currentProduct) {
-        window.showToast?.('Không tìm thấy thông tin sản phẩm');
+        window.showToast?.('Không tìm thấy thông tin sản phẩm', 'error');
+        return;
+    }
+    
+    if (!selectedColor) {
+        window.showToast?.('Vui lòng chọn màu sắc', 'warning');
         return;
     }
     
     if (!selectedSize) {
-        window.showToast?.('Vui lòng chọn kích thước');
+        window.showToast?.('Vui lòng chọn kích thước', 'warning');
         return;
+    }
+    
+    // Check stock availability
+    const inventory = currentProduct.inventory || {};
+    const colorInventory = inventory[selectedColor] || {};
+    const stock = colorInventory[selectedSize] || 0;
+    
+    if (stock === 0) {
+        window.showToast?.('Sản phẩm này đã hết hàng', 'error');
+        return;
+    }
+    
+    // Get image for selected color
+    let productImage = '';
+    if (currentProduct.colorImages && currentProduct.colorImages[selectedColor]) {
+        productImage = currentProduct.colorImages[selectedColor];
+    } else if (currentProduct.images && currentProduct.images.length > 0) {
+        productImage = currentProduct.images[0];
     }
     
     const cartItem = {
         id: currentProduct.id,
         name: currentProduct.name,
         price: currentProduct.price,
-        image: currentProduct.images?.[0] || '',
-        color: selectedColor || 'Mặc định',
+        image: productImage,
+        color: selectedColor,
         size: selectedSize,
-        quantity: 1
+        quantity: 1,
+        maxStock: stock
     };
     
+    // Use global addToCart function if available
     if (window.addToCart) {
         window.addToCart(cartItem);
     } else {
-        // Fallback if common.js not loaded
+        // Fallback
         let cart = JSON.parse(localStorage.getItem('cart')) || [];
         const existing = cart.find(item => 
             item.id === cartItem.id && 
@@ -736,13 +710,24 @@ function handleAddToCart() {
         );
         
         if (existing) {
-            existing.quantity += 1;
+            if (existing.quantity < stock) {
+                existing.quantity += 1;
+                window.showToast?.(`Đã cập nhật số lượng ${currentProduct.name}`, 'success');
+            } else {
+                window.showToast?.('Đã đạt số lượng tối đa có sẵn', 'warning');
+                return;
+            }
         } else {
             cart.push(cartItem);
+            window.showToast?.(`Đã thêm ${currentProduct.name} vào giỏ hàng`, 'success');
         }
         
         localStorage.setItem('cart', JSON.stringify(cart));
-        window.showToast?.(`Đã thêm ${currentProduct.name} vào giỏ hàng`);
+        
+        // Update cart count if function exists
+        if (window.updateCartCount) {
+            window.updateCartCount();
+        }
     }
 }
 
@@ -759,23 +744,19 @@ async function handleAddToWishlist() {
     const btn = document.querySelector('button.border-2.border-gray-200 span.material-symbols-outlined');
     
     if (existingIndex >= 0) {
-        // Remove from wishlist
         wishlist.splice(existingIndex, 1);
         if (btn) btn.textContent = 'favorite';
-        window.showToast?.('Đã xóa khỏi danh sách yêu thích');
+        window.showToast?.('Đã xóa khỏi danh sách yêu thích', 'info');
         
-        // Xóa khỏi Firebase nếu đã đăng nhập
         if (user) {
             try {
                 const wishlistItemRef = ref(database, `wishlist/${user.uid}/${currentProduct.id}`);
                 await remove(wishlistItemRef);
-                console.log('✅ Đã xóa khỏi Firebase wishlist');
             } catch (error) {
                 console.error('❌ Lỗi xóa Firebase wishlist:', error);
             }
         }
     } else {
-        // Add to wishlist
         const wishlistItem = {
             id: currentProduct.id,
             name: currentProduct.name,
@@ -786,14 +767,12 @@ async function handleAddToWishlist() {
         
         wishlist.push(wishlistItem);
         if (btn) btn.textContent = 'favorite';
-        window.showToast?.('Đã thêm vào danh sách yêu thích');
+        window.showToast?.('Đã thêm vào danh sách yêu thích', 'success');
         
-        // Lưu lên Firebase nếu đã đăng nhập
         if (user) {
             try {
                 const wishlistItemRef = ref(database, `wishlist/${user.uid}/${currentProduct.id}`);
                 await set(wishlistItemRef, wishlistItem);
-                console.log('✅ Đã lưu vào Firebase wishlist');
             } catch (error) {
                 console.error('❌ Lỗi lưu Firebase wishlist:', error);
             }
@@ -814,16 +793,14 @@ async function toggleWishlistForRelated(productId, button) {
     const icon = button.querySelector('span.material-symbols-outlined');
     
     if (existingIndex >= 0) {
-        // Remove from wishlist
         wishlist.splice(existingIndex, 1);
         if (icon) {
             icon.textContent = 'favorite';
             icon.classList.remove('text-red-500');
             icon.classList.add('text-gray-800');
         }
-        window.showToast?.('Đã xóa khỏi yêu thích');
+        window.showToast?.('Đã xóa khỏi yêu thích', 'info');
         
-        // Xóa khỏi Firebase
         if (user) {
             try {
                 const wishlistItemRef = ref(database, `wishlist/${user.uid}/${productId}`);
@@ -833,36 +810,32 @@ async function toggleWishlistForRelated(productId, button) {
             }
         }
     } else {
-        // Add to wishlist - need to fetch product data from related products
-        const relatedCard = button.closest('.group');
-        const productName = relatedCard?.querySelector('h4')?.textContent || '';
-        const productPrice = relatedCard?.querySelector('.font-bold.text-lg')?.textContent || '';
-        const productImage = relatedCard?.querySelector('[style*="background-image"]')?.style.backgroundImage.match(/url\("(.+)"\)/)?.[1] || '';
-        
-        const wishlistItem = {
-            id: productId,
-            name: productName,
-            price: parseFloat(productPrice.replace(/[^\d]/g, '')),
-            image: productImage,
-            addedAt: Date.now()
-        };
-        
-        wishlist.push(wishlistItem);
-        
-        if (icon) {
-            icon.textContent = 'favorite';
-            icon.classList.remove('text-gray-800');
-            icon.classList.add('text-red-500');
-        }
-        window.showToast?.('Đã thêm vào yêu thích');
-        
-        // Lưu lên Firebase
-        if (user) {
-            try {
-                const wishlistItemRef = ref(database, `wishlist/${user.uid}/${productId}`);
-                await set(wishlistItemRef, wishlistItem);
-            } catch (error) {
-                console.error('❌ Lỗi lưu Firebase wishlist:', error);
+        const relatedProduct = relatedProducts.find(p => p.id === productId);
+        if (relatedProduct) {
+            const wishlistItem = {
+                id: productId,
+                name: relatedProduct.name,
+                price: relatedProduct.price,
+                image: relatedProduct.images?.[0] || '',
+                addedAt: Date.now()
+            };
+            
+            wishlist.push(wishlistItem);
+            
+            if (icon) {
+                icon.textContent = 'favorite';
+                icon.classList.remove('text-gray-800');
+                icon.classList.add('text-red-500');
+            }
+            window.showToast?.('Đã thêm vào yêu thích', 'success');
+            
+            if (user) {
+                try {
+                    const wishlistItemRef = ref(database, `wishlist/${user.uid}/${productId}`);
+                    await set(wishlistItemRef, wishlistItem);
+                } catch (error) {
+                    console.error('❌ Lỗi lưu Firebase wishlist:', error);
+                }
             }
         }
     }
@@ -874,14 +847,11 @@ async function toggleWishlistForRelated(productId, button) {
  * Show size guide modal
  */
 function showSizeGuide() {
-    window.showToast?.('Đang mở bảng hướng dẫn chọn size...', 'info');
-    
-    // Create modal
     const modal = document.createElement('div');
     modal.className = 'fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4';
     modal.innerHTML = `
-        <div class="bg-white dark:bg-background-dark rounded-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto">
-            <div class="sticky top-0 bg-white dark:bg-background-dark border-b border-gray-200 dark:border-white/10 p-6 flex items-center justify-between z-10">
+        <div class="bg-white dark:bg-gray-900 rounded-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto">
+            <div class="sticky top-0 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 p-6 flex items-center justify-between z-10">
                 <h2 class="text-2xl font-bold">Bảng Hướng Dẫn Chọn Size</h2>
                 <button class="close-modal text-gray-400 hover:text-gray-600 transition-colors">
                     <span class="material-symbols-outlined text-3xl">close</span>
@@ -892,21 +862,23 @@ function showSizeGuide() {
                 <div class="overflow-x-auto">
                     <table class="w-full border-collapse">
                         <thead>
-                            <tr class="bg-gray-50 dark:bg-white/5">
+                            <tr class="bg-gray-50 dark:bg-gray-800">
+                                <th class="border border-gray-200 dark:border-gray-700 px-4 py-3 text-left font-bold">Size VN</th>
                                 <th class="border border-gray-200 dark:border-gray-700 px-4 py-3 text-left font-bold">US Size</th>
                                 <th class="border border-gray-200 dark:border-gray-700 px-4 py-3 text-left font-bold">EU Size</th>
-                                <th class="border border-gray-200 dark:border-gray-700 px-4 py-3 text-left font-bold">UK Size</th>
                                 <th class="border border-gray-200 dark:border-gray-700 px-4 py-3 text-left font-bold">Chiều dài (cm)</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr><td class="border border-gray-200 dark:border-gray-700 px-4 py-2">US 7</td><td class="border border-gray-200 dark:border-gray-700 px-4 py-2">40</td><td class="border border-gray-200 dark:border-gray-700 px-4 py-2">6</td><td class="border border-gray-200 dark:border-gray-700 px-4 py-2">25.0</td></tr>
-                            <tr><td class="border border-gray-200 dark:border-gray-700 px-4 py-2">US 8</td><td class="border border-gray-200 dark:border-gray-700 px-4 py-2">41</td><td class="border border-gray-200 dark:border-gray-700 px-4 py-2">7</td><td class="border border-gray-200 dark:border-gray-700 px-4 py-2">25.5</td></tr>
-                            <tr><td class="border border-gray-200 dark:border-gray-700 px-4 py-2">US 9</td><td class="border border-gray-200 dark:border-gray-700 px-4 py-2">42</td><td class="border border-gray-200 dark:border-gray-700 px-4 py-2">8</td><td class="border border-gray-200 dark:border-gray-700 px-4 py-2">26.0</td></tr>
-                            <tr><td class="border border-gray-200 dark:border-gray-700 px-4 py-2">US 10</td><td class="border border-gray-200 dark:border-gray-700 px-4 py-2">43</td><td class="border border-gray-200 dark:border-gray-700 px-4 py-2">9</td><td class="border border-gray-200 dark:border-gray-700 px-4 py-2">26.5</td></tr>
-                            <tr><td class="border border-gray-200 dark:border-gray-700 px-4 py-2">US 11</td><td class="border border-gray-200 dark:border-gray-700 px-4 py-2">44</td><td class="border border-gray-200 dark:border-gray-700 px-4 py-2">10</td><td class="border border-gray-200 dark:border-gray-700 px-4 py-2">27.0</td></tr>
-                            <tr><td class="border border-gray-200 dark:border-gray-700 px-4 py-2">US 12</td><td class="border border-gray-200 dark:border-gray-700 px-4 py-2">45</td><td class="border border-gray-200 dark:border-gray-700 px-4 py-2">11</td><td class="border border-gray-200 dark:border-gray-700 px-4 py-2">27.5</td></tr>
-                            <tr><td class="border border-gray-200 dark:border-gray-700 px-4 py-2">US 13</td><td class="border border-gray-200 dark:border-gray-700 px-4 py-2">46</td><td class="border border-gray-200 dark:border-gray-700 px-4 py-2">12</td><td class="border border-gray-200 dark:border-gray-700 px-4 py-2">28.0</td></tr>
+                            <tr><td class="border px-4 py-2">36</td><td class="border px-4 py-2">5.5</td><td class="border px-4 py-2">36</td><td class="border px-4 py-2">23.0</td></tr>
+                            <tr><td class="border px-4 py-2">37</td><td class="border px-4 py-2">6</td><td class="border px-4 py-2">37</td><td class="border px-4 py-2">23.5</td></tr>
+                            <tr><td class="border px-4 py-2">38</td><td class="border px-4 py-2">7</td><td class="border px-4 py-2">38</td><td class="border px-4 py-2">24.5</td></tr>
+                            <tr><td class="border px-4 py-2">39</td><td class="border px-4 py-2">7.5</td><td class="border px-4 py-2">39</td><td class="border px-4 py-2">25.0</td></tr>
+                            <tr><td class="border px-4 py-2">40</td><td class="border px-4 py-2">8</td><td class="border px-4 py-2">40</td><td class="border px-4 py-2">25.5</td></tr>
+                            <tr><td class="border px-4 py-2">41</td><td class="border px-4 py-2">8.5</td><td class="border px-4 py-2">41</td><td class="border px-4 py-2">26.0</td></tr>
+                            <tr><td class="border px-4 py-2">42</td><td class="border px-4 py-2">9</td><td class="border px-4 py-2">42</td><td class="border px-4 py-2">26.5</td></tr>
+                            <tr><td class="border px-4 py-2">43</td><td class="border px-4 py-2">9.5</td><td class="border px-4 py-2">43</td><td class="border px-4 py-2">27.0</td></tr>
+                            <tr><td class="border px-4 py-2">44</td><td class="border px-4 py-2">10</td><td class="border px-4 py-2">44</td><td class="border px-4 py-2">27.5</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -928,12 +900,10 @@ function showSizeGuide() {
     
     document.body.appendChild(modal);
     
-    // Close modal
     modal.querySelector('.close-modal').addEventListener('click', () => {
         modal.remove();
     });
     
-    // Close on backdrop click
     modal.addEventListener('click', (e) => {
         if (e.target === modal) {
             modal.remove();
@@ -942,44 +912,14 @@ function showSizeGuide() {
 }
 
 /**
- * Setup product tabs
- */
-function setupTabs() {
-    const tabButtons = document.querySelectorAll('.flex.gap-10.border-b button');
-    
-    tabButtons.forEach((btn, index) => {
-        btn.addEventListener('click', () => {
-            // Remove active from all
-            tabButtons.forEach(b => {
-                b.classList.remove('border-primary', 'text-primary');
-                b.classList.add('border-transparent', 'text-gray-500');
-            });
-            
-            // Add active to clicked
-            btn.classList.remove('border-transparent', 'text-gray-500');
-            btn.classList.add('border-primary', 'text-primary');
-            
-            // Note: In a full implementation, you would show/hide different content panels here
-            console.log(`Switched to tab: ${btn.textContent}`);
-        });
-    });
-}
-
-/**
- * Setup related products carousel
- */
-/**
- * Setup carousel navigation for related products
+ * Setup carousel navigation
  */
 function setupCarousel() {
-    const relatedSection = document.querySelector('.mt-24.mb-12');
-    if (!relatedSection) return;
+    const prevBtn = document.getElementById('related-prev-btn');
+    const nextBtn = document.getElementById('related-next-btn');
     
-    const leftBtn = relatedSection.querySelector('.flex.gap-2 button:first-child');
-    const rightBtn = relatedSection.querySelector('.flex.gap-2 button:last-child');
-    
-    if (leftBtn && rightBtn) {
-        leftBtn.addEventListener('click', (e) => {
+    if (prevBtn && nextBtn) {
+        prevBtn.addEventListener('click', (e) => {
             e.preventDefault();
             if (relatedProductsStartIndex > 0) {
                 relatedProductsStartIndex = Math.max(0, relatedProductsStartIndex - 1);
@@ -987,7 +927,7 @@ function setupCarousel() {
             }
         });
         
-        rightBtn.addEventListener('click', (e) => {
+        nextBtn.addEventListener('click', (e) => {
             e.preventDefault();
             if (relatedProductsStartIndex + 4 < relatedProducts.length) {
                 relatedProductsStartIndex = Math.min(relatedProducts.length - 4, relatedProductsStartIndex + 1);
@@ -1006,6 +946,135 @@ function formatPrice(price) {
         style: 'currency',
         currency: 'VND'
     }).format(price);
+}
+
+/**
+ * Show loading skeleton
+ */
+function showLoadingSkeleton() {
+    const main = document.querySelector('main');
+    if (!main) return;
+    
+    // Hide actual content
+    const productContent = main.querySelector('.flex.flex-col.lg\\:flex-row.gap-12');
+    const reviewsSection = main.querySelector('.mt-20.mb-12');
+    const relatedSection = main.querySelector('.mt-24.mb-12');
+    
+    if (productContent) productContent.style.display = 'none';
+    if (reviewsSection) reviewsSection.style.display = 'none';
+    if (relatedSection) relatedSection.style.display = 'none';
+    
+    // Create skeleton
+    const skeleton = document.createElement('div');
+    skeleton.id = 'loading-skeleton';
+    skeleton.className = 'animate-pulse';
+    skeleton.innerHTML = `
+        <div class="flex flex-col lg:flex-row gap-12 mb-12">
+            <!-- Image Skeleton -->
+            <div class="w-full lg:w-3/5 flex flex-col gap-4">
+                <div class="w-full aspect-square bg-gray-200 dark:bg-gray-800 rounded-xl"></div>
+                <div class="grid grid-cols-5 gap-3">
+                    <div class="aspect-square bg-gray-200 dark:bg-gray-800 rounded-lg"></div>
+                    <div class="aspect-square bg-gray-200 dark:bg-gray-800 rounded-lg"></div>
+                    <div class="aspect-square bg-gray-200 dark:bg-gray-800 rounded-lg"></div>
+                    <div class="aspect-square bg-gray-200 dark:bg-gray-800 rounded-lg"></div>
+                    <div class="aspect-square bg-gray-200 dark:bg-gray-800 rounded-lg"></div>
+                </div>
+            </div>
+            
+            <!-- Info Skeleton -->
+            <div class="w-full lg:w-2/5 flex flex-col gap-4">
+                <div class="h-10 bg-gray-200 dark:bg-gray-800 rounded-lg w-3/4"></div>
+                <div class="h-6 bg-gray-200 dark:bg-gray-800 rounded-lg w-full"></div>
+                <div class="h-8 bg-gray-200 dark:bg-gray-800 rounded-lg w-1/2"></div>
+                
+                <!-- Color Skeleton -->
+                <div class="flex gap-3 mt-4">
+                    <div class="w-10 h-10 bg-gray-200 dark:bg-gray-800 rounded-full"></div>
+                    <div class="w-10 h-10 bg-gray-200 dark:bg-gray-800 rounded-full"></div>
+                    <div class="w-10 h-10 bg-gray-200 dark:bg-gray-800 rounded-full"></div>
+                </div>
+                
+                <!-- Size Skeleton -->
+                <div class="grid grid-cols-4 gap-2 mt-4">
+                    <div class="h-12 bg-gray-200 dark:bg-gray-800 rounded-lg"></div>
+                    <div class="h-12 bg-gray-200 dark:bg-gray-800 rounded-lg"></div>
+                    <div class="h-12 bg-gray-200 dark:bg-gray-800 rounded-lg"></div>
+                    <div class="h-12 bg-gray-200 dark:bg-gray-800 rounded-lg"></div>
+                </div>
+                
+                <!-- Buttons Skeleton -->
+                <div class="flex flex-col gap-3 mt-6">
+                    <div class="h-14 bg-gray-200 dark:bg-gray-800 rounded-xl"></div>
+                    <div class="h-14 bg-gray-200 dark:bg-gray-800 rounded-xl"></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Reviews Skeleton -->
+        <div class="h-64 bg-gray-200 dark:bg-gray-800 rounded-xl mb-12"></div>
+        
+        <!-- Related Products Skeleton -->
+        <div class="grid grid-cols-4 gap-6">
+            <div class="h-64 bg-gray-200 dark:bg-gray-800 rounded-xl"></div>
+            <div class="h-64 bg-gray-200 dark:bg-gray-800 rounded-xl"></div>
+            <div class="h-64 bg-gray-200 dark:bg-gray-800 rounded-xl"></div>
+            <div class="h-64 bg-gray-200 dark:bg-gray-800 rounded-xl"></div>
+        </div>
+    `;
+    
+    // Insert skeleton before breadcrumbs
+    const breadcrumbs = main.querySelector('.flex.flex-wrap.gap-2.py-4');
+    if (breadcrumbs && breadcrumbs.nextElementSibling) {
+        breadcrumbs.nextElementSibling.insertAdjacentElement('afterend', skeleton);
+    }
+}
+
+/**
+ * Hide loading skeleton
+ */
+function hideLoadingSkeleton() {
+    const skeleton = document.getElementById('loading-skeleton');
+    if (skeleton) {
+        skeleton.style.opacity = '0';
+        skeleton.style.transition = 'opacity 0.3s ease-out';
+        setTimeout(() => skeleton.remove(), 300);
+    }
+    
+    // Show actual content
+    const main = document.querySelector('main');
+    if (!main) return;
+    
+    const productContent = main.querySelector('.flex.flex-col.lg\\:flex-row.gap-12');
+    const reviewsSection = main.querySelector('.mt-20.mb-12');
+    const relatedSection = main.querySelector('.mt-24.mb-12');
+    
+    if (productContent) {
+        productContent.style.display = '';
+        productContent.style.opacity = '0';
+        setTimeout(() => {
+            productContent.style.transition = 'opacity 0.4s ease-in';
+            productContent.style.opacity = '1';
+        }, 50);
+    }
+    
+    if (reviewsSection) {
+        reviewsSection.style.display = '';
+        reviewsSection.style.opacity = '0';
+        setTimeout(() => {
+            reviewsSection.style.transition = 'opacity 0.4s ease-in';
+            reviewsSection.style.opacity = '1';
+        }, 150);
+    }
+    
+    if (relatedSection) {
+        relatedSection.style.display = '';
+        relatedSection.style.opacity = '0';
+        setTimeout(() => {
+            relatedSection.style.transition = 'opacity 0.4s ease-in';
+            relatedSection.style.opacity = '1';
+        }, 250);
+    }
 }
 
 /**
@@ -1044,57 +1113,80 @@ function showErrorPage() {
 async function init() {
     console.log('🚀 Initializing product detail page...');
     
+    // Show loading skeleton immediately
+    showLoadingSkeleton();
+    
     const productId = getProductIdFromUrl();
     const blogId = getBlogIdFromUrl();
     
     if (!productId) {
         console.error('❌ No product ID in URL');
+        hideLoadingSkeleton();
         showErrorPage();
         return;
     }
     
-    // Load product data
-    const product = await loadProductById(productId);
-    
-    if (!product) {
-        showErrorPage();
-        return;
-    }
-    
-    // Render product
-    renderProductData(product);
-    
-    // Load and render related products (prioritize blog featured products if available)
-    let relatedProducts;
-    if (blogId) {
-        console.log(`📝 Loading featured products from blog: ${blogId}`);
-        relatedProducts = await loadFeaturedProductsFromBlog(blogId, productId);
+    try {
+        // Load product data
+        const product = await loadProductById(productId);
         
-        // Update the related products title if coming from blog
-        const relatedTitle = document.querySelector('h2');
-        if (relatedTitle && relatedTitle.textContent === 'Sản Phẩm Khác') {
-            relatedTitle.textContent = 'Sản Phẩm Được Đề Xuất';
-            const relatedSubtitle = relatedTitle.nextElementSibling;
-            if (relatedSubtitle) {
-                relatedSubtitle.textContent = 'Các sản phẩm liên quan được giới thiệu trong bài viết.';
-            }
+        if (!product) {
+            hideLoadingSkeleton();
+            showErrorPage();
+            return;
         }
-    } else {
-        relatedProducts = await loadRelatedProducts(product.category, productId);
+        
+        // Render product immediately (progressive rendering)
+        renderProductData(product);
+        
+        // Setup event listeners right away
+        setupEventListeners();
+        
+        // Hide skeleton after main content is rendered
+        hideLoadingSkeleton();
+        
+        // Load related products in background (non-blocking)
+        setTimeout(async () => {
+            let relatedProductsList;
+            if (blogId) {
+                console.log(`📝 Loading featured products from blog: ${blogId}`);
+                relatedProductsList = await loadFeaturedProductsFromBlog(blogId, productId);
+                
+                const relatedTitle = document.querySelector('.mt-24.mb-12 h2');
+                if (relatedTitle && relatedTitle.textContent.includes('Sản Phẩm Khác')) {
+                    relatedTitle.textContent = 'Sản Phẩm Được Đề Xuất';
+                    const relatedSubtitle = relatedTitle.nextElementSibling;
+                    if (relatedSubtitle) {
+                        relatedSubtitle.textContent = 'Các sản phẩm liên quan được giới thiệu trong bài viết.';
+                    }
+                }
+            } else {
+                relatedProductsList = await loadRelatedProducts(product.category, productId);
+            }
+            
+            renderRelatedProducts(relatedProductsList);
+        }, 100);
+        
+        // Load reviews in background (non-blocking)
+        setTimeout(async () => {
+            await initProductReviews(productId);
+        }, 200);
+        
+        console.log('✅ Product detail page initialized');
+    } catch (error) {
+        console.error('❌ Error initializing product detail:', error);
+        hideLoadingSkeleton();
+        showErrorPage();
     }
-    
-    renderRelatedProducts(relatedProducts);
-    
-    // Initialize product reviews
-    await initProductReviews(productId);
-    
-    // Setup event listeners
-    setupEventListeners();
-    
-    console.log('✅ Product detail page initialized');
 }
 
-// Run on page load
-document.addEventListener('DOMContentLoaded', init);
+// ============================================================================
+// START APPLICATION
+// ============================================================================
 
-console.log('✅ Product detail module loaded');
+// Wait for DOM to be ready before initializing
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+} else {
+    init();
+}

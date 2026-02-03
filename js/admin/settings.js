@@ -84,13 +84,6 @@ function loadAllSettings() {
         // Payment Settings
         const payment = data.payment || {};
         
-        // VNPay
-        const vnpay = payment.vnpay || {};
-        setCheckbox('payment-vnpay-enabled', vnpay.enabled || false);
-        setValue('payment-vnpay-tmn', vnpay.tmnCode || '');
-        setValue('payment-vnpay-secret', vnpay.hashSecret || '');
-        setValue('payment-vnpay-return', vnpay.returnUrl || '');
-        
         // Momo
         const momo = payment.momo || {};
         setCheckbox('payment-momo-enabled', momo.enabled || false);
@@ -222,12 +215,6 @@ async function savePaymentSettings() {
     try {
         const paymentData = {
             payment: {
-                vnpay: {
-                    enabled: getCheckbox('payment-vnpay-enabled'),
-                    tmnCode: getValue('payment-vnpay-tmn'),
-                    hashSecret: getValue('payment-vnpay-secret'),
-                    returnUrl: getValue('payment-vnpay-return')
-                },
                 momo: {
                     enabled: getCheckbox('payment-momo-enabled'),
                     partnerCode: getValue('payment-momo-partner'),

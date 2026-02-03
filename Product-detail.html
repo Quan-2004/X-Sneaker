@@ -95,21 +95,14 @@
 
     <main class="max-w-[1280px] mx-auto w-full px-6 py-8">
         <!-- Breadcrumbs -->
-        <div class="flex flex-wrap gap-2 py-4 items-center text-sm mb-6">
-            <a class="text-gray-500 hover:text-primary transition-colors font-medium" href="index.html">Trang chủ</a>
-            <span class="text-gray-400">/</span>
-            <a class="text-gray-500 hover:text-primary transition-colors font-medium" href="Product.html">Giày</a>
-            <span class="text-gray-400">/</span>
-            <a class="text-gray-500 hover:text-primary transition-colors font-medium" href="Product.html">Thể thao</a>
-            <span class="text-gray-400">/</span>
-            <span class="text-[#1b0e0f] dark:text-white font-bold">X-Velocity Elite</span>
+        <div id="breadcrumbs" class="flex flex-wrap gap-2 py-4 items-center text-sm mb-6">
+            <!-- Breadcrumbs will be loaded dynamically -->
         </div>
         <div class="flex flex-col lg:flex-row gap-12">
             <!-- Left: Product Gallery -->
             <div class="w-full lg:w-3/5 flex flex-col gap-4">
-                <div class="w-full bg-white dark:bg-gray-800 rounded-xl overflow-hidden aspect-[4/5] md:aspect-square flex items-center justify-center">
-                    <div class="w-full h-full bg-center bg-no-repeat bg-cover hover:scale-105 transition-transform duration-500 cursor-zoom-in" data-alt="Main product view of X-Velocity Elite sneaker in red and white" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDEWJKAJ1JUeK-n92CDg7bUWkR4l5Zc8BD6hs5xJ7BnwLHc3XwjZ96serRxnoZFpbZjeYMAmt9edPK1UNMSvIEapYSvSOzLnLvRna6CPokmxawMQoaaPDq07MWA0tg8PkUwc1PKFkMJrTSvGpc39isEvD1eOL2rBt3joR8gOH_C1HClAiue_qB2-Luim71vO3Gw9wxil7IttnUquANcO3rarP0-Lmcapq0-LoaU9Z4SxtUb-4AsHMI896PgOkmIlpbEe4gdnqygcXY");'>
-                    </div>
+                <div id="main-image-container" class="w-full bg-white dark:bg-gray-800 rounded-xl overflow-hidden aspect-[4/5] md:aspect-square flex items-center justify-center">
+                    <!-- Main image will be loaded dynamically -->
                 </div>
                 <!-- Color Thumbnails - Hiển thị ảnh đại diện của từng màu -->
                 <div id="color-thumbnails-container" class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3">
@@ -118,35 +111,26 @@
             </div>
             <!-- Right: Product Info -->
             <div class="w-full lg:w-2/5 flex flex-col">
-                <div class="mb-2 flex items-center gap-2">
-                    <span class="bg-primary/10 text-primary text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider">Hàng Mới</span>
-                    <div class="flex items-center text-amber-500">
-                        <span class="material-symbols-outlined text-sm">star</span>
-                        <span class="material-symbols-outlined text-sm">star</span>
-                        <span class="material-symbols-outlined text-sm">star</span>
-                        <span class="material-symbols-outlined text-sm">star</span>
-                        <span class="material-symbols-outlined text-sm text-gray-300">star_half</span>
-                        <span class="text-xs text-gray-500 dark:text-gray-400 ml-1 font-medium">(124 Đánh giá)</span>
-                    </div>
+                <div id="product-badges" class="mb-2 flex items-center gap-2">
+                    <!-- Badges and rating will be loaded dynamically -->
                 </div>
-                <h1 class="text-[#1b0e0f] dark:text-white text-4xl font-extrabold leading-tight mb-2">X-Velocity Elite</h1>
-                <p class="text-gray-500 dark:text-gray-400 text-lg mb-6">Giày chạy marathon siêu nhẹ dành cho vận động viên chuyên nghiệp.</p>
-                <div class="flex items-baseline gap-4 mb-6">
-                    <span class="text-primary text-3xl font-bold">4.440.000₫</span>
-                    <span class="text-gray-400 line-through text-lg">5.280.000₫</span>
+                <h1 id="product-name" class="text-[#1b0e0f] dark:text-white text-4xl font-extrabold leading-tight mb-2">
+                    <!-- Product name will be loaded dynamically -->
+                </h1>
+                <p id="product-description" class="text-gray-500 dark:text-gray-400 text-lg mb-6">
+                    <!-- Product description will be loaded dynamically -->
+                </p>
+                <div id="product-price" class="flex items-baseline gap-4 mb-6">
+                    <!-- Price will be loaded dynamically -->
                 </div>
                 <!-- Gender Info -->
-                <div class="mb-6 pb-6 border-b border-gray-100 dark:border-gray-800">
-                    <div class="flex items-center gap-2 text-sm">
-                        <span class="material-symbols-outlined text-gray-400">person</span>
-                        <span class="text-gray-500 dark:text-gray-400">Giới tính:</span>
-                        <span id="product-gender" class="font-semibold text-[#1b0e0f] dark:text-white">Unisex</span>
-                    </div>
+                <div id="gender-info" class="mb-6 pb-6 border-b border-gray-100 dark:border-gray-800">
+                    <!-- Gender info will be loaded dynamically -->
                 </div>
                 <!-- Color Selection -->
                 <div class="mb-8">
                     <div class="flex justify-between items-center mb-3">
-                        <h3 class="text-sm font-bold uppercase tracking-wide">Màu Sắc: <span class="text-gray-500 font-medium" id="selected-color-name">Đen</span></h3>
+                        <h3 class="text-sm font-bold uppercase tracking-wide">Màu Sắc: <span class="text-gray-500 font-medium" id="selected-color-name"></span></h3>
                     </div>
                     <div class="flex gap-3" id="color-container">
                         <!-- Color buttons will be loaded dynamically -->
@@ -158,22 +142,16 @@
                         <h3 class="text-sm font-bold uppercase tracking-wide">Chọn Kích Thước</h3>
                         <button id="size-guide-btn" class="text-primary text-xs font-bold underline">Bảng Size</button>
                     </div>
-                    <div class="grid grid-cols-4 gap-2">
-                        <button class="size-btn py-3 text-center border border-gray-200 dark:border-gray-700 rounded-lg text-sm font-semibold hover:border-primary transition-all" data-size="US 7">US 7</button>
-                        <button class="size-btn py-3 text-center border border-gray-200 dark:border-gray-700 rounded-lg text-sm font-semibold hover:border-primary transition-all" data-size="US 8">US 8</button>
-                        <button class="size-btn py-3 text-center border border-primary bg-primary/5 text-primary rounded-lg text-sm font-bold" data-size="US 9">US 9</button>
-                        <button class="size-btn py-3 text-center border border-gray-200 dark:border-gray-700 rounded-lg text-sm font-semibold hover:border-primary transition-all" data-size="US 10">US 10</button>
-                        <button class="size-btn py-3 text-center border border-gray-200 dark:border-gray-700 rounded-lg text-sm font-semibold hover:border-primary transition-all" data-size="US 11">US 11</button>
-                        <button class="size-btn py-3 text-center border border-gray-200 dark:border-gray-700 rounded-lg text-sm font-semibold hover:border-primary transition-all" data-size="US 12">US 12</button>
-                        <button class="size-btn py-3 text-center border border-gray-200 dark:border-gray-700 rounded-lg text-sm font-semibold opacity-40 cursor-not-allowed bg-gray-50 dark:bg-gray-900" disabled="" data-size="US 13">US 13</button>
+                    <div id="size-container" class="grid grid-cols-4 gap-2">
+                        <!-- Size buttons will be loaded dynamically -->
                     </div>
                 </div>
                 <div class="flex flex-col gap-3">
-                    <button class="w-full bg-primary hover:bg-[#c4141d] text-white py-4 rounded-xl font-bold text-lg shadow-lg shadow-primary/20 transition-all flex items-center justify-center gap-2">
+                    <button id="add-to-cart-btn" class="w-full bg-primary hover:bg-[#c4141d] text-white py-4 rounded-xl font-bold text-lg shadow-lg shadow-primary/20 transition-all flex items-center justify-center gap-2">
                         <span class="material-symbols-outlined">shopping_cart</span>
                         Thêm Vào Giỏ
                     </button>
-                    <button class="w-full border-2 border-gray-200 dark:border-gray-700 py-4 rounded-xl font-bold text-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-all flex items-center justify-center gap-2">
+                    <button id="add-to-wishlist-btn" class="w-full border-2 border-gray-200 dark:border-gray-700 py-4 rounded-xl font-bold text-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-all flex items-center justify-center gap-2">
                         <span class="material-symbols-outlined">favorite</span>
                         Thêm Vào Yêu Thích
                     </button>
@@ -274,7 +252,7 @@
                     </button>
                 </div>
             </div>
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div id="related-products-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 <!-- Related products will be loaded dynamically from Firebase -->
             </div>
         </div>

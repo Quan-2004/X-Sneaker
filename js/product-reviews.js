@@ -13,6 +13,61 @@ let currentProductId = null;
 let allReviews = [];
 
 // ============================================================================
+// TOAST NOTIFICATION
+// ============================================================================
+
+function showToast(message, type = 'success') {
+    // Ensure toast container exists
+    let toastContainer = document.getElementById('toast-container');
+    if (!toastContainer) {
+        toastContainer = document.createElement('div');
+        toastContainer.id = 'toast-container';
+        toastContainer.className = 'fixed bottom-5 right-5 z-[100] flex flex-col gap-3';
+        document.body.appendChild(toastContainer);
+    }
+    
+    // Create toast element
+    const toast = document.createElement('div');
+    toast.className = 'bg-black text-white px-6 py-4 rounded shadow-2xl flex items-center gap-3 transform transition-all duration-300 translate-x-[400px] opacity-0';
+    
+    // Icon and color based on type
+    let icon = 'check_circle';
+    let iconColor = 'text-green-500';
+    
+    if (type === 'error') {
+        icon = 'error';
+        iconColor = 'text-red-500';
+    } else if (type === 'warning') {
+        icon = 'warning';
+        iconColor = 'text-amber-500';
+    } else if (type === 'info') {
+        icon = 'info';
+        iconColor = 'text-blue-500';
+    }
+    
+    toast.innerHTML = `
+        <span class="material-symbols-outlined ${iconColor}">${icon}</span>
+        <span class="font-bold text-sm">${message}</span>
+    `;
+    
+    toastContainer.appendChild(toast);
+    
+    // Trigger animation
+    setTimeout(() => {
+        toast.classList.remove('translate-x-[400px]', 'opacity-0');
+        toast.classList.add('translate-x-0', 'opacity-100');
+    }, 10);
+    
+    // Auto remove after 3 seconds
+    setTimeout(() => {
+        toast.classList.add('translate-x-[400px]', 'opacity-0');
+        setTimeout(() => {
+            toast.remove();
+        }, 300);
+    }, 3000);
+}
+
+// ============================================================================
 // AUTHENTICATION
 // ============================================================================
 
@@ -90,18 +145,20 @@ function calculateRatingStats(reviews) {
 
 async function postReview(productId, reviewData) {
     if (!currentUser) {
-        alert('Vui lòng đăng nhập để đánh giá sản phẩm');
-        window.location.href = 'login.html';
+        showToast('Vui lòng đăng nhập để đánh giá sản phẩm', 'warning');
+        setTimeout(() => {
+            window.location.href = 'login.html';
+        }, 1500);
         return false;
     }
     
     if (!reviewData.rating || reviewData.rating < 1 || reviewData.rating > 5) {
-        alert('Vui lòng chọn số sao đánh giá');
+        showToast('Vui lòng chọn số sao đánh giá', 'warning');
         return false;
     }
     
     if (!reviewData.comment || reviewData.comment.trim().length < 10) {
-        alert('Nội dung đánh giá phải có ít nhất 10 ký tự');
+        showToast('Nội dung đánh giá phải có ít nhất 10 ký tự', 'warning');
         return false;
     }
     
@@ -131,14 +188,14 @@ async function postReview(productId, reviewData) {
         return true;
     } catch (error) {
         console.error('❌ Error posting review:', error);
-        alert('Có lỗi xảy ra khi đăng đánh giá. Vui lòng thử lại.');
+        showToast('Có lỗi xảy ra khi đăng đánh giá. Vui lòng thử lại.', 'error');
         return false;
     }
 }
 
 async function markReviewHelpful(productId, reviewId) {
     if (!currentUser) {
-        alert('Vui lòng đăng nhập để đánh dấu hữu ích');
+        showToast('Vui lòng đăng nhập để đánh dấu hữu ích', 'warning');
         return false;
     }
     
@@ -525,8 +582,21 @@ async function handleReviewSubmit(e) {
         // Reload reviews
         await refreshReviews();
         
-        // Show success message
-        alert('Cảm ơn bạn đã đánh giá sản phẩm!');
+        // Show success toast notification
+        showToast('Cảm ơn bạn đã đánh giá sản phẩm!', 'success');
+        
+        // Reset form
+        e.target.reset();
+        document.getElementById('rating-value').value = '0';
+        
+        // Reset stars
+        const starButtons = document.querySelectorAll('.star-btn');
+        starButtons.forEach(btn => {
+            const icon = btn.querySelector('.material-symbols-outlined');
+            icon.classList.add('text-gray-300');
+            icon.classList.remove('text-amber-500');
+            icon.style.fontVariationSettings = "'FILL' 0";
+        });
     }
     
     // Re-enable submit button

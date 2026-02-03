@@ -1031,45 +1031,6 @@
         </div>
       </div>
     </footer>
-    <script>
-      // Xử lý Kết quả trả về từ VNPay
-      document.addEventListener('DOMContentLoaded', () => {
-        const urlParams = new URLSearchParams(window.location.search);
-        
-        // Kiểm tra nếu có tham số phản hồi từ VNPay
-        if (urlParams.has('vnp_ResponseCode')) {
-          const responseCode = urlParams.get('vnp_ResponseCode');
-          const orderId = urlParams.get('vnp_TxnRef');
-          const amount = urlParams.get('vnp_Amount') ? parseInt(urlParams.get('vnp_Amount')) / 100 : 0;
-          
-          if (responseCode === '00') {
-            // Thanh toán THÀNH CÔNG
-            // 1. Xóa giỏ hàng
-            localStorage.removeItem('cart');
-            if (window.updateCartCount) window.updateCartCount();
-            
-            // 2. Thông báo thành công
-            setTimeout(() => {
-               if(window.showToast) window.showToast(`Thanh toán VNPay thành công! Mã đơn: ${orderId}`, 'success');
-               else alert(`Thanh toán thành công! Mã đơn: ${orderId}`);
-            }, 500);
 
-            // 3. (Tùy chọn) Hiển thị modal chúc mừng ở đây
-            console.log("VNPay Success:", { orderId, amount });
-            
-          } else {
-            // Thanh toán THẤT BẠI / HỦY BỎ
-            setTimeout(() => {
-               if(window.showToast) window.showToast(`Thanh toán thất bại hoặc bị hủy. Mã lỗi: ${responseCode}`, 'error');
-               else alert(`Thanh toán thất bại. Mã lỗi: ${responseCode}`);
-            }, 500);
-            console.log("VNPay Failed:", responseCode);
-          }
-          
-          // 4. Xóa tham số trên URL để tránh xử lý lặp lại khi refresh
-          window.history.replaceState({}, document.title, window.location.pathname);
-        }
-      });
-    </script>
   </body>
 </html>
