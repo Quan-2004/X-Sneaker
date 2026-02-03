@@ -10,7 +10,7 @@ const productsRef = ref(db, 'products');
 let currentProducts = {};
 let filteredProducts = []; // For search/filter
 let currentPage = 1;
-const itemsPerPage = 10;
+const itemsPerPage = 6;
 let isInitialized = false;
 
 function formatCurrency(amount) {
@@ -885,7 +885,8 @@ function init() {
 window.productsModule = {
     init,
     reload,
-    closeViewModal
+    closeViewModal,
+    setPage
 };
 
 // Auto init
