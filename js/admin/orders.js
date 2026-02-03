@@ -168,7 +168,7 @@ function exportCSV() {
  * Update Filter Buttons UI
  */
 function updateFilterUI() {
-    const filters = ['all', 'pending', 'processing', 'shipped', 'delivered'];
+    const filters = ['all', 'pending', 'shipped', 'delivered'];
     filters.forEach(f => {
         const btn = document.getElementById(`filter-btn-${f}`);
         if(btn) {
@@ -186,7 +186,6 @@ function updateFilterUI() {
  */
 function renderStats() {
     const pending = allOrders.filter(o => o.status === 'pending').length;
-    const processing = allOrders.filter(o => o.status === 'processing').length;
     const shipped = allOrders.filter(o => o.status === 'shipped').length;
     const delivered = allOrders.filter(o => o.status === 'delivered').length;
     const cancelled = allOrders.filter(o => o.status === 'cancelled').length;
@@ -197,7 +196,6 @@ function renderStats() {
     };
 
     setStat('stat-orders-pending', pending);
-    setStat('stat-orders-processing', processing);
     setStat('stat-orders-shipped', shipped);
     setStat('stat-orders-delivered', delivered);
     setStat('stat-orders-cancelled', cancelled);
@@ -291,7 +289,6 @@ function renderTable() {
                             <div class="status-dropdown absolute right-0 ${dropdownPositionClass} w-40 bg-white dark:bg-card-dark rounded-xl shadow-xl border border-slate-100 dark:border-border-dark hidden z-10 overflow-hidden">
                                 <div class="py-1">
                                     <button onclick="window.ordersModule.updateStatus('${order.key}', 'pending'); window.ordersModule.closeAllDropdowns();" class="w-full text-left px-4 py-2 text-xs font-semibold hover:bg-slate-50 dark:hover:bg-white/5 text-orange-600">Chờ xử lý</button>
-                                    <button onclick="window.ordersModule.updateStatus('${order.key}', 'processing'); window.ordersModule.closeAllDropdowns();" class="w-full text-left px-4 py-2 text-xs font-semibold hover:bg-slate-50 dark:hover:bg-white/5 text-yellow-600">Đang xử lý</button>
                                     <button onclick="window.ordersModule.updateStatus('${order.key}', 'shipped'); window.ordersModule.closeAllDropdowns();" class="w-full text-left px-4 py-2 text-xs font-semibold hover:bg-slate-50 dark:hover:bg-white/5 text-blue-600">Đang giao</button>
                                     <button onclick="window.ordersModule.updateStatus('${order.key}', 'delivered'); window.ordersModule.closeAllDropdowns();" class="w-full text-left px-4 py-2 text-xs font-semibold hover:bg-slate-50 dark:hover:bg-white/5 text-emerald-600">Đã giao</button>
                                     <button onclick="window.ordersModule.updateStatus('${order.key}', 'cancelled'); window.ordersModule.closeAllDropdowns();" class="w-full text-left px-4 py-2 text-xs font-semibold hover:bg-slate-50 dark:hover:bg-white/5 text-rose-600">Đã hủy</button>
@@ -362,8 +359,6 @@ function getStatusConfig(status) {
     switch (status) {
         case 'pending':
             return { label: 'Chờ xử lý', class: 'bg-orange-100 dark:bg-orange-500/10 text-orange-600 dark:text-orange-500 border border-orange-200 dark:border-orange-500/20', dotClass: 'bg-orange-500' };
-        case 'processing':
-            return { label: 'Đang xử lý', class: 'bg-yellow-100 dark:bg-yellow-500/10 text-yellow-600 dark:text-yellow-500 border border-yellow-200 dark:border-yellow-500/20', dotClass: 'bg-yellow-500' };
         case 'shipped':
             return { label: 'Đang giao', class: 'bg-blue-100 dark:bg-blue-500/10 text-blue-600 dark:text-blue-500 border border-blue-200 dark:border-blue-500/20', dotClass: 'bg-blue-500' };
         case 'delivered':
@@ -805,7 +800,7 @@ async function saveOrder() {
     const address = document.getElementById('new-order-address')?.value.trim();
     const city = document.getElementById('new-order-city')?.value.trim();
     const payment = document.getElementById('new-order-payment')?.value;
-    const status = document.getElementById('new-order-status')?.value || 'processing';
+    const status = document.getElementById('new-order-status')?.value || 'pending';
 
     // Validation
     if (!fullname || !email || !phone || !address || !city) {

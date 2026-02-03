@@ -207,9 +207,29 @@
 
             <!-- Recent Orders Section -->
             <div class="bg-white dark:bg-background-dark border border-gray-200 dark:border-white/10 rounded-xl shadow-sm overflow-hidden">
-                <div class="px-6 py-5 border-b border-gray-100 dark:border-white/10 flex justify-between items-center">
-                    <h2 class="text-xl font-bold">Đơn Hàng Gần Đây</h2>
-                    <a class="text-sm font-bold text-primary hover:underline" href="#">Xem tất cả</a>
+                <div class="px-6 py-5 border-b border-gray-100 dark:border-white/10">
+                    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                        <h2 class="text-xl font-bold">Lịch Sử Đơn Hàng</h2>
+                        
+                        <!-- Filter Buttons -->
+                        <div class="flex items-center gap-2 p-1 bg-gray-100 dark:bg-white/5 rounded-lg overflow-x-auto">
+                            <button id="order-filter-all" onclick="window.filterOrders('all')" class="px-4 py-2 bg-white dark:bg-background-dark text-gray-900 dark:text-white text-xs font-bold rounded-lg shadow-sm transition-all whitespace-nowrap">
+                                Tất cả
+                            </button>
+                            <button id="order-filter-pending" onclick="window.filterOrders('pending')" class="px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white text-xs font-medium rounded-lg transition-all whitespace-nowrap">
+                                Chờ xử lý
+                            </button>
+                            <button id="order-filter-shipped" onclick="window.filterOrders('shipped')" class="px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white text-xs font-medium rounded-lg transition-all whitespace-nowrap">
+                                Đang giao
+                            </button>
+                            <button id="order-filter-delivered" onclick="window.filterOrders('delivered')" class="px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white text-xs font-medium rounded-lg transition-all whitespace-nowrap">
+                                Đã giao
+                            </button>
+                            <button id="order-filter-cancelled" onclick="window.filterOrders('cancelled')" class="px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white text-xs font-medium rounded-lg transition-all whitespace-nowrap">
+                                Đã hủy
+                            </button>
+                        </div>
+                    </div>
                 </div>
                 <div class="overflow-x-auto">
                     <table class="w-full text-left">
@@ -256,7 +276,28 @@
 
             <!-- Orders Tab -->
             <div id="tab-orders" class="tab-content hidden space-y-6">
-                <h2 class="text-2xl font-bold">Lịch Sử Đơn Hàng</h2>
+                <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                    <h2 class="text-2xl font-bold">Lịch Sử Đơn Hàng</h2>
+                    
+                    <!-- Filter Buttons for Orders Tab -->
+                    <div class="flex items-center gap-2 p-1 bg-gray-100 dark:bg-white/5 rounded-lg overflow-x-auto">
+                        <button id="order-filter-all-tab" onclick="window.filterOrders('all')" class="px-4 py-2 bg-white dark:bg-background-dark text-gray-900 dark:text-white text-xs font-bold rounded-lg shadow-sm transition-all whitespace-nowrap">
+                            Tất cả
+                        </button>
+                        <button id="order-filter-pending-tab" onclick="window.filterOrders('pending')" class="px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white text-xs font-medium rounded-lg transition-all whitespace-nowrap">
+                            Chờ xử lý
+                        </button>
+                        <button id="order-filter-shipped-tab" onclick="window.filterOrders('shipped')" class="px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white text-xs font-medium rounded-lg transition-all whitespace-nowrap">
+                            Đang giao
+                        </button>
+                        <button id="order-filter-delivered-tab" onclick="window.filterOrders('delivered')" class="px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white text-xs font-medium rounded-lg transition-all whitespace-nowrap">
+                            Đã giao
+                        </button>
+                        <button id="order-filter-cancelled-tab" onclick="window.filterOrders('cancelled')" class="px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white text-xs font-medium rounded-lg transition-all whitespace-nowrap">
+                            Đã hủy
+                        </button>
+                    </div>
+                </div>
                 <div class="bg-white dark:bg-background-dark border border-gray-200 dark:border-white/10 rounded-xl shadow-sm overflow-hidden">
                     <div class="overflow-x-auto">
                         <table class="w-full text-left">
@@ -602,14 +643,14 @@
 
                 <!-- Action Buttons -->
                 <div class="flex gap-3 pt-4 border-t dark:border-white/10">
-                    <!-- Nút Đã Nhận Hàng - chỉ hiện khi status = shipped -->
-                    <button id="btn-confirm-received" class="flex-1 bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-xl transition-all flex items-center justify-center gap-2 hidden">
+                    <!-- Nút Đã Nhận Hàng - luôn hiển thị, disable khi chưa shipped -->
+                    <button id="btn-confirm-received" class="flex-1 px-6 py-3 rounded-lg transition-colors font-medium flex items-center justify-center gap-2">
                         <span class="material-symbols-outlined">task_alt</span>
                         <span>Đã Nhận Hàng</span>
                     </button>
                     
-                    <!-- Nút Hủy Đơn - ẩn khi status = shipped hoặc delivered -->
-                    <button id="btn-cancel-order" class="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold py-3 rounded-xl transition-all flex items-center justify-center gap-2 hidden">
+                    <!-- Nút Hủy Đơn - luôn hiển thị, disable khi shipped/delivered/cancelled -->
+                    <button id="btn-cancel-order" class="flex-1 px-6 py-3 rounded-lg transition-colors font-medium flex items-center justify-center gap-2">
                         <span class="material-symbols-outlined">cancel</span>
                         <span>Hủy Đơn Hàng</span>
                     </button>

@@ -27,6 +27,7 @@ let cloudinaryWidget = null;
 let unsubscribeProfile = null;
 let unsubscribeOrders = null;
 let allUserOrders = []; // Store all orders for quick access
+let currentOrderFilter = 'all'; // Current filter status
 
 // ============================================================================
 // INITIALIZATION
@@ -264,6 +265,21 @@ function renderUserProfile(userData) {
 }
 
 function renderOrderHistory(orders) {
+    console.log('🎨 Rendering orders with filter:', currentOrderFilter);
+    console.log('📊 Total orders before filter:', orders.length);
+    
+    // Apply current filter
+    let filteredOrders = orders;
+    if (currentOrderFilter !== 'all') {
+        if (currentOrderFilter === 'pending') {
+            // "Chờ xử lý" bao gồm cả pending và processing (legacy)
+            filteredOrders = orders.filter(order => order.status === 'pending' || order.status === 'processing');
+        } else {
+            filteredOrders = orders.filter(order => order.status === currentOrderFilter);
+        }
+        console.log(`✅ Filtered orders (${currentOrderFilter}):`, filteredOrders.length);
+    }
+    
     // Render to both summary table (Dashboard) and full table (Orders Tab)
     const summaryTbody = document.getElementById('orders-table-body');
     const fullTbody = document.getElementById('full-orders-table-body');
@@ -271,20 +287,23 @@ function renderOrderHistory(orders) {
     const renderTable = (tbody, isSummary) => {
         if (!tbody) return;
 
-        if (orders.length === 0) {
+        if (filteredOrders.length === 0) {
+            const emptyMessage = currentOrderFilter === 'all' 
+                ? 'Chưa có đơn hàng nào'
+                : `Không có đơn hàng ${getFilterLabel(currentOrderFilter)}`;
             tbody.innerHTML = `
                 <tr>
                     <td colspan="6" class="text-center py-12">
                         <span class="material-symbols-outlined text-6xl text-gray-300 mb-4">shopping_bag</span>
-                        <p class="text-gray-500 font-medium">Chưa có đơn hàng nào</p>
-                        <a href="Product.html" class="text-primary hover:underline text-sm mt-2 inline-block">Mua sắm ngay</a>
+                        <p class="text-gray-500 font-medium">${emptyMessage}</p>
+                        ${currentOrderFilter === 'all' ? '<a href="Product.html" class="text-primary hover:underline text-sm mt-2 inline-block">Mua sắm ngay</a>' : ''}
                     </td>
                 </tr>
             `;
             return;
         }
 
-        const ordersToRender = isSummary ? orders.slice(0, 5) : orders;
+        const ordersToRender = isSummary ? filteredOrders.slice(0, 5) : filteredOrders;
 
         tbody.innerHTML = ordersToRender.map(order => `
             <tr class="hover:bg-gray-50/50 dark:hover:bg-white/5 transition-colors">
@@ -801,12 +820,8 @@ function getStatusBadge(status) {
             class: 'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400'
         },
         'processing': {
-            text: 'Đang xử lý',
-            class: 'bg-primary/10 text-primary'
-        },
-        'shipping': {
-            text: 'Đang gửi',
-            class: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400'
+            text: 'Chờ xử lý',  // Hiển thị như pending
+            class: 'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400'
         },
         'shipped': {
             text: 'Đang giao hàng',
@@ -822,7 +837,7 @@ function getStatusBadge(status) {
         }
     };
 
-    const config = statusConfig[status] || statusConfig['processing'];
+    const config = statusConfig[status] || statusConfig['pending'];
     return `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold uppercase ${config.class}">${config.text}</span>`;
 }
 
@@ -894,19 +909,31 @@ function showOrderDetails(orderId) {
     const confirmBtn = document.getElementById('btn-confirm-received');
     const cancelBtn = document.getElementById('btn-cancel-order');
     
-    // Reset buttons
-    confirmBtn.classList.add('hidden');
-    cancelBtn.classList.add('hidden');
+    // Luôn hiển thị cả 2 nút
+    confirmBtn.classList.remove('hidden');
+    cancelBtn.classList.remove('hidden');
     
-    // Show buttons based on order status
+    // Nút "Đã nhận hàng" - chỉ enable khi status = 'shipped'
     if (order.status === 'shipped') {
-        // Đang giao hàng: Hiện nút "Đã nhận hàng", ẩn nút "Hủy đơn"
-        confirmBtn.classList.remove('hidden');
+        confirmBtn.disabled = false;
+        confirmBtn.className = 'flex-1 px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors font-medium';
         confirmBtn.onclick = () => confirmOrderReceived(orderId);
-    } else if (order.status !== 'delivered' && order.status !== 'cancelled') {
-        // Pending hoặc Processing: Hiện nút "Hủy đơn"
-        cancelBtn.classList.remove('hidden');
+    } else {
+        confirmBtn.disabled = true;
+        confirmBtn.className = 'flex-1 px-6 py-3 bg-gray-300 dark:bg-gray-600 text-gray-500 dark:text-gray-400 rounded-lg cursor-not-allowed font-medium';
+        confirmBtn.onclick = null;
+    }// pending hoặc processing đều cho phép hủy
+        
+    
+    // Nút "Hủy đơn hàng" - disable khi shipped/delivered/cancelled
+    if (order.status !== 'shipped' && order.status !== 'delivered' && order.status !== 'cancelled') {
+        cancelBtn.disabled = false;
+        cancelBtn.className = 'flex-1 px-6 py-3 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors font-medium';
         cancelBtn.onclick = () => cancelOrder(orderId);
+    } else {
+        cancelBtn.disabled = true;
+        cancelBtn.className = 'flex-1 px-6 py-3 bg-gray-300 dark:bg-gray-600 text-gray-500 dark:text-gray-400 rounded-lg cursor-not-allowed font-medium';
+        cancelBtn.onclick = null;
     }
 
     // Show modal
@@ -1006,6 +1033,56 @@ document.getElementById('close-order-modal')?.addEventListener('click', closeOrd
 
 // Make functions available globally
 window.showOrderDetails = showOrderDetails;
+window.filterOrders = filterOrders;
+
+// ============================================================================
+// ORDER FILTER FUNCTIONS
+// ============================================================================
+
+function filterOrders(status) {
+    console.log('🔍 Filter clicked:', status);
+    console.log('📦 Total orders:', allUserOrders.length);
+    console.log('📦 Orders data:', allUserOrders.map(o => ({ id: o.orderId, status: o.status })));
+    
+    currentOrderFilter = status;
+    
+    // Update UI - highlight active filter button in both Dashboard and Orders Tab
+    const filters = ['all', 'pending', 'shipped', 'delivered', 'cancelled'];
+    filters.forEach(filter => {
+        // Dashboard filter buttons
+        const btnDashboard = document.getElementById(`order-filter-${filter}`);
+        if (btnDashboard) {
+            if (filter === status) {
+                btnDashboard.className = 'px-4 py-2 bg-white dark:bg-background-dark text-gray-900 dark:text-white text-xs font-bold rounded-lg shadow-sm transition-all whitespace-nowrap';
+            } else {
+                btnDashboard.className = 'px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white text-xs font-medium rounded-lg transition-all whitespace-nowrap';
+            }
+        }
+        
+        // Orders Tab filter buttons
+        const btnTab = document.getElementById(`order-filter-${filter}-tab`);
+        if (btnTab) {
+            if (filter === status) {
+                btnTab.className = 'px-4 py-2 bg-white dark:bg-background-dark text-gray-900 dark:text-white text-xs font-bold rounded-lg shadow-sm transition-all whitespace-nowrap';
+            } else {
+                btnTab.className = 'px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white text-xs font-medium rounded-lg transition-all whitespace-nowrap';
+            }
+        }
+    });
+    
+    // Re-render orders with filter applied
+    renderOrderHistory(allUserOrders);
+}
+
+function getFilterLabel(status) {
+    const labels = {
+        'pending': 'chờ xử lý',
+        'shipped': 'đang giao',
+        'delivered': 'đã giao',
+        'cancelled': 'đã hủy'
+    };
+    return labels[status] || '';
+}
 
 // ============================================================================
 // HELPER FUNCTIONS

@@ -154,7 +154,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     subtotal: _currentTotal / (1 + TAX_RATE),
                     tax: _currentTotal - (_currentTotal / (1 + TAX_RATE)),
                     paymentMethod: paymentMethod === 'qr-transfer' ? 'QR Transfer' : 'COD',
-                    status: paymentMethod === 'qr-transfer' ? 'pending' : 'processing',
+                    status: 'pending', // Tất cả đơn mới đều là 'pending'
                     createdAt: Date.now(),
                     updatedAt: Date.now()
                 };
