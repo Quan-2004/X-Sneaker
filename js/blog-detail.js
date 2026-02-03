@@ -114,6 +114,16 @@ async function loadFeaturedProducts(limit = 2, blogData = null) {
 
 async function loadBlogCategories() {
     try {
+        // Use predefined categories that match admin blog modal
+        const predefinedCategories = [
+            'Phong cách',
+            'Xu hướng',
+            'Hướng dẫn',
+            'Review sản phẩm',
+            'Tin tức'
+        ];
+        
+        // Load blogs to count posts per category
         const blogsRef = ref(database, 'blogs');
         const snapshot = await get(blogsRef);
         
@@ -121,16 +131,24 @@ async function loadBlogCategories() {
             const blogsData = snapshot.val();
             const categoriesMap = {};
             
+            // Initialize all predefined categories with count 0
+            predefinedCategories.forEach(cat => {
+                categoriesMap[cat] = 0;
+            });
+            
+            // Count actual posts in each category
             Object.values(blogsData).forEach(blog => {
-                if (blog.category) {
+                if (blog.category && predefinedCategories.includes(blog.category)) {
                     categoriesMap[blog.category] = (categoriesMap[blog.category] || 0) + 1;
                 }
             });
             
-            const categories = Object.keys(categoriesMap).map(name => ({
-                name,
-                count: categoriesMap[name]
-            }));
+            const categories = predefinedCategories
+                .filter(name => categoriesMap[name] > 0) // Only show categories with posts
+                .map(name => ({
+                    name,
+                    count: categoriesMap[name]
+                }));
             
             console.log('✅ Loaded blog categories:', categories.length);
             return categories;

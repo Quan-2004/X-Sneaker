@@ -62,6 +62,70 @@ async function loadProductById(productId) {
 }
 
 /**
+ * Load featured products from a specific blog
+ */
+async function loadFeaturedProductsFromBlog(blogId, currentProductId, limit = 6) {
+    try {
+        // Load blog data
+        const blogRef = ref(database, `blogs/${blogId}`);
+        const blogSnapshot = await get(blogRef);
+        
+        if (!blogSnapshot.exists()) {
+            console.log('⚠️ Blog not found, loading random products');
+            return await loadRelatedProducts('', currentProductId, limit);
+        }
+        
+        const blogData = blogSnapshot.val();
+        
+        // Check if blog has featured products
+        if (!blogData.featuredProducts || blogData.featuredProducts.length === 0) {
+            console.log('⚠️ No featured products in blog, loading random products');
+            return await loadRelatedProducts('', currentProductId, limit);
+        }
+        
+        // Load all products
+        const productsRef = ref(database, 'products');
+        const productsSnapshot = await get(productsRef);
+        
+        if (!productsSnapshot.exists()) {
+            return [];
+        }
+        
+        const productsData = productsSnapshot.val();
+        
+        // Get featured products from blog (excluding current product)
+        const featuredProducts = blogData.featuredProducts
+            .filter(productId => productId !== currentProductId) // Exclude current product
+            .map(productId => {
+                const product = productsData[productId];
+                return product ? { id: productId, ...product } : null;
+            })
+            .filter(p => p !== null);
+        
+        // If we have enough featured products, return them
+        if (featuredProducts.length >= 3) {
+            console.log(`✅ Loaded ${featuredProducts.length} featured products from blog`);
+            return featuredProducts.slice(0, limit);
+        }
+        
+        // If not enough featured products, mix with random products
+        const allProducts = Object.keys(productsData)
+            .map(key => ({ id: key, ...productsData[key] }))
+            .filter(p => p.id !== currentProductId && !featuredProducts.find(fp => fp.id === p.id));
+        
+        const shuffled = allProducts.sort(() => 0.5 - Math.random());
+        const mixedProducts = [...featuredProducts, ...shuffled.slice(0, limit - featuredProducts.length)];
+        
+        console.log(`✅ Loaded ${featuredProducts.length} featured + ${mixedProducts.length - featuredProducts.length} random products`);
+        return mixedProducts.slice(0, limit);
+        
+    } catch (error) {
+        console.error('❌ Error loading featured products from blog:', error);
+        return await loadRelatedProducts('', currentProductId, limit);
+    }
+}
+
+/**
  * Load related products from same category
  */
 async function loadRelatedProducts(category, currentProductId, limit = 6) {
