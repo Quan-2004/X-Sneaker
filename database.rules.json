@@ -1,10 +1,10 @@
 {
   "rules": {
     "users": {
-      ".read": "auth != null && root.child('users').child(auth.uid).child('isAdmin').val() === true",
+      ".read": "auth != null && (root.child('users').child(auth.uid).child('isAdmin').val() === true || root.child('users').child(auth.uid).child('role').val() === 'admin')",
       "$uid": {
-        ".read": "auth != null && ($uid === auth.uid || root.child('users').child(auth.uid).child('isAdmin').val() === true)",
-        ".write": "auth != null && ($uid === auth.uid || root.child('users').child(auth.uid).child('isAdmin').val() === true)",
+        ".read": "auth != null && ($uid === auth.uid || root.child('users').child(auth.uid).child('isAdmin').val() === true || root.child('users').child(auth.uid).child('role').val() === 'admin')",
+        ".write": "auth != null && ($uid === auth.uid || root.child('users').child(auth.uid).child('isAdmin').val() === true || root.child('users').child(auth.uid).child('role').val() === 'admin')",
         "role": {
           ".write": "root.child('users').child(auth.uid).child('isAdmin').val() === true"
         },
@@ -26,15 +26,15 @@
       ".read": true,
       ".indexOn": ["category", "brand", "price", "createdAt", "isActive"],
       "$productId": {
-        ".write": "auth != null && root.child('users').child(auth.uid).child('isAdmin').val() === true"
+        ".write": "auth != null && (root.child('users').child(auth.uid).child('isAdmin').val() === true || root.child('users').child(auth.uid).child('role').val() === 'admin')"
       }
     },
     "orders": {
-      ".indexOn": ["userId", "status", "createdAt", "orderId"],
+      ".indexOn": ["userId", "userEmail", "status", "createdAt", "orderId"],
       ".read": "auth != null",
       "$orderId": {
-        ".read": "auth != null && (data.child('userId').val() === auth.uid || root.child('users').child(auth.uid).child('isAdmin').val() === true)",
-        ".write": "!data.exists() || (auth != null && (data.child('userId').val() === auth.uid || root.child('users').child(auth.uid).child('isAdmin').val() === true))"
+        ".read": "auth != null",
+        ".write": "auth != null && (root.child('users').child(auth.uid).child('role').val() === 'admin' || root.child('users').child(auth.uid).child('isAdmin').val() === true || !data.exists())"
       }
     },
     "cart": {
@@ -54,17 +54,17 @@
     },
     "categories": {
       ".read": true,
-      ".write": "auth != null && root.child('users').child(auth.uid).child('isAdmin').val() === true"
+      ".write": "auth != null && (root.child('users').child(auth.uid).child('isAdmin').val() === true || root.child('users').child(auth.uid).child('role').val() === 'admin')"
     },
     "brands": {
       ".read": true,
-      ".write": "auth != null && root.child('users').child(auth.uid).child('isAdmin').val() === true"
+      ".write": "auth != null && (root.child('users').child(auth.uid).child('isAdmin').val() === true || root.child('users').child(auth.uid).child('role').val() === 'admin')"
     },
     "blogs": {
       ".read": true,
       ".indexOn": ["category", "createdAt", "isPublished"],
       "$blogId": {
-        ".write": "auth != null && root.child('users').child(auth.uid).child('isAdmin').val() === true",
+        ".write": "auth != null && (root.child('users').child(auth.uid).child('isAdmin').val() === true || root.child('users').child(auth.uid).child('role').val() === 'admin')",
         "views": {
           ".write": true
         }
@@ -85,7 +85,7 @@
       "$productId": {
         ".indexOn": ["userId", "createdAt", "rating"],
         "$reviewId": {
-          ".write": "auth != null && (!data.exists() || data.child('userId').val() === auth.uid || root.child('users').child(auth.uid).child('isAdmin').val() === true)",
+          ".write": "auth != null && (!data.exists() || data.child('userId').val() === auth.uid || root.child('users').child(auth.uid).child('isAdmin').val() === true || root.child('users').child(auth.uid).child('role').val() === 'admin')",
           ".validate": "newData.hasChildren(['productId', 'userId', 'rating', 'comment', 'createdAt'])"
         }
       }
@@ -94,24 +94,24 @@
       ".read": true,
       ".indexOn": ["isActive", "startDate", "endDate"],
       "$promoId": {
-        ".write": "auth != null && root.child('users').child(auth.uid).child('isAdmin').val() === true"
+        ".write": "auth != null && (root.child('users').child(auth.uid).child('isAdmin').val() === true || root.child('users').child(auth.uid).child('role').val() === 'admin')"
       }
     },
     "banners": {
       ".read": true,
       ".indexOn": ["isActive", "position"],
       "$bannerId": {
-        ".write": "auth != null && root.child('users').child(auth.uid).child('isAdmin').val() === true"
+        ".write": "auth != null && (root.child('users').child(auth.uid).child('isAdmin').val() === true || root.child('users').child(auth.uid).child('role').val() === 'admin')"
       }
     },
     "settings": {
       ".read": true,
       "$settingKey": {
-        ".write": "auth != null && root.child('users').child(auth.uid).child('isAdmin').val() === true"
+        ".write": "auth != null && (root.child('users').child(auth.uid).child('isAdmin').val() === true || root.child('users').child(auth.uid).child('role').val() === 'admin')"
       }
     },
     "contact-submissions": {
-      ".read": "auth != null && root.child('users').child(auth.uid).child('isAdmin').val() === true",
+      ".read": "auth != null && (root.child('users').child(auth.uid).child('isAdmin').val() === true || root.child('users').child(auth.uid).child('role').val() === 'admin')",
       ".indexOn": ["createdAt", "status"],
       "$submissionId": {
         ".write": "!data.exists()",
@@ -119,7 +119,7 @@
       }
     },
     "newsletters": {
-      ".read": "auth != null && root.child('users').child(auth.uid).child('isAdmin').val() === true",
+      ".read": "auth != null && (root.child('users').child(auth.uid).child('isAdmin').val() === true || root.child('users').child(auth.uid).child('role').val() === 'admin')",
       ".indexOn": ["subscribedAt"],
       "$subscriberId": {
         ".write": "!data.exists()",
@@ -127,8 +127,8 @@
       }
     },
     "analytics": {
-      ".read": "auth != null && root.child('users').child(auth.uid).child('isAdmin').val() === true",
-      ".write": "auth != null && root.child('users').child(auth.uid).child('isAdmin').val() === true"
+      ".read": "auth != null && (root.child('users').child(auth.uid).child('isAdmin').val() === true || root.child('users').child(auth.uid).child('role').val() === 'admin')",
+      ".write": "auth != null && (root.child('users').child(auth.uid).child('isAdmin').val() === true || root.child('users').child(auth.uid).child('role').val() === 'admin')"
     }
   }
 }

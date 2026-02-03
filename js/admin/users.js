@@ -3,12 +3,22 @@ import { ref, onValue, update, remove, get } from "https://www.gstatic.com/fireb
 
 const db = getFirebaseDatabase();
 const usersRef = ref(db, 'users');
-const tableBody = document.getElementById('users-table-body');
 
 let currentUsers = {};
 let isCurrentUserAdmin = false;
 
+// Helper function to get table body element safely
+function getTableBody() {
+    return document.getElementById('users-table-body');
+}
+
 function renderTable(users) {
+    const tableBody = getTableBody();
+    if (!tableBody) {
+        console.warn('Users table body not found in DOM');
+        return;
+    }
+    
     tableBody.innerHTML = '';
     
     if (!users) {
@@ -69,6 +79,12 @@ import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.8.0/fi
 function initUsers() {
     const auth = getFirebaseAuth();
     onAuthStateChanged(auth, async (user) => {
+        const tableBody = getTableBody();
+        if (!tableBody) {
+            console.warn('Users table not ready yet');
+            return;
+        }
+        
         if (user) {
             // Check if current user is admin
             const currentUserRef = ref(db, `users/${user.uid}`);
@@ -93,7 +109,10 @@ function initUsers() {
                 renderTable(users);
             }, (error) => {
                 console.error('Error fetching users:', error);
-                tableBody.innerHTML = `<tr><td colspan="5" class="text-center py-4 text-red-500">❌ Error: ${error.message}<br><small>Check Firebase Rules</small></td></tr>`;
+                const tb = getTableBody();
+                if (tb) {
+                    tb.innerHTML = `<tr><td colspan="5" class="text-center py-4 text-red-500">❌ Error: ${error.message}<br><small>Check Firebase Rules</small></td></tr>`;
+                }
             });
         } else {
             tableBody.innerHTML = `<tr><td colspan="5" class="text-center py-4 text-gray-500">Please login to continue</td></tr>`;

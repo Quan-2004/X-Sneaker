@@ -428,10 +428,13 @@
 
                 <!-- Create Order Modal -->
                 <div id="create-order-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-                    <div class="bg-white dark:bg-card-dark rounded-2xl w-full max-w-4xl shadow-2xl max-h-[90vh] flex flex-col">
+                    <div class="bg-white dark:bg-card-dark rounded-2xl w-full max-w-6xl shadow-2xl max-h-[90vh] flex flex-col">
                         <!-- Header -->
                         <div class="p-6 border-b border-slate-100 dark:border-border-dark flex items-center justify-between">
-                            <h3 class="text-xl font-bold text-slate-900 dark:text-white">Tạo Đơn Hàng Mới</h3>
+                            <div>
+                                <h3 class="text-xl font-bold text-slate-900 dark:text-white">Tạo Đơn Hàng Mới</h3>
+                                <p class="text-sm text-slate-500 mt-1">Nhập thông tin khách hàng và chọn sản phẩm</p>
+                            </div>
                             <button onclick="window.ordersModule.closeCreateModal()" class="p-2 text-slate-400 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-500/10 rounded-full transition-all">
                                 <span class="material-symbols-rounded">close</span>
                             </button>
@@ -439,65 +442,158 @@
 
                         <!-- Content -->
                         <div class="flex-1 overflow-y-auto p-6">
-                            <form id="create-order-form" class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                                <!-- Left Column: Customer Info -->
-                                <div class="space-y-6">
-                                    <div class="flex items-center justify-between">
+                            <form id="create-order-form" class="space-y-8">
+                                <!-- Customer Information Section -->
+                                <div class="bg-slate-50/50 dark:bg-white/[0.02] rounded-xl p-6 border border-slate-100 dark:border-border-dark">
+                                    <div class="flex items-center gap-2 mb-6">
+                                        <span class="material-symbols-rounded text-primary">person</span>
                                         <h4 class="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider">Thông tin khách hàng</h4>
-                                        <!-- Optional: Button to select existing user -->
                                     </div>
                                     
-                                    <div class="space-y-4">
+                                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                                         <div>
-                                            <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Họ tên</label>
-                                            <input type="text" id="new-order-name" required class="w-full px-4 py-2 bg-slate-50 dark:bg-background-dark border border-slate-200 dark:border-border-dark rounded-xl text-sm" placeholder="Nhập tên khách hàng">
+                                            <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">
+                                                Họ và tên <span class="text-red-500">*</span>
+                                            </label>
+                                            <input type="text" id="new-order-fullname" required 
+                                                class="w-full px-4 py-2.5 bg-white dark:bg-background-dark border border-slate-200 dark:border-border-dark rounded-xl text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all" 
+                                                placeholder="VD: Nguyễn Văn A">
                                         </div>
+                                        
                                         <div>
-                                            <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Số điện thoại</label>
-                                            <input type="tel" id="new-order-phone" required class="w-full px-4 py-2 bg-slate-50 dark:bg-background-dark border border-slate-200 dark:border-border-dark rounded-xl text-sm" placeholder="Nhập số điện thoại">
+                                            <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">
+                                                Email <span class="text-red-500">*</span>
+                                            </label>
+                                            <input type="email" id="new-order-email" required 
+                                                class="w-full px-4 py-2.5 bg-white dark:bg-background-dark border border-slate-200 dark:border-border-dark rounded-xl text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all" 
+                                                placeholder="email@example.com">
                                         </div>
+                                        
                                         <div>
-                                            <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Địa chỉ giao hàng</label>
-                                            <textarea id="new-order-address" required rows="3" class="w-full px-4 py-2 bg-slate-50 dark:bg-background-dark border border-slate-200 dark:border-border-dark rounded-xl text-sm" placeholder="Nhập địa chỉ chi tiết"></textarea>
+                                            <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">
+                                                Số điện thoại <span class="text-red-500">*</span>
+                                            </label>
+                                            <input type="tel" id="new-order-phone" required 
+                                                class="w-full px-4 py-2.5 bg-white dark:bg-background-dark border border-slate-200 dark:border-border-dark rounded-xl text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all" 
+                                                placeholder="0901234567">
                                         </div>
+                                        
+                                        <div class="md:col-span-2">
+                                            <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">
+                                                Địa chỉ <span class="text-red-500">*</span>
+                                            </label>
+                                            <input type="text" id="new-order-address" required 
+                                                class="w-full px-4 py-2.5 bg-white dark:bg-background-dark border border-slate-200 dark:border-border-dark rounded-xl text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all" 
+                                                placeholder="Số nhà, tên đường">
+                                        </div>
+                                        
                                         <div>
-                                            <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Phương thức thanh toán</label>
-                                            <select id="new-order-payment" class="w-full px-4 py-2 bg-slate-50 dark:bg-background-dark border border-slate-200 dark:border-border-dark rounded-xl text-sm">
-                                                <option value="COD">Thanh toán khi nhận hàng (COD)</option>
-                                                <option value="Banking">Chuyển khoản ngân hàng</option>
-                                            </select>
+                                            <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">
+                                                Thành phố <span class="text-red-500">*</span>
+                                            </label>
+                                            <input type="text" id="new-order-city" required 
+                                                class="w-full px-4 py-2.5 bg-white dark:bg-background-dark border border-slate-200 dark:border-border-dark rounded-xl text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all" 
+                                                placeholder="VD: TP.HCM">
                                         </div>
                                     </div>
                                 </div>
 
-                                <!-- Right Column: Products -->
-                                <div class="space-y-6">
-                                    <h4 class="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider">Sản phẩm</h4>
-                                    
-                                    <!-- Product Search -->
-                                    <div class="relative">
-                                        <input type="text" id="product-search" class="w-full px-4 py-2 pl-10 bg-slate-50 dark:bg-background-dark border border-slate-200 dark:border-border-dark rounded-xl text-sm" placeholder="Tìm kiếm sản phẩm...">
-                                        <span class="material-symbols-rounded absolute left-3 top-2.5 text-slate-400 text-[18px]">search</span>
-                                        <!-- Dropdown results -->
-                                        <div id="product-search-results" class="absolute left-0 right-0 top-full mt-1 bg-white dark:bg-card-dark border border-slate-200 dark:border-border-dark rounded-xl shadow-xl z-20 hidden max-h-60 overflow-y-auto">
-                                            <!-- Dynamic Items -->
+                                <!-- Order Details Section -->
+                                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                                    <!-- Products Selection (Left - 2 columns) -->
+                                    <div class="lg:col-span-2 space-y-4">
+                                        <div class="flex items-center gap-2">
+                                            <span class="material-symbols-rounded text-primary">shopping_bag</span>
+                                            <h4 class="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider">Sản phẩm</h4>
+                                        </div>
+                                        
+                                        <!-- Product Search -->
+                                        <div class="relative">
+                                            <input type="text" id="product-search" 
+                                                class="w-full px-4 py-3 pl-11 bg-white dark:bg-background-dark border border-slate-200 dark:border-border-dark rounded-xl text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all" 
+                                                placeholder="Tìm kiếm sản phẩm theo tên hoặc mã...">
+                                            <span class="material-symbols-rounded absolute left-3 top-3 text-slate-400 text-[20px]">search</span>
+                                            
+                                            <!-- Search Results Dropdown -->
+                                            <div id="product-search-results" class="absolute left-0 right-0 top-full mt-2 bg-white dark:bg-card-dark border border-slate-200 dark:border-border-dark rounded-xl shadow-xl z-20 hidden max-h-80 overflow-y-auto">
+                                                <!-- Dynamic search results will be inserted here -->
+                                            </div>
+                                        </div>
+
+                                        <!-- Selected Products List -->
+                                        <div class="border border-slate-200 dark:border-border-dark rounded-xl bg-white dark:bg-card-dark">
+                                            <div id="selected-products-list" class="divide-y divide-slate-100 dark:divide-border-dark min-h-[200px] max-h-[400px] overflow-y-auto">
+                                                <!-- Empty state -->
+                                                <div id="empty-products-state" class="p-12 text-center text-slate-400">
+                                                    <span class="material-symbols-rounded text-5xl opacity-20 block mb-3">shopping_cart</span>
+                                                    <p class="text-sm font-medium">Chưa có sản phẩm nào</p>
+                                                    <p class="text-xs mt-1">Tìm kiếm và thêm sản phẩm vào đơn hàng</p>
+                                                </div>
+                                                <!-- Dynamic product items will be inserted here -->
+                                            </div>
                                         </div>
                                     </div>
 
-                                    <!-- Selected Items List -->
-                                    <div class="border border-slate-100 dark:border-border-dark rounded-xl bg-slate-50/50 dark:bg-white/[0.02]">
-                                        <div id="selected-products-list" class="divide-y divide-slate-100 dark:divide-border-dark max-h-[300px] overflow-y-auto">
-                                            <div class="p-8 text-center text-slate-400">
-                                                <span class="material-symbols-rounded text-4xl opacity-20 block mb-2">shopping_cart</span>
-                                                Chưa có sản phẩm nào
-                                            </div>
+                                    <!-- Order Summary (Right - 1 column) -->
+                                    <div class="space-y-4">
+                                        <div class="flex items-center gap-2">
+                                            <span class="material-symbols-rounded text-primary">receipt_long</span>
+                                            <h4 class="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider">Tổng quan</h4>
                                         </div>
                                         
-                                        <!-- Totals -->
-                                        <div class="p-4 border-t border-slate-100 dark:border-border-dark bg-white dark:bg-card-dark rounded-b-xl">
-                                            <div class="flex justify-between items-center text-sm font-bold text-slate-900 dark:text-white">
-                                                <span>Tổng tiền:</span>
-                                                <span id="new-order-total" class="text-xl text-primary">0đ</span>
+                                        <div class="bg-slate-50/50 dark:bg-white/[0.02] rounded-xl p-5 border border-slate-100 dark:border-border-dark space-y-4">
+                                            <!-- Payment Method -->
+                                            <div>
+                                                <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">
+                                                    Thanh toán <span class="text-red-500">*</span>
+                                                </label>
+                                                <select id="new-order-payment" required
+                                                    class="w-full px-4 py-2.5 bg-white dark:bg-background-dark border border-slate-200 dark:border-border-dark rounded-xl text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all">
+                                                    <option value="COD">Thanh toán khi nhận hàng (COD)</option>
+                                                    <option value="Banking">Chuyển khoản ngân hàng</option>
+                                                    <option value="VNPay">VNPay</option>
+                                                    <option value="Momo">Ví MoMo</option>
+                                                </select>
+                                            </div>
+
+                                            <!-- Order Status -->
+                                            <div>
+                                                <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">
+                                                    Trạng thái <span class="text-red-500">*</span>
+                                                </label>
+                                                <select id="new-order-status" required
+                                                    class="w-full px-4 py-2.5 bg-white dark:bg-background-dark border border-slate-200 dark:border-border-dark rounded-xl text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all">
+                                                    <option value="pending">Chờ xử lý</option>
+                                                    <option value="processing" selected>Đang xử lý</option>
+                                                    <option value="confirmed">Đã xác nhận</option>
+                                                    <option value="shipping">Đang giao hàng</option>
+                                                    <option value="delivered">Đã giao hàng</option>
+                                                    <option value="cancelled">Đã hủy</option>
+                                                </select>
+                                            </div>
+
+                                            <!-- Price Breakdown -->
+                                            <div class="pt-4 border-t border-slate-200 dark:border-border-dark space-y-3">
+                                                <div class="flex justify-between items-center text-sm">
+                                                    <span class="text-slate-600 dark:text-slate-400">Tạm tính:</span>
+                                                    <span id="new-order-subtotal" class="font-semibold text-slate-900 dark:text-white">0đ</span>
+                                                </div>
+                                                <div class="flex justify-between items-center text-sm">
+                                                    <span class="text-slate-600 dark:text-slate-400">Thuế (8%):</span>
+                                                    <span id="new-order-tax" class="font-semibold text-slate-900 dark:text-white">0đ</span>
+                                                </div>
+                                                <div class="pt-3 border-t border-slate-200 dark:border-border-dark flex justify-between items-center">
+                                                    <span class="text-sm font-bold text-slate-900 dark:text-white">Tổng cộng:</span>
+                                                    <span id="new-order-total" class="text-2xl font-bold text-primary">0đ</span>
+                                                </div>
+                                            </div>
+
+                                            <!-- Items Count -->
+                                            <div class="pt-3 border-t border-slate-200 dark:border-border-dark">
+                                                <div class="flex items-center gap-2 text-xs text-slate-500">
+                                                    <span class="material-symbols-rounded text-[16px]">inventory_2</span>
+                                                    <span>Số lượng sản phẩm: <span id="new-order-items-count" class="font-semibold text-slate-700 dark:text-slate-300">0</span></span>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -506,11 +602,22 @@
                         </div>
 
                         <!-- Footer -->
-                        <div class="p-6 border-t border-slate-100 dark:border-border-dark flex justify-end gap-3">
-                            <button onclick="window.ordersModule.closeCreateModal()" class="px-6 py-2.5 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-xl text-sm font-bold hover:bg-slate-200 dark:hover:bg-slate-700 transition-all">Hủy</button>
-                            <button onclick="window.ordersModule.saveOrder()" class="px-6 py-2.5 bg-primary hover:bg-primary-600 text-white rounded-xl text-sm font-bold shadow-lg shadow-primary/25 hover:shadow-primary/40 active:scale-95 transition-all">
-                                Tạo Đơn Hàng
-                            </button>
+                        <div class="p-6 border-t border-slate-100 dark:border-border-dark flex justify-between items-center bg-slate-50/50 dark:bg-white/[0.02]">
+                            <div class="text-sm text-slate-500">
+                                <span class="material-symbols-rounded text-[16px] align-middle">info</span>
+                                <span class="align-middle ml-1">Vui lòng kiểm tra kỹ thông tin trước khi tạo đơn</span>
+                            </div>
+                            <div class="flex gap-3">
+                                <button type="button" onclick="window.ordersModule.closeCreateModal()" 
+                                    class="px-6 py-2.5 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-xl text-sm font-bold hover:bg-slate-200 dark:hover:bg-slate-700 transition-all">
+                                    Hủy
+                                </button>
+                                <button type="button" onclick="window.ordersModule.saveOrder()" 
+                                    class="px-8 py-2.5 bg-primary hover:bg-primary-600 text-white rounded-xl text-sm font-bold shadow-lg shadow-primary/25 hover:shadow-primary/40 active:scale-95 transition-all flex items-center gap-2">
+                                    <span class="material-symbols-rounded text-[20px]">add_shopping_cart</span>
+                                    <span>Tạo Đơn Hàng</span>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>

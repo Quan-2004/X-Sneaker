@@ -533,9 +533,9 @@ function createOrder() {
     if (!modal) return;
     
     // Reset form
-    document.getElementById('create-order-form').reset();
+    const form = document.getElementById('create-order-form');
+    if (form) form.reset();
     selectedItems = [];
-    renderSelectedItems();
     
     // Load products for search (cached)
     // In a real app we might want to fetch fresh, but rely on caching for now or fetch if empty
@@ -553,9 +553,15 @@ function createOrder() {
     modal.classList.remove('hidden');
     modal.classList.add('flex');
     
+    // Render empty state
+    renderSelectedItems();
+    
     // Setup Search Listener
     const searchInput = document.getElementById('product-search');
-    searchInput.oninput = handleProductSearch;
+    if (searchInput) {
+        searchInput.value = '';
+        searchInput.oninput = handleProductSearch;
+    }
 }
 
 function closeCreateModal() {
@@ -564,6 +570,21 @@ function closeCreateModal() {
         modal.classList.add('hidden');
         modal.classList.remove('flex');
     }
+    
+    // Reset form
+    const form = document.getElementById('create-order-form');
+    if (form) form.reset();
+    
+    // Clear selected items
+    selectedItems = [];
+    renderSelectedItems();
+    
+    // Clear search
+    const searchInput = document.getElementById('product-search');
+    if (searchInput) searchInput.value = '';
+    
+    const searchResults = document.getElementById('product-search-results');
+    if (searchResults) searchResults.classList.add('hidden');
 }
 
 /**
@@ -584,19 +605,35 @@ function handleProductSearch(e) {
     ).slice(0, 5); // Limit 5
 
     if (matches.length > 0) {
-        resultsContainer.innerHTML = matches.map(([id, p]) => `
-            <div class="p-3 hover:bg-slate-50 dark:hover:bg-white/5 cursor-pointer flex items-center gap-3 border-b border-slate-50 last:border-0"
-                 onclick="window.ordersModule.addProductToOrder('${id}')">
-                <div class="w-10 h-10 bg-slate-100 rounded overflow-hidden">
-                    ${p.image ? `<img src="${p.image}" class="w-full h-full object-cover">` : ''}
+        resultsContainer.innerHTML = matches.map(([id, p]) => {
+            // Get product image safely
+            let imgSrc = '';
+            if (p.images && p.images.length > 0) {
+                imgSrc = p.images[0];
+            } else if (p.image) {
+                imgSrc = p.image;
+            } else if (p.colorImages) {
+                const firstColor = Object.keys(p.colorImages)[0];
+                if (firstColor && p.colorImages[firstColor].length > 0) {
+                    imgSrc = p.colorImages[firstColor][0];
+                }
+            }
+            
+            return `
+                <div class="p-3 hover:bg-slate-50 dark:hover:bg-white/5 cursor-pointer flex items-center gap-3 border-b border-slate-50 last:border-0"
+                     onclick="window.ordersModule.addProductToOrder('${id}')">
+                    <div class="w-10 h-10 bg-slate-100 dark:bg-slate-800 rounded overflow-hidden flex items-center justify-center">
+                        ${imgSrc ? `<img src="${imgSrc}" class="w-full h-full object-cover" alt="${p.name || ''}">` : 
+                        `<span class="material-symbols-rounded text-slate-400 text-[20px]">image</span>`}
+                    </div>
+                    <div class="flex-1">
+                        <p class="text-sm font-bold text-slate-900 dark:text-white">${p.name || 'Sản phẩm'}</p>
+                        <p class="text-xs text-slate-500">${formatCurrency(p.price || 0)}</p>
+                    </div>
+                    <button class="text-primary text-sm font-bold">Thêm</button>
                 </div>
-                <div class="flex-1">
-                    <p class="text-sm font-bold text-slate-900 dark:text-white">${p.name}</p>
-                    <p class="text-xs text-slate-500">${formatCurrency(p.price)}</p>
-                </div>
-                <button class="text-primary text-sm font-bold">Thêm</button>
-            </div>
-        `).join('');
+            `;
+        }).join('');
         resultsContainer.classList.remove('hidden');
     } else {
         resultsContainer.innerHTML = '<div class="p-3 text-sm text-slate-500 text-center">Không tìm thấy sản phẩm</div>';
@@ -615,12 +652,27 @@ function addProductToOrder(productId) {
     if (existing) {
         existing.quantity += 1;
     } else {
+        // Get the first image from images array or colorImages, fallback to empty string
+        let productImage = '';
+        if (product.images && product.images.length > 0) {
+            productImage = product.images[0];
+        } else if (product.image) {
+            productImage = product.image;
+        } else if (product.colorImages) {
+            const firstColor = Object.keys(product.colorImages)[0];
+            if (firstColor && product.colorImages[firstColor].length > 0) {
+                productImage = product.colorImages[firstColor][0];
+            }
+        }
+        
         selectedItems.push({
             id: productId,
-            name: product.name,
-            price: product.price,
-            image: product.image,
-            quantity: 1
+            name: product.name || 'Sản phẩm',
+            price: product.price || 0,
+            image: productImage,
+            quantity: 1,
+            color: product.colors && product.colors.length > 0 ? product.colors[0] : '',
+            size: product.sizes && product.sizes.length > 0 ? product.sizes[0].toString() : ''
         });
     }
 
@@ -654,58 +706,104 @@ function updateItemQuantity(index, change) {
  */
 function renderSelectedItems() {
     const container = document.getElementById('selected-products-list');
+    const emptyState = document.getElementById('empty-products-state');
+    const subtotalEl = document.getElementById('new-order-subtotal');
+    const taxEl = document.getElementById('new-order-tax');
     const totalEl = document.getElementById('new-order-total');
+    const itemsCountEl = document.getElementById('new-order-items-count');
     
     if (selectedItems.length === 0) {
-        container.innerHTML = `
-            <div class="p-8 text-center text-slate-400">
-                <span class="material-symbols-rounded text-4xl opacity-20 block mb-2">shopping_cart</span>
-                Chưa có sản phẩm nào
-            </div>
-        `;
-        totalEl.textContent = '0đ';
+        if (emptyState) {
+            emptyState.style.display = 'block';
+        }
+        container.querySelectorAll('.product-item').forEach(el => el.remove());
+        
+        if (subtotalEl) subtotalEl.textContent = '0đ';
+        if (taxEl) taxEl.textContent = '0đ';
+        if (totalEl) totalEl.textContent = '0đ';
+        if (itemsCountEl) itemsCountEl.textContent = '0';
         return;
     }
 
-    let total = 0;
-    container.innerHTML = selectedItems.map((item, index) => {
+    // Hide empty state
+    if (emptyState) {
+        emptyState.style.display = 'none';
+    }
+
+    // Calculate totals
+    let subtotal = 0;
+    const totalItems = selectedItems.reduce((sum, item) => sum + item.quantity, 0);
+    
+    // Render items
+    const itemsHTML = selectedItems.map((item, index) => {
         const itemTotal = item.price * item.quantity;
-        total += itemTotal;
+        subtotal += itemTotal;
         return `
-            <div class="p-4 flex items-center gap-4">
-                <div class="w-12 h-12 bg-slate-100 rounded-lg overflow-hidden">
-                    ${item.image ? `<img src="${item.image}" class="w-full h-full object-cover">` : ''}
+            <div class="product-item p-4 flex items-center gap-4 hover:bg-slate-50/50 dark:hover:bg-white/[0.02] transition-colors">
+                <div class="w-16 h-16 bg-slate-100 dark:bg-slate-800 rounded-lg overflow-hidden flex-shrink-0">
+                    ${item.image ? `<img src="${item.image}" class="w-full h-full object-cover" alt="${item.name}">` : 
+                    `<div class="w-full h-full flex items-center justify-center text-slate-400">
+                        <span class="material-symbols-rounded">image</span>
+                    </div>`}
                 </div>
-                <div class="flex-1">
-                    <p class="text-sm font-bold text-slate-900 dark:text-white">${item.name}</p>
-                    <p class="text-xs text-slate-500">${formatCurrency(item.price)}</p>
+                <div class="flex-1 min-w-0">
+                    <p class="text-sm font-bold text-slate-900 dark:text-white truncate">${item.name}</p>
+                    <p class="text-xs text-slate-500 mt-0.5">${formatCurrency(item.price)} × ${item.quantity}</p>
+                    ${item.color ? `<p class="text-xs text-slate-400 mt-0.5">Màu: ${item.color}</p>` : ''}
+                    ${item.size ? `<p class="text-xs text-slate-400">Size: ${item.size}</p>` : ''}
                 </div>
-                <div class="flex items-center gap-2">
-                    <button onclick="window.ordersModule.updateItemQuantity(${index}, -1)" class="w-6 h-6 rounded bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center">-</button>
-                    <span class="text-sm font-bold w-4 text-center">${item.quantity}</span>
-                    <button onclick="window.ordersModule.updateItemQuantity(${index}, 1)" class="w-6 h-6 rounded bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center">+</button>
+                <div class="flex items-center gap-2 flex-shrink-0">
+                    <button onclick="window.ordersModule.updateItemQuantity(${index}, -1)" 
+                        class="w-7 h-7 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 flex items-center justify-center transition-all active:scale-95">
+                        <span class="material-symbols-rounded text-[16px]">remove</span>
+                    </button>
+                    <span class="text-sm font-bold w-8 text-center text-slate-900 dark:text-white">${item.quantity}</span>
+                    <button onclick="window.ordersModule.updateItemQuantity(${index}, 1)" 
+                        class="w-7 h-7 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 flex items-center justify-center transition-all active:scale-95">
+                        <span class="material-symbols-rounded text-[16px]">add</span>
+                    </button>
                 </div>
-                <div class="text-right">
+                <div class="text-right flex-shrink-0 w-24">
                     <p class="text-sm font-bold text-primary">${formatCurrency(itemTotal)}</p>
-                    <button onclick="window.ordersModule.removeProductFromOrder(${index})" class="text-xs text-rose-500 hover:underline mt-1">Xóa</button>
+                    <button onclick="window.ordersModule.removeProductFromOrder(${index})" 
+                        class="text-xs text-rose-500 hover:text-rose-600 hover:underline mt-1 transition-colors">
+                        Xóa
+                    </button>
                 </div>
             </div>
         `;
     }).join('');
 
-    totalEl.textContent = formatCurrency(total);
+    // Remove old items and insert new ones
+    container.querySelectorAll('.product-item').forEach(el => el.remove());
+    container.insertAdjacentHTML('beforeend', itemsHTML);
+
+    // Calculate tax and total
+    const tax = Math.round(subtotal * 0.08); // 8% tax
+    const total = subtotal + tax;
+
+    // Update summary
+    if (subtotalEl) subtotalEl.textContent = formatCurrency(subtotal);
+    if (taxEl) taxEl.textContent = formatCurrency(tax);
+    if (totalEl) totalEl.textContent = formatCurrency(total);
+    if (itemsCountEl) itemsCountEl.textContent = totalItems;
 }
 
 /**
  * Save New Order
  */
 async function saveOrder() {
-    const name = document.getElementById('new-order-name').value;
-    const phone = document.getElementById('new-order-phone').value;
-    const address = document.getElementById('new-order-address').value;
-    const payment = document.getElementById('new-order-payment').value;
+    // Get all form values with new IDs
+    const fullname = document.getElementById('new-order-fullname')?.value.trim();
+    const email = document.getElementById('new-order-email')?.value.trim();
+    const phone = document.getElementById('new-order-phone')?.value.trim();
+    const address = document.getElementById('new-order-address')?.value.trim();
+    const city = document.getElementById('new-order-city')?.value.trim();
+    const payment = document.getElementById('new-order-payment')?.value;
+    const status = document.getElementById('new-order-status')?.value || 'processing';
 
-    if (!name || !phone || !address) {
+    // Validation
+    if (!fullname || !email || !phone || !address || !city) {
         alert('Vui lòng điền đầy đủ thông tin khách hàng!');
         return;
     }
@@ -720,19 +818,47 @@ async function saveOrder() {
     // Need `push` function. 
     // Re-importing to be safe/dynamic since this file is module based
     const { ref, push } = await import("https://www.gstatic.com/firebasejs/12.8.0/firebase-database.js");
+    
+    // Get current user ID
+    const { getFirebaseAuth } = await import('../firebase-config.js');
+    const auth = getFirebaseAuth();
+    const currentUser = auth.currentUser;
 
-    const total = selectedItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    // Calculate totals
+    const subtotal = selectedItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    const tax = Math.round(subtotal * 0.08); // 8% tax
+    const total = subtotal + tax;
+    
+    // Clean items data - ensure no undefined values
+    const cleanedItems = selectedItems.map(item => ({
+        id: item.id || '',
+        name: item.name || 'Sản phẩm',
+        price: item.price || 0,
+        quantity: item.quantity || 1,
+        image: item.image || '',
+        color: item.color || '',
+        size: item.size || ''
+    }));
     
     const newOrder = {
-        customerName: name,
-        customerPhone: phone,
-        shippingAddress: address,
+        customerInfo: {
+            fullname: fullname,
+            email: email,
+            phone: phone,
+            address: address,
+            city: city
+        },
         paymentMethod: payment,
-        status: 'processing',
-        items: selectedItems,
+        status: status,
+        items: cleanedItems,
+        subtotal: subtotal,
+        tax: tax,
         total: total,
         createdAt: Date.now(),
-        orderId: 'ORD-' + Date.now().toString().slice(-6)
+        updatedAt: Date.now(),
+        orderId: 'ORD-' + Date.now(),
+        userEmail: email,
+        userId: currentUser ? currentUser.uid : '' // Add userId for Firebase rules
     };
 
     try {
