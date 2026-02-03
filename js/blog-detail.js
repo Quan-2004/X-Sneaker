@@ -71,24 +71,41 @@ async function loadRelatedBlogs(category, currentBlogId, limit = 3) {
     }
 }
 
-async function loadFeaturedProducts(limit = 2) {
+async function loadFeaturedProducts(limit = 2, blogData = null) {
     try {
         const productsRef = ref(database, 'products');
         const snapshot = await get(productsRef);
         
-        if (snapshot.exists()) {
-            const productsData = snapshot.val();
-            const featuredProducts = Object.keys(productsData)
-                .map(key => ({ id: key, ...productsData[key] }))
-                .filter(product => product.featured || product.bestseller)
-                .sort((a, b) => (b.sales || 0) - (a.sales || 0))
+        if (!snapshot.exists()) {
+            return [];
+        }
+        
+        const productsData = snapshot.val();
+        
+        // If blog has featured products, load those first
+        if (blogData && blogData.featuredProducts && blogData.featuredProducts.length > 0) {
+            const featuredProducts = blogData.featuredProducts
+                .map(productId => {
+                    const product = productsData[productId];
+                    return product ? { id: productId, ...product } : null;
+                })
+                .filter(p => p !== null)
                 .slice(0, limit);
             
-            console.log('✅ Loaded featured products:', featuredProducts.length);
+            console.log('✅ Loaded blog featured products:', featuredProducts.length);
             return featuredProducts;
         }
         
-        return [];
+        // Otherwise, load general featured/bestseller products
+        const featuredProducts = Object.keys(productsData)
+            .map(key => ({ id: key, ...productsData[key] }))
+            .filter(product => product.featured || product.bestseller)
+            .sort((a, b) => (b.sales || 0) - (a.sales || 0))
+            .slice(0, limit);
+        
+        console.log('✅ Loaded featured products:', featuredProducts.length);
+        return featuredProducts;
+        
     } catch (error) {
         console.error('❌ Error loading featured products:', error);
         return [];
@@ -480,7 +497,7 @@ async function init() {
     
     // Load and render sidebar sections concurrently
     const [products, categories, popularBlogs] = await Promise.all([
-        loadFeaturedProducts(2),
+        loadFeaturedProducts(2, blog), // Pass blog data to load featured products
         loadBlogCategories(),
         loadPopularBlogs(blogId, 3)
     ]);

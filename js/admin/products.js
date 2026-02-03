@@ -172,18 +172,31 @@ function renderTable(products) {
                  ${statusHtml}
             </td>
             <td class="px-6 py-4 text-right">
-                <button class="p-2 text-slate-400 hover:text-primary transition-colors btn-edit" data-id="${product.id}">
-                    <span class="material-symbols-rounded text-[20px]">edit</span>
-                </button>
-                <button class="p-2 text-slate-400 hover:text-primary transition-colors btn-delete" data-id="${product.id}">
-                    <span class="material-symbols-rounded text-[20px]">delete</span>
-                </button>
+                <div class="flex items-center justify-end gap-2">
+                    <button class="group relative p-2 text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-500/10 rounded-lg transition-all btn-view" data-id="${product.id}" title="Xem chi tiết">
+                        <span class="material-symbols-rounded text-[20px]">visibility</span>
+                    </button>
+                    <button class="group relative p-2 text-slate-400 hover:text-amber-600 dark:hover:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-500/10 rounded-lg transition-all btn-edit" data-id="${product.id}" title="Chỉnh sửa">
+                        <span class="material-symbols-rounded text-[20px]">edit</span>
+                    </button>
+                    <button class="group relative p-2 text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-500/10 rounded-lg transition-all btn-delete" data-id="${product.id}" title="Xóa">
+                        <span class="material-symbols-rounded text-[20px]">delete</span>
+                    </button>
+                </div>
             </td>
         `;
         tableBody.appendChild(row);
     });
 
     // Add Listeners
+    document.querySelectorAll('.btn-edit').forEach(btn => {
+        btn.addEventListener('click', () => openEditModal(btn.dataset.id));
+    });
+
+    document.querySelectorAll('.btn-view').forEach(btn => {
+        btn.addEventListener('click', () => openViewModal(btn.dataset.id));
+    });
+
     document.querySelectorAll('.btn-edit').forEach(btn => {
         btn.addEventListener('click', () => openEditModal(btn.dataset.id));
     });
@@ -228,7 +241,87 @@ function closeModal() {
         document.getElementById('product-id').value = '';
         document.getElementById('prod-image-url').value = '';
         if(previewDiv) previewDiv.innerHTML = '<span class="material-symbols-rounded text-slate-400 text-4xl">image</span>';
-        document.getElementById('modal-title').innerText = 'Add New Product';
+        document.getElementById('modal-title').innerText = 'Thêm Sản Phẩm Mới';
+        
+        // Clear inventory table body but keep the table structure
+        const inventoryTableBody = document.getElementById('inventory-table-body');
+        if (inventoryTableBody) {
+            inventoryTableBody.innerHTML = '';
+        }
+        const totalInventory = document.getElementById('total-inventory');
+        if (totalInventory) {
+            totalInventory.textContent = '0';
+        }
+    }
+}
+
+function closeViewModal() {
+    const modal = document.getElementById('view-modal');
+    if(modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+    }
+}
+
+function openViewModal(id) {
+    const product = currentProducts[id];
+    if (!product) return;
+
+    // Product basic info
+    document.getElementById('view-name').textContent = product.name || '-';
+    document.getElementById('view-brand').textContent = product.brand || '-';
+    document.getElementById('view-category').textContent = product.category || '-';
+    document.getElementById('view-gender').textContent = product.gender === 'male' ? 'Nam' : product.gender === 'female' ? 'Nữ' : 'Unisex';
+    document.getElementById('view-price').textContent = (product.price || 0).toLocaleString('vi-VN') + 'đ';
+    document.getElementById('view-original-price').textContent = (product.originalPrice || 0).toLocaleString('vi-VN') + 'đ';
+    document.getElementById('view-discount').textContent = (product.discount || 0) + '%';
+    document.getElementById('view-description').textContent = product.description || '-';
+    document.getElementById('view-total-stock').textContent = product.stock || 0;
+
+    // Colors and sizes
+    const colors = product.colors || [];
+    const sizes = product.sizes || [];
+    document.getElementById('view-colors').textContent = colors.join(', ') || '-';
+    document.getElementById('view-sizes').textContent = sizes.join(', ') || '-';
+
+    // Badges
+    const badges = [];
+    if (product.featured) badges.push('Nổi bật');
+    if (product.isNew) badges.push('Mới');
+    if (product.isBestSeller) badges.push('Bán chạy');
+    document.getElementById('view-badges').textContent = badges.length > 0 ? badges.join(', ') : '-';
+
+    // Main image
+    const imageUrl = product.images && product.images.length > 0 ? product.images[0] : '';
+    const mainImageEl = document.getElementById('view-main-image');
+    if (mainImageEl) {
+        if (imageUrl) {
+            mainImageEl.innerHTML = `<img src="${imageUrl}" class="w-full h-full object-cover rounded-lg">`;
+        } else {
+            mainImageEl.innerHTML = '<span class="material-symbols-rounded text-slate-400 text-6xl">image</span>';
+        }
+    }
+
+    // Inventory table
+    if (product.inventory && colors.length > 0 && sizes.length > 0) {
+        const inventoryHtml = generateViewInventoryTable(product.inventory, colors, sizes);
+        document.getElementById('view-inventory-table').innerHTML = inventoryHtml;
+    } else {
+        document.getElementById('view-inventory-table').innerHTML = '<p class="text-sm text-slate-500">Không có dữ liệu tồn kho</p>';
+    }
+
+    // Color images
+    if (product.colorImages && colors.length > 0) {
+        const colorImagesHtml = generateViewColorImages(product.colorImages, colors);
+        document.getElementById('view-color-images').innerHTML = colorImagesHtml;
+    } else {
+        document.getElementById('view-color-images').innerHTML = '<p class="text-sm text-slate-500">Không có ảnh màu</p>';
+    }
+
+    const modal = document.getElementById('view-modal');
+    if(modal) {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
     }
 }
 
@@ -237,33 +330,57 @@ function openEditModal(id) {
     if (!product) return;
 
     document.getElementById('product-id').value = id;
-    document.getElementById('prod-name').value = product.name;
-    document.getElementById('prod-brand').value = product.brand || 'Other';
+    document.getElementById('prod-name').value = product.name || '';
+    document.getElementById('prod-brand').value = product.brand || '';
+    document.getElementById('prod-category').value = product.category || '';
     document.getElementById('prod-gender').value = product.gender || 'unisex';
-    document.getElementById('prod-price').value = product.price;
-    document.getElementById('prod-original-price').value = product.originalPrice || '';
-    document.getElementById('prod-desc').value = product.description;
-    document.getElementById('prod-style').value = product.style || '';
-    document.getElementById('prod-color').value = product.color || '';
-    document.getElementById('prod-quantity').value = product.quantity || 0;
-    document.getElementById('prod-image-url').value = product.image || '';
+    document.getElementById('prod-price').value = product.price || 0;
+    document.getElementById('prod-original-price').value = product.originalPrice || 0;
+    document.getElementById('prod-discount').value = product.discount || 0;
+    document.getElementById('prod-description').value = product.description || '';
+    
+    // Load colors and sizes
+    const colors = product.colors || [];
+    const sizes = product.sizes || [];
+    document.getElementById('prod-colors').value = colors.join(', ');
+    document.getElementById('prod-sizes').value = sizes.join(', ');
+    document.getElementById('prod-stock').value = product.stock || 0;
+    
+    // Load badges
+    document.getElementById('prod-featured').checked = product.featured || false;
+    document.getElementById('prod-new').checked = product.isNew || false;
+    document.getElementById('prod-bestseller').checked = product.isBestSeller || false;
 
+    // Load image
+    const imageUrl = product.images && product.images.length > 0 ? product.images[0] : '';
+    document.getElementById('prod-image-url').value = imageUrl;
     const previewDiv = document.getElementById('image-preview');
-    if (previewDiv && product.image) {
-        previewDiv.innerHTML = `<img src="${product.image}" class="w-full h-full object-cover">`;
+    if (previewDiv && imageUrl) {
+        previewDiv.innerHTML = `<img src="${imageUrl}" class="w-full h-full object-cover rounded-lg">`;
     }
 
-    document.getElementById('modal-title').innerText = 'Edit Product';
+    // Load inventory data
+    if (product.inventory && colors.length > 0 && sizes.length > 0) {
+        loadInventoryData(product.inventory, colors, sizes);
+    }
+    
+    // Load color images
+    if (product.colorImages && colors.length > 0) {
+        loadColorImages(product.colorImages, colors);
+    }
+
+    document.getElementById('modal-title').innerText = 'Chỉnh Sửa Sản Phẩm';
     openModal();
 }
 
 async function handleFormSubmit(e) {
     e.preventDefault();
     
-    const form = document.getElementById('product-form');
-    const submitBtn = form.querySelector('button[type="submit"]');
+    const submitBtn = document.getElementById('btn-submit-product');
+    if (!submitBtn) return;
+    
     const originalBtnText = submitBtn.innerHTML;
-    submitBtn.innerHTML = '<span class="material-symbols-rounded animate-spin text-sm">rotate_right</span> Saving...';
+    submitBtn.innerHTML = '<span class="material-symbols-rounded animate-spin text-sm">rotate_right</span> Đang lưu...';
     submitBtn.disabled = true;
 
     try {
@@ -275,38 +392,65 @@ async function handleFormSubmit(e) {
         // Upload image if selected
         if (file) {
             const statusEl = document.getElementById('upload-status');
-            if(statusEl) statusEl.innerText = 'Uploading image...';
+            if(statusEl) statusEl.innerText = 'Đang tải ảnh lên...';
             imageUrl = await uploadAvatarDirect(file);
-            if(statusEl) statusEl.innerText = 'Upload complete!';
+            if(statusEl) statusEl.innerText = 'Tải lên thành công!';
         }
 
+        // Parse colors and sizes
+        const colorsText = document.getElementById('prod-colors')?.value || '';
+        const sizesText = document.getElementById('prod-sizes')?.value || '';
+        const colors = colorsText.split(',').map(c => c.trim()).filter(c => c);
+        const sizes = sizesText.split(',').map(s => s.trim()).filter(s => s);
+        
+        // Get inventory data
+        const inventory = getInventoryData();
+        const colorImages = getColorImages();
+
         const productData = {
-            name: document.getElementById('prod-name').value,
-            brand: document.getElementById('prod-brand').value,
-            gender: document.getElementById('prod-gender').value,
-            price: parseInt(document.getElementById('prod-price').value),
-            originalPrice: parseInt(document.getElementById('prod-original-price').value) || 0,
-            description: document.getElementById('prod-desc').value,
-            style: document.getElementById('prod-style').value,
-            color: document.getElementById('prod-color').value,
-            quantity: parseInt(document.getElementById('prod-quantity').value) || 0,
-            image: imageUrl,
-            updatedAt: new Date().toISOString()
+            name: document.getElementById('prod-name')?.value || '',
+            brand: document.getElementById('prod-brand')?.value || '',
+            category: document.getElementById('prod-category')?.value || '',
+            gender: document.getElementById('prod-gender')?.value || 'unisex',
+            price: parseInt(document.getElementById('prod-price')?.value) || 0,
+            originalPrice: parseInt(document.getElementById('prod-original-price')?.value) || 0,
+            discount: parseInt(document.getElementById('prod-discount')?.value) || 0,
+            description: document.getElementById('prod-description')?.value || '',
+            colors: colors,
+            sizes: sizes.map(s => isNaN(s) ? s : parseInt(s)),
+            stock: parseInt(document.getElementById('prod-stock')?.value) || 0,
+            inventory: inventory || {},
+            colorImages: colorImages || {},
+            images: imageUrl ? [imageUrl] : [],
+            featured: document.getElementById('prod-featured')?.checked || false,
+            isNew: document.getElementById('prod-new')?.checked || false,
+            isBestSeller: document.getElementById('prod-bestseller')?.checked || false,
+            updatedAt: Date.now()
         };
 
         if (id) {
+            // Update existing
+            const existingProduct = currentProducts[id];
+            productData.createdAt = existingProduct?.createdAt || Date.now();
+            productData.sold = existingProduct?.sold || 0;
+            productData.rating = existingProduct?.rating || 0;
+            productData.reviews = existingProduct?.reviews || 0;
             await set(ref(db, `products/${id}`), productData);
         } else {
-            productData.createdAt = new Date().toISOString();
+            // Create new
+            productData.createdAt = Date.now();
+            productData.sold = 0;
+            productData.rating = 0;
+            productData.reviews = 0;
             await push(productsRef, productData);
         }
 
         closeModal();
-        alert('Product saved successfully!');
+        alert('✅ Lưu sản phẩm thành công!');
         
     } catch (error) {
         console.error('Error saving product:', error);
-        alert('Failed to save product: ' + error.message);
+        alert('❌ Lỗi khi lưu sản phẩm: ' + error.message);
     } finally {
         submitBtn.innerHTML = originalBtnText;
         submitBtn.disabled = false;
@@ -428,8 +572,300 @@ function reload() {
         };
     }
 
+    // Inventory Management
+    const btnGenerateInventory = document.getElementById('btn-generate-inventory');
+    if (btnGenerateInventory) {
+        btnGenerateInventory.onclick = generateInventoryTable;
+    }
+
+    // Auto-calculate discount
+    const originalPriceInput = document.getElementById('prod-original-price');
+    const priceInput = document.getElementById('prod-price');
+    const discountInput = document.getElementById('prod-discount');
+    
+    if (originalPriceInput && priceInput && discountInput) {
+        const calculateDiscount = () => {
+            const original = parseFloat(originalPriceInput.value) || 0;
+            const current = parseFloat(priceInput.value) || 0;
+            if (original > 0 && current > 0 && current < original) {
+                const discount = Math.round(((original - current) / original) * 100);
+                discountInput.value = discount;
+            } else {
+                discountInput.value = 0;
+            }
+        };
+        
+        originalPriceInput.oninput = calculateDiscount;
+        priceInput.oninput = calculateDiscount;
+    }
+
     // 2. Load Data
     loadProducts();
+}
+
+// ============================================================================
+// INVENTORY MANAGEMENT
+// ============================================================================
+
+function generateViewInventoryTable(inventory, colors, sizes) {
+    let html = '<table class="w-full border-collapse border border-slate-200 dark:border-slate-700 text-sm">';
+    html += '<thead><tr class="bg-slate-100 dark:bg-slate-800">';
+    html += '<th class="border border-slate-200 dark:border-slate-700 px-3 py-2 text-left">Màu</th>';
+    html += '<th class="border border-slate-200 dark:border-slate-700 px-3 py-2 text-left">Size</th>';
+    html += '<th class="border border-slate-200 dark:border-slate-700 px-3 py-2 text-right">Số lượng</th>';
+    html += '</tr></thead><tbody>';
+    
+    colors.forEach(color => {
+        sizes.forEach((size, sizeIndex) => {
+            const quantity = inventory[color] && inventory[color][size] ? inventory[color][size] : 0;
+            html += '<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50">';
+            if (sizeIndex === 0) {
+                html += `<td class="border border-slate-200 dark:border-slate-700 px-3 py-2 font-semibold" rowspan="${sizes.length}">${color}</td>`;
+            }
+            html += `<td class="border border-slate-200 dark:border-slate-700 px-3 py-2">${size}</td>`;
+            html += `<td class="border border-slate-200 dark:border-slate-700 px-3 py-2 text-right">${quantity}</td>`;
+            html += '</tr>';
+        });
+    });
+    
+    html += '</tbody></table>';
+    return html;
+}
+
+function generateViewColorImages(colorImages, colors) {
+    let html = '<div class="grid grid-cols-2 md:grid-cols-3 gap-4">';
+    colors.forEach(color => {
+        const imageUrl = colorImages[color] || '';
+        html += '<div class="border border-slate-200 dark:border-slate-700 rounded-lg p-3">';
+        html += `<div class="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">${color}</div>`;
+        if (imageUrl) {
+            html += `<img src="${imageUrl}" class="w-full h-32 object-cover rounded">`;
+        } else {
+            html += '<div class="w-full h-32 bg-slate-100 dark:bg-slate-800 rounded flex items-center justify-center">';
+            html += '<span class="material-symbols-rounded text-slate-400">image</span>';
+            html += '</div>';
+        }
+        html += '</div>';
+    });
+    html += '</div>';
+    return html;
+}
+
+function generateInventoryTable() {
+    const colorsInput = document.getElementById('prod-colors');
+    const sizesInput = document.getElementById('prod-sizes');
+    const container = document.getElementById('inventory-table-container');
+    const tbody = document.getElementById('inventory-table-body');
+    
+    if (!colorsInput || !sizesInput || !container || !tbody) return;
+    
+    const colorsText = colorsInput.value.trim();
+    const sizesText = sizesInput.value.trim();
+    
+    if (!colorsText || !sizesText) {
+        alert('Vui lòng nhập màu sắc và size trước!');
+        return;
+    }
+    
+    const colors = colorsText.split(',').map(c => c.trim()).filter(c => c);
+    const sizes = sizesText.split(',').map(s => s.trim()).filter(s => s);
+    
+    if (colors.length === 0 || sizes.length === 0) {
+        alert('Màu sắc hoặc size không hợp lệ!');
+        return;
+    }
+    
+    // Generate table rows
+    let html = '';
+    colors.forEach((color, colorIndex) => {
+        sizes.forEach((size, sizeIndex) => {
+            const isFirstSizeOfColor = sizeIndex === 0;
+            html += `
+                <tr class="hover:bg-purple-50 dark:hover:bg-purple-900/10">
+                    ${isFirstSizeOfColor ? `<td class="px-3 py-2 font-semibold text-slate-700 dark:text-slate-300" rowspan="${sizes.length}">${color}</td>` : ''}
+                    ${isFirstSizeOfColor ? `
+                    <td class="px-3 py-2" rowspan="${sizes.length}">
+                        <div class="flex flex-col gap-2">
+                            <input type="file" 
+                                   accept="image/*"
+                                   data-color="${color}"
+                                   class="color-image-file hidden">
+                            <button type="button" 
+                                    onclick="this.previousElementSibling.click()"
+                                    class="px-2 py-1 text-xs bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 rounded hover:bg-purple-200 dark:hover:bg-purple-800/50">
+                                <span class="material-symbols-rounded text-sm align-middle">upload</span>
+                                Chọn ảnh
+                            </button>
+                            <div class="color-image-preview-${color.replace(/\s+/g, '-')} w-16 h-16 bg-slate-100 dark:bg-slate-800 rounded border border-slate-200 dark:border-slate-700 flex items-center justify-center">
+                                <span class="material-symbols-rounded text-slate-400 text-sm">image</span>
+                            </div>
+                            <input type="hidden" 
+                                   data-color="${color}"
+                                   class="color-image-url"
+                                   value="">
+                        </div>
+                    </td>` : ''}
+                    <td class="px-3 py-2 text-slate-600 dark:text-slate-400">${size}</td>
+                    <td class="px-3 py-2">
+                        <input type="number" 
+                               min="0" 
+                               value="0" 
+                               data-color="${color}" 
+                               data-size="${size}"
+                               class="inventory-input w-full px-2 py-1 text-center bg-white dark:bg-slate-800 border border-purple-200 dark:border-purple-700 rounded text-sm font-semibold focus:ring-2 focus:ring-purple-500">
+                    </td>
+                </tr>
+            `;
+        });
+    });
+    
+    tbody.innerHTML = html;
+    // No need to toggle visibility anymore since table is always visible
+    
+    // Add event listeners for auto-calculate total
+    document.querySelectorAll('.inventory-input').forEach(input => {
+        input.addEventListener('input', updateTotalInventory);
+    });
+    
+    // Add event listeners for color image uploads
+    document.querySelectorAll('.color-image-file').forEach(input => {
+        input.addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            
+            const color = e.target.dataset.color;
+            const previewClass = `color-image-preview-${color.replace(/\s+/g, '-')}`;
+            const preview = document.querySelector(`.${previewClass}`);
+            const urlInput = document.querySelector(`.color-image-url[data-color="${color}"]`);
+            
+            try {
+                if (preview) {
+                    preview.innerHTML = '<span class="material-symbols-rounded text-slate-400 text-sm animate-spin">progress_activity</span>';
+                }
+                
+                const imageUrl = await uploadAvatarDirect(file);
+                
+                if (urlInput) {
+                    urlInput.value = imageUrl;
+                }
+                
+                if (preview) {
+                    preview.innerHTML = `<img src="${imageUrl}" class="w-full h-full object-cover rounded">`;
+                }
+            } catch (error) {
+                console.error('Error uploading color image:', error);
+                alert('Lỗi khi tải ảnh lên: ' + error.message);
+                if (preview) {
+                    preview.innerHTML = '<span class="material-symbols-rounded text-red-400 text-sm">error</span>';
+                }
+            }
+        });
+    });
+    
+    updateTotalInventory();
+}
+
+function updateTotalInventory() {
+    const inputs = document.querySelectorAll('.inventory-input');
+    let total = 0;
+    
+    inputs.forEach(input => {
+        total += parseInt(input.value) || 0;
+    });
+    
+    const totalEl = document.getElementById('total-inventory');
+    if (totalEl) {
+        totalEl.textContent = total;
+    }
+    
+    // Also update stock field
+    const stockInput = document.getElementById('prod-stock');
+    if (stockInput) {
+        stockInput.value = total;
+    }
+}
+
+function getInventoryData() {
+    const inputs = document.querySelectorAll('.inventory-input');
+    const inventory = {};
+    
+    inputs.forEach(input => {
+        const color = input.dataset.color;
+        const size = input.dataset.size;
+        const quantity = parseInt(input.value) || 0;
+        
+        if (!inventory[color]) {
+            inventory[color] = {};
+        }
+        inventory[color][size] = quantity;
+    });
+    
+    return Object.keys(inventory).length > 0 ? inventory : null;
+}
+
+function getColorImages() {
+    const urlInputs = document.querySelectorAll('.color-image-url');
+    const colorImages = {};
+    
+    urlInputs.forEach(input => {
+        const color = input.dataset.color;
+        const url = input.value.trim();
+        
+        if (url) {
+            colorImages[color] = url;
+        }
+    });
+    
+    return Object.keys(colorImages).length > 0 ? colorImages : null;
+}
+
+function loadInventoryData(inventory, colors, sizes) {
+    if (!inventory || typeof inventory !== 'object') return;
+    
+    // First generate the table
+    const colorsInput = document.getElementById('prod-colors');
+    const sizesInput = document.getElementById('prod-sizes');
+    
+    if (colorsInput && sizesInput) {
+        colorsInput.value = colors.join(', ');
+        sizesInput.value = sizes.join(', ');
+        generateInventoryTable();
+    }
+    
+    // Then populate values
+    setTimeout(() => {
+        Object.keys(inventory).forEach(color => {
+            Object.keys(inventory[color]).forEach(size => {
+                const input = document.querySelector(`.inventory-input[data-color="${color}"][data-size="${size}"]`);
+                if (input) {
+                    input.value = inventory[color][size] || 0;
+                }
+            });
+        });
+        updateTotalInventory();
+    }, 100);
+}
+
+function loadColorImages(colorImages, colors) {
+    if (!colorImages || !colors) return;
+    
+    setTimeout(() => {
+        colors.forEach(color => {
+            if (colorImages[color]) {
+                const urlInput = document.querySelector(`.color-image-url[data-color="${color}"]`);
+                const previewClass = `color-image-preview-${color.replace(/\s+/g, '-')}`;
+                const preview = document.querySelector(`.${previewClass}`);
+                
+                if (urlInput) {
+                    urlInput.value = colorImages[color];
+                }
+                
+                if (preview) {
+                    preview.innerHTML = `<img src="${colorImages[color]}" class="w-full h-full object-cover rounded">`;
+                }
+            }
+        });
+    }, 150);
 }
 
 function init() {
@@ -448,7 +884,8 @@ function init() {
 
 window.productsModule = {
     init,
-    reload
+    reload,
+    closeViewModal
 };
 
 // Auto init

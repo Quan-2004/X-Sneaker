@@ -1,13 +1,15 @@
 import { getFirebaseDatabase } from '../firebase-config.js';
-import { ref, push, set, remove, onValue } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-database.js";
+import { ref, push, set, remove, onValue, get } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-database.js";
 import { uploadAvatarDirect, getOptimizedImageUrl } from '../cloudinary-upload.js';
 import { getFirebaseAuth } from '../firebase-config.js';
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-auth.js";
 
 const db = getFirebaseDatabase();
 const blogsRef = ref(db, 'blogs');
+const productsRef = ref(db, 'products');
 
 let currentBlogs = {};
+let selectedProducts = [];
 let isInitialized = false;
 
 // 1. Render Table
@@ -100,10 +102,17 @@ function loadBlogs() {
 function init() {
     if (isInitialized) return;
     
+    const tableBody = document.getElementById('blog-table-body');
+    if (!tableBody) {
+        console.warn('Blog table not ready, skipping init');
+        return;
+    }
+    
     // Auth Check (Optional here if core handles it, but good safety)
     const auth = getFirebaseAuth();
     
     isInitialized = true;
+    loadBlogs();
 }
 
 // 3. Modal Handling
@@ -120,6 +129,10 @@ function openModal() {
     document.getElementById('blog-image-url').value = '';
     document.getElementById('blog-featured').checked = false;
     document.getElementById('blog-published-date').value = '';
+    
+    // Reset selected products
+    selectedProducts = [];
+    renderSelectedProducts();
     
     // Reset preview
     document.getElementById('blog-image-preview').innerHTML = '<span class="material-symbols-rounded text-slate-400 text-5xl">add_photo_alternate</span><p class="text-xs text-slate-500 mt-2 font-semibold">Click to upload</p><p class="text-[10px] text-slate-400 mt-1">JPG, PNG, WebP (Max 2MB)</p>';
@@ -143,7 +156,7 @@ function closeModal() {
     }
 }
 
-function openEditModal(id) {
+async function openEditModal(id) {
     const blog = currentBlogs[id];
     if (!blog) return;
 
@@ -158,6 +171,34 @@ function openEditModal(id) {
     document.getElementById('blog-image-url').value = blog.thumbnailImage || '';
     document.getElementById('blog-tags').value = blog.tags ? blog.tags.join(', ') : '';
     document.getElementById('blog-featured').checked = blog.featured || false;
+    
+    // Load featured products
+    selectedProducts = [];
+    if (blog.featuredProducts && blog.featuredProducts.length > 0) {
+        try {
+            const snapshot = await get(productsRef);
+            if (snapshot.exists()) {
+                const allProducts = snapshot.val();
+                selectedProducts = blog.featuredProducts
+                    .map(productId => {
+                        const product = allProducts[productId];
+                        if (product) {
+                            return {
+                                id: productId,
+                                name: product.name,
+                                image: product.images?.[0] || '',
+                                price: product.price
+                            };
+                        }
+                        return null;
+                    })
+                    .filter(p => p !== null);
+            }
+        } catch (error) {
+            console.error('Error loading featured products:', error);
+        }
+    }
+    renderSelectedProducts();
     
     // Set published date if exists
     if (blog.publishedDate) {
@@ -202,18 +243,29 @@ async function saveBlog(e) {
     if (e) e.preventDefault();
     
     const form = document.getElementById('blog-form');
-    if (!form) return;
+    if (!form) {
+        console.error('Blog form not found');
+        return;
+    }
     
-    const submitBtn = form.querySelector('button[type="submit"]');
+    // Button is outside form, use document.querySelector with form attribute
+    const submitBtn = document.querySelector('button[type="submit"][form="blog-form"]') || 
+                      form.querySelector('button[type="submit"]');
+    
+    if (!submitBtn) {
+        console.error('Submit button not found');
+        return;
+    }
+    
     const originalBtnText = submitBtn.innerHTML;
     submitBtn.innerHTML = '<span class="material-symbols-rounded animate-spin text-sm">rotate_right</span> Saving...';
     submitBtn.disabled = true;
 
     try {
-        const id = document.getElementById('blog-id').value;
+        const id = document.getElementById('blog-id')?.value || '';
         const fileInput = document.getElementById('blog-image-file');
-        const file = fileInput.files[0];
-        let imageUrl = document.getElementById('blog-image-url').value;
+        const file = fileInput?.files[0];
+        let imageUrl = document.getElementById('blog-image-url')?.value || '';
 
         // Upload image if file selected
         if (file) {
@@ -221,28 +273,29 @@ async function saveBlog(e) {
         }
         
         // Parse tags from comma-separated string
-        const tagsInput = document.getElementById('blog-tags').value;
+        const tagsInput = document.getElementById('blog-tags')?.value || '';
         const tags = tagsInput ? tagsInput.split(',').map(tag => tag.trim()).filter(tag => tag) : [];
         
         // Get published date or use current time
-        const publishedDateInput = document.getElementById('blog-published-date').value;
+        const publishedDateInput = document.getElementById('blog-published-date')?.value || '';
         const publishedDate = publishedDateInput ? new Date(publishedDateInput).getTime() : Date.now();
 
         const blogData = {
-            title: document.getElementById('blog-title').value,
-            slug: document.getElementById('blog-slug').value,
+            title: document.getElementById('blog-title')?.value || '',
+            slug: document.getElementById('blog-slug')?.value || '',
             author: {
-                name: document.getElementById('blog-author-name').value,
-                avatar: document.getElementById('blog-author-avatar').value || 'https://ui-avatars.com/api/?name=Admin&background=FF3C3C&color=fff'
+                name: document.getElementById('blog-author-name')?.value || 'Admin',
+                avatar: document.getElementById('blog-author-avatar')?.value || 'https://ui-avatars.com/api/?name=Admin&background=FF3C3C&color=fff'
             },
-            category: document.getElementById('blog-category').value,
-            excerpt: document.getElementById('blog-excerpt').value,
-            content: document.getElementById('blog-content').value,
+            category: document.getElementById('blog-category')?.value || '',
+            excerpt: document.getElementById('blog-excerpt')?.value || '',
+            content: document.getElementById('blog-content')?.value || '',
             thumbnailImage: imageUrl,
             tags: tags,
-            featured: document.getElementById('blog-featured').checked,
+            featured: document.getElementById('blog-featured')?.checked || false,
             publishedDate: publishedDate,
-            updatedAt: Date.now()
+            updatedAt: Date.now(),
+            featuredProducts: selectedProducts.map(p => p.id) // Save only product IDs
         };
 
         if (id) {
@@ -344,8 +397,155 @@ function reload() {
             }
         };
     }
+    
+    // Product search functionality
+    const productSearchInput = document.getElementById('blog-product-search');
+    if (productSearchInput) {
+        productSearchInput.addEventListener('input', (e) => {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                searchProducts(e.target.value);
+            }, 300);
+        });
+        
+        // Close search results when clicking outside
+        document.addEventListener('click', (e) => {
+            const resultsContainer = document.getElementById('blog-product-results');
+            if (resultsContainer && 
+                !productSearchInput.contains(e.target) && 
+                !resultsContainer.contains(e.target)) {
+                resultsContainer.classList.add('hidden');
+            }
+        });
+    }
 
     loadBlogs();
+}
+
+// ============================================================================
+// PRODUCT SEARCH & SELECTION
+// ============================================================================
+
+let searchTimeout = null;
+
+async function searchProducts(query) {
+    if (!query || query.trim().length < 2) {
+        document.getElementById('blog-product-results').classList.add('hidden');
+        return;
+    }
+    
+    try {
+        const snapshot = await get(productsRef);
+        if (!snapshot.exists()) {
+            document.getElementById('blog-product-results').innerHTML = '<p class="p-4 text-sm text-slate-500">Không tìm thấy sản phẩm</p>';
+            return;
+        }
+        
+        const products = snapshot.val();
+        const searchLower = query.toLowerCase();
+        
+        const results = Object.entries(products)
+            .map(([id, product]) => ({ id, ...product }))
+            .filter(p => 
+                p.name?.toLowerCase().includes(searchLower) ||
+                p.brand?.toLowerCase().includes(searchLower) ||
+                p.category?.toLowerCase().includes(searchLower)
+            )
+            .filter(p => !selectedProducts.find(sp => sp.id === p.id)) // Exclude already selected
+            .slice(0, 5);
+        
+        renderProductResults(results);
+    } catch (error) {
+        console.error('Error searching products:', error);
+    }
+}
+
+function renderProductResults(results) {
+    const container = document.getElementById('blog-product-results');
+    if (!container) return;
+    
+    if (results.length === 0) {
+        container.innerHTML = '<p class="p-4 text-sm text-slate-500">Không tìm thấy sản phẩm</p>';
+        container.classList.remove('hidden');
+        return;
+    }
+    
+    container.innerHTML = results.map(product => `
+        <div class="p-3 hover:bg-amber-50 dark:hover:bg-slate-700 cursor-pointer border-b border-amber-100 dark:border-slate-600 last:border-0 flex items-center gap-3" 
+             onclick="window.blogModule.addProduct('${product.id}', '${escapeHtml(product.name)}', '${product.images?.[0] || ''}', ${product.price})">
+            <img src="${product.images?.[0] || 'image/coming_soon.png'}" 
+                 class="w-12 h-12 object-cover rounded-lg bg-slate-100" 
+                 onerror="this.src='image/coming_soon.png'">
+            <div class="flex-1 min-w-0">
+                <p class="font-semibold text-sm text-slate-800 dark:text-white truncate">${product.name}</p>
+                <p class="text-xs text-slate-500">${formatPrice(product.price)}₫</p>
+            </div>
+        </div>
+    `).join('');
+    
+    container.classList.remove('hidden');
+}
+
+function addProduct(id, name, image, price) {
+    // Check limit
+    if (selectedProducts.length >= 3) {
+        alert('Chỉ có thể chọn tối đa 3 sản phẩm!');
+        return;
+    }
+    
+    // Check duplicate
+    if (selectedProducts.find(p => p.id === id)) {
+        return;
+    }
+    
+    selectedProducts.push({ id, name, image, price });
+    renderSelectedProducts();
+    
+    // Clear search
+    const searchInput = document.getElementById('blog-product-search');
+    if (searchInput) searchInput.value = '';
+    document.getElementById('blog-product-results').classList.add('hidden');
+}
+
+function removeProduct(id) {
+    selectedProducts = selectedProducts.filter(p => p.id !== id);
+    renderSelectedProducts();
+}
+
+function renderSelectedProducts() {
+    const container = document.getElementById('blog-selected-products');
+    if (!container) return;
+    
+    if (selectedProducts.length === 0) {
+        container.innerHTML = '<p class="text-xs text-slate-400 italic py-2">Chưa chọn sản phẩm nào</p>';
+        return;
+    }
+    
+    container.innerHTML = selectedProducts.map(product => `
+        <div class="flex items-center gap-3 p-3 bg-amber-50 dark:bg-slate-800 rounded-lg border border-amber-200 dark:border-slate-600">
+            <img src="${product.image || 'image/coming_soon.png'}" 
+                 class="w-12 h-12 object-cover rounded-lg" 
+                 onerror="this.src='image/coming_soon.png'">
+            <div class="flex-1 min-w-0">
+                <p class="font-semibold text-sm text-slate-800 dark:text-white truncate">${product.name}</p>
+                <p class="text-xs text-slate-500">${formatPrice(product.price)}₫</p>
+            </div>
+            <button type="button" onclick="window.blogModule.removeProduct('${product.id}')" 
+                    class="text-slate-400 hover:text-red-600 transition-colors">
+                <span class="material-symbols-rounded text-[18px]">close</span>
+            </button>
+        </div>
+    `).join('');
+}
+
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
+function formatPrice(price) {
+    return new Intl.NumberFormat('vi-VN').format(price);
 }
 
 window.blogModule = {
@@ -355,8 +555,10 @@ window.blogModule = {
     closeModal,
     openEditModal,
     saveBlog,
-    deleteBlog
+    deleteBlog,
+    addProduct,
+    removeProduct
 };
 
-init();
-console.log('Blog Module Loaded');
+// Don't auto-init, wait for tab to be active
+console.log('Blog Module Loaded (waiting for init)');

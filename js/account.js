@@ -213,6 +213,13 @@ function renderUserProfile(userData) {
         welcomeEl.textContent = `Chào mừng trở lại, ${firstName}!`;
     }
 
+    // Check if user is admin and show admin panel button
+    const adminBtn = document.getElementById('admin-panel-btn');
+    if (adminBtn && (userData.role === 'admin' || userData.isAdmin === true)) {
+        adminBtn.classList.remove('hidden');
+        adminBtn.classList.add('flex');
+    }
+
     // Populate Detailed Info Card
     const infoName = document.getElementById('info-displayname');
     const infoEmail = document.getElementById('info-email');
