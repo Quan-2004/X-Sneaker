@@ -125,11 +125,6 @@
                 <span class="text-sm font-semibold">Kho hàng</span>
             </a>
             
-            <a href="#" data-tab="customers" class="nav-link flex items-center gap-3 px-4 py-3 text-slate-600 hover:bg-slate-50 hover:text-primary rounded-xl transition-all group">
-                <span class="material-symbols-rounded text-[22px] group-hover:scale-110 transition-transform">group</span>
-                <span class="text-sm font-semibold">Khách hàng</span>
-            </a>
-            
             <div class="px-4 mt-8 mb-2 text-xs font-bold text-slate-500 uppercase tracking-wider">PHÂN TÍCH</div>
             
             <a href="#" data-tab="reports" class="nav-link flex items-center gap-3 px-4 py-3 text-slate-600 hover:bg-slate-50 hover:text-primary rounded-xl transition-all group">
@@ -138,6 +133,11 @@
             </a>
 
             <div class="px-4 mt-8 mb-2 text-xs font-bold text-slate-500 uppercase tracking-wider">HỆ THỐNG</div>
+
+            <a href="#" data-tab="users" class="nav-link flex items-center gap-3 px-4 py-3 text-slate-600 hover:bg-slate-50 hover:text-primary rounded-xl transition-all group">
+                <span class="material-symbols-rounded text-[22px] group-hover:scale-110 transition-transform">group</span>
+                <span class="text-sm font-semibold">Người dùng</span>
+            </a>
 
             <a href="#" data-tab="cms" class="nav-link flex items-center gap-3 px-4 py-3 text-slate-600 hover:bg-slate-50 hover:text-primary rounded-xl transition-all group">
                 <span class="material-symbols-rounded text-[22px] group-hover:scale-110 transition-transform">edit_document</span>
@@ -1156,143 +1156,6 @@
             </div>
             `,
 
-            customers: `
-            <!-- Page Header -->
-            <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
-                <div>
-                    <h2 class="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">Customer Management</h2>
-                    <div class="flex items-center gap-2 mt-2 text-sm text-slate-500 dark:text-slate-400">
-                        <span>Dashboard</span>
-                        <span class="material-symbols-rounded text-[14px]">chevron_right</span>
-                        <span class="text-primary font-semibold">Customers</span>
-                    </div>
-                </div>
-                <div class="flex items-center gap-3">
-                    <button onclick="window.usersModule.sendEmail()" class="flex items-center gap-2 px-5 py-2.5 bg-white dark:bg-card-dark border border-slate-200 dark:border-border-dark rounded-xl text-sm font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-white/5 transition-all">
-                        <span class="material-symbols-rounded text-[20px]">mail</span>
-                        Send Email
-                    </button>
-                    <button id="btn-add-customer" onclick="window.usersModule.openAddUserModal()" class="flex items-center gap-2 px-5 py-2.5 bg-primary hover:bg-primary-600 text-white rounded-xl text-sm font-bold shadow-lg shadow-primary/25 hover:shadow-primary/40 active:scale-95 transition-all">
-                        <span class="material-symbols-rounded text-[20px]">add</span>
-                        Add Customer
-                    </button>
-                </div>
-            </div>
-
-            <!-- Stats Overview -->
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-                <div class="bg-white dark:bg-card-dark p-6 rounded-2xl border border-slate-100 dark:border-border-dark shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
-                    <div class="absolute right-0 top-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
-                        <span class="material-symbols-rounded text-6xl text-blue-500">group</span>
-                    </div>
-                    <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">Total Customers</p>
-                    <div class="flex items-baseline gap-2 mt-2">
-                        <h3 id="stat-cust-total" class="text-3xl font-extrabold text-slate-900 dark:text-white">0</h3>
-                    </div>
-                </div>
-
-                <div class="bg-white dark:bg-card-dark p-6 rounded-2xl border border-slate-100 dark:border-border-dark shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
-                    <div class="absolute right-0 top-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
-                        <span class="material-symbols-rounded text-6xl text-emerald-500">person_add</span>
-                    </div>
-                    <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">New This Month</p>
-                    <div class="flex items-baseline gap-2 mt-2">
-                        <h3 id="stat-cust-new" class="text-3xl font-extrabold text-slate-900 dark:text-white">0</h3>
-                    </div>
-                </div>
-
-                <div class="bg-white dark:bg-card-dark p-6 rounded-2xl border border-slate-100 dark:border-border-dark shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
-                    <div class="absolute right-0 top-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
-                        <span class="material-symbols-rounded text-6xl text-yellow-500">workspace_premium</span>
-                    </div>
-                    <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">Premium Members</p>
-                    <div class="flex items-baseline gap-2 mt-2">
-                        <h3 id="stat-cust-premium" class="text-3xl font-extrabold text-slate-900 dark:text-white">0</h3>
-                    </div>
-                </div>
-
-                <div class="bg-white dark:bg-card-dark p-6 rounded-2xl border border-slate-100 dark:border-border-dark shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
-                    <div class="absolute right-0 top-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
-                        <span class="material-symbols-rounded text-6xl text-primary">local_activity</span>
-                    </div>
-                    <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">Active Today</p>
-                    <div class="flex items-baseline gap-2 mt-2">
-                        <h3 id="stat-cust-active" class="text-3xl font-extrabold text-slate-900 dark:text-white">0</h3>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Customers Table -->
-            <div class="bg-white dark:bg-card-dark border border-slate-200 dark:border-border-dark rounded-2xl overflow-hidden shadow-sm">
-                <!-- Filters -->
-                <div class="p-6 border-b border-slate-100 dark:border-border-dark flex flex-wrap items-center gap-4">
-                    <div class="ml-auto w-full md:w-auto relative">
-                        <span class="material-symbols-rounded absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-[18px]">search</span>
-                        <input type="text" id="customer-search-input" placeholder="Search customers..." class="w-full md:w-80 pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-background-dark/50 border border-slate-200 dark:border-border-dark rounded-xl text-sm font-semibold focus:ring-primary focus:border-primary text-slate-700 dark:text-slate-300">
-                    </div>
-                </div>
-
-                <!-- Table -->
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left border-collapse">
-                        <thead>
-                            <tr class="bg-slate-50/50 dark:bg-white/[0.02] border-b border-slate-200 dark:border-border-dark">
-                                <th class="px-6 py-5 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Customer</th>
-                                <th class="px-6 py-5 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Email</th>
-                                <th class="px-6 py-5 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Orders</th>
-                                <th class="px-6 py-5 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Total Spent</th>
-                                <th class="px-6 py-5 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Status</th>
-                                <th class="px-6 py-5 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Joined</th>
-                                <th class="px-6 py-5 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider text-right">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-slate-100 dark:divide-border-dark" id="users-table-body">
-                            <!-- Users will be loaded dynamically -->
-                        </tbody>
-
-                <!-- User Edit Modal -->
-                <div id="user-edit-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-                    <div class="bg-white dark:bg-card-dark rounded-2xl w-full max-w-md shadow-2xl flex flex-col">
-                        <div class="p-6 border-b border-slate-100 dark:border-border-dark flex items-center justify-between">
-                            <h3 class="text-xl font-bold text-slate-900 dark:text-white">Edit User</h3>
-                            <button onclick="window.closeUserModal()" class="p-2 text-slate-400 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-500/10 rounded-full transition-all">
-                                <span class="material-symbols-rounded">close</span>
-                            </button>
-                        </div>
-                        <div class="p-6 space-y-4">
-                            <input type="hidden" id="edit-user-id">
-                            <div>
-                                <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Full Name</label>
-                                <input type="text" id="edit-fullname" class="w-full px-4 py-2 bg-slate-50 dark:bg-background-dark border border-slate-200 dark:border-border-dark rounded-xl text-sm">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Email</label>
-                                <input type="email" id="edit-email" disabled class="w-full px-4 py-2 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-border-dark rounded-xl text-sm text-slate-500 cursor-not-allowed">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Role</label>
-                                <select id="edit-role" class="w-full px-4 py-2 bg-slate-50 dark:bg-background-dark border border-slate-200 dark:border-border-dark rounded-xl text-sm">
-                                    <option value="customer">Customer</option>
-                                    <option value="admin">Admin</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="p-6 border-t border-slate-100 dark:border-border-dark flex justify-end gap-3">
-                            <button onclick="window.closeUserModal()" class="px-4 py-2 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-xl text-sm font-bold hover:bg-slate-200 dark:hover:bg-slate-700 transition-all">Cancel</button>
-                            <button onclick="window.saveUserChanges()" class="px-4 py-2 bg-primary text-white rounded-xl text-sm font-bold shadow-lg shadow-primary/25 hover:shadow-primary/40 hover:bg-primary-600 transition-all">Save Changes</button>
-                        </div>
-                    </div>
-                </div>
-                    </table>
-                </div>
-
-                <!-- Pagination -->
-                <div id="customers-pagination" class="px-6 py-4 border-t border-slate-100 dark:border-border-dark flex items-center justify-between">
-                    <!-- Dynamic Pagination -->
-                </div>
-            </div>
-            `,
-
             reports: `
             <!-- Page Header -->
             <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
@@ -1391,6 +1254,351 @@
                            <!-- Dynamic content -->
                         </tbody>
                     </table>
+                </div>
+            </div>
+            `,
+
+            users: `
+            <!-- Page Header -->
+            <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+                <div>
+                    <h2 class="text-3xl font-extrabold text-slate-900 tracking-tight">Quản lý Người dùng</h2>
+                    <div class="flex items-center gap-2 mt-2 text-sm text-slate-500">
+                        <span>Dashboard</span>
+                        <span class="material-symbols-rounded text-[14px]">chevron_right</span>
+                        <span class="text-primary font-semibold">Người dùng</span>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button onclick="window.usersModule.reload()" class="p-2.5 text-slate-500 hover:text-primary transition-all" title="Reload">
+                        <span class="material-symbols-rounded text-[20px] md:text-[24px]">refresh</span>
+                    </button>
+                    <button onclick="window.usersModule.exportCSV()" class="flex items-center gap-2 px-3 md:px-5 py-2.5 bg-white border border-slate-200 rounded-xl text-sm font-semibold text-slate-700 hover:bg-slate-50 transition-all">
+                        <span class="material-symbols-rounded text-[18px] md:text-[20px]">download</span>
+                        <span class="hidden md:inline">Xuất CSV</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Stats Overview -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+                <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
+                    <div class="absolute right-0 top-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                        <span class="material-symbols-rounded text-6xl text-blue-500">group</span>
+                    </div>
+                    <p class="text-xs font-bold text-slate-600 uppercase tracking-wider">TỔNG NGƯỜI DÙNG</p>
+                    <div class="flex items-baseline gap-2 mt-2">
+                        <h3 id="stat-users-total" class="text-3xl font-extrabold text-slate-900">0</h3>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
+                    <div class="absolute right-0 top-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                        <span class="material-symbols-rounded text-6xl text-purple-500">admin_panel_settings</span>
+                    </div>
+                    <p class="text-xs font-bold text-slate-600 uppercase tracking-wider">ADMIN</p>
+                    <div class="flex items-baseline gap-2 mt-2">
+                        <h3 id="stat-users-admin" class="text-3xl font-extrabold text-slate-900">0</h3>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
+                    <div class="absolute right-0 top-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                        <span class="material-symbols-rounded text-6xl text-emerald-500">shopping_bag</span>
+                    </div>
+                    <p class="text-xs font-bold text-slate-600 uppercase tracking-wider">KHÁCH HÀNG</p>
+                    <div class="flex items-baseline gap-2 mt-2">
+                        <h3 id="stat-users-customer" class="text-3xl font-extrabold text-slate-900">0</h3>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
+                    <div class="absolute right-0 top-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                        <span class="material-symbols-rounded text-6xl text-yellow-500">person_add</span>
+                    </div>
+                    <p class="text-xs font-bold text-slate-600 uppercase tracking-wider">MỚI (7 NGÀY)</p>
+                    <div class="flex items-baseline gap-2 mt-2">
+                        <h3 id="stat-users-new" class="text-3xl font-extrabold text-slate-900">0</h3>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Content Area -->
+            <div class="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+                
+                <!-- Filters Toolbar -->
+                <div class="p-4 md:p-6 border-b border-slate-200 space-y-4">
+                    <!-- Filter Buttons - Scrollable on mobile -->
+                    <div class="overflow-x-auto -mx-4 px-4 md:mx-0 md:px-0">
+                        <div class="flex items-center gap-2 p-1 bg-slate-100 rounded-lg min-w-max">
+                            <button id="filter-btn-all" onclick="window.usersModule.setFilter('all')" class="px-3 md:px-4 py-2 bg-white text-slate-900 text-xs md:text-sm font-bold rounded-lg shadow-sm transition-all whitespace-nowrap">Tất cả</button>
+                            <button id="filter-btn-admin" onclick="window.usersModule.setFilter('admin')" class="px-3 md:px-4 py-2 text-slate-600 hover:text-slate-900 text-xs md:text-sm font-medium rounded-lg transition-all whitespace-nowrap">Admin</button>
+                            <button id="filter-btn-customer" onclick="window.usersModule.setFilter('customer')" class="px-3 md:px-4 py-2 text-slate-600 hover:text-slate-900 text-xs md:text-sm font-medium rounded-lg transition-all whitespace-nowrap">Khách hàng</button>
+                            <button id="filter-btn-verified" onclick="window.usersModule.setFilter('verified')" class="px-3 md:px-4 py-2 text-slate-600 hover:text-slate-900 text-xs md:text-sm font-medium rounded-lg transition-all whitespace-nowrap">Đã xác thực</button>
+                        </div>
+                    </div>
+
+                    <!-- Search and Sort -->
+                    <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+                        <div class="relative flex-1">
+                            <span class="material-symbols-rounded absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-[16px] md:text-[18px]">search</span>
+                            <input type="text" id="users-search-input" placeholder="Tìm kiếm..." class="w-full pl-9 md:pl-10 pr-4 py-2 md:py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm font-semibold focus:ring-2 focus:ring-primary focus:border-primary text-slate-700">
+                        </div>
+                        <div class="relative flex-shrink-0 sm:w-48">
+                            <span class="material-symbols-rounded absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-[16px] md:text-[18px]">filter_list</span>
+                            <select onchange="window.usersModule.setSort(this.value)" class="w-full pl-9 md:pl-10 pr-8 py-2 md:py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm font-semibold focus:ring-2 focus:ring-primary focus:border-primary text-slate-700 appearance-none cursor-pointer">
+                                <option value="newest">Mới nhất</option>
+                                <option value="oldest">Cũ nhất</option>
+                                <option value="name_asc">Tên A-Z</option>
+                                <option value="name_desc">Tên Z-A</option>
+                                <option value="last_login">Đăng nhập gần nhất</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Table -->
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-slate-50 border-b border-slate-200">
+                                <th class="px-6 py-4 text-xs font-bold text-slate-600 uppercase tracking-wider">Người dùng</th>
+                                <th class="px-6 py-4 text-xs font-bold text-slate-600 uppercase tracking-wider">Vai trò</th>
+                                <th class="px-6 py-4 text-xs font-bold text-slate-600 uppercase tracking-wider">Đơn hàng</th>
+                                <th class="px-6 py-4 text-xs font-bold text-slate-600 uppercase tracking-wider">Ngày tham gia</th>
+                                <th class="px-6 py-4 text-xs font-bold text-slate-600 uppercase tracking-wider">Đăng nhập cuối</th>
+                                <th class="px-6 py-4 text-xs font-bold text-slate-600 uppercase tracking-wider">Trạng thái</th>
+                                <th class="px-6 py-4 text-xs font-bold text-slate-600 uppercase tracking-wider text-right">Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody id="users-table-body" class="divide-y divide-slate-200">
+                            <tr><td colspan="7" class="text-center py-8 text-slate-400">Đang tải người dùng...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Pagination -->
+                <div id="users-pagination" class="px-4 md:px-6 py-3 md:py-4 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-3">
+                    <p class="text-xs md:text-sm text-slate-600 font-medium hidden sm:block" id="users-showing-text">Hiển thị <span class="text-slate-900 font-bold">...</span></p>
+                    <div class="flex items-center gap-1 md:gap-2 overflow-x-auto max-w-full" id="users-pagination-controls">
+                        <!-- Controls generated by JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- User Details Modal -->
+            <div id="user-details-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+                <div class="bg-white rounded-2xl w-full max-w-3xl shadow-2xl max-h-[90vh] flex flex-col">
+                    <!-- Header -->
+                    <div class="p-6 border-b border-slate-100 flex items-center justify-between">
+                        <div class="flex items-center gap-4">
+                            <img id="modal-user-avatar" src="" alt="User" class="h-16 w-16 rounded-full border-2 border-primary">
+                            <div>
+                                <h3 id="modal-user-name" class="text-xl font-bold text-slate-900"></h3>
+                                <p id="modal-user-email" class="text-sm text-slate-500"></p>
+                            </div>
+                        </div>
+                        <button onclick="window.usersModule.closeDetails()" class="p-2 text-slate-400 hover:text-rose-500 hover:bg-rose-50 rounded-full transition-all">
+                            <span class="material-symbols-rounded">close</span>
+                        </button>
+                    </div>
+
+                    <!-- Content -->
+                    <div class="flex-1 overflow-y-auto p-6 space-y-6">
+                        <!-- User Info Grid -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="space-y-4">
+                                <h4 class="text-sm font-bold text-slate-900 uppercase tracking-wider">Thông tin cá nhân</h4>
+                                <div class="space-y-3">
+                                    <div class="flex items-start gap-2">
+                                        <span class="material-symbols-rounded text-slate-400 text-[20px]">badge</span>
+                                        <div>
+                                            <p class="text-xs text-slate-500">Vai trò</p>
+                                            <p id="modal-user-role" class="text-sm font-semibold text-slate-900"></p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-start gap-2">
+                                        <span class="material-symbols-rounded text-slate-400 text-[20px]">fingerprint</span>
+                                        <div>
+                                            <p class="text-xs text-slate-500">User ID</p>
+                                            <p id="modal-user-uid" class="text-xs font-mono text-slate-700 break-all"></p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-start gap-2">
+                                        <span class="material-symbols-rounded text-slate-400 text-[20px]">phone</span>
+                                        <div>
+                                            <p class="text-xs text-slate-500">Điện thoại</p>
+                                            <p id="modal-user-phone" class="text-sm font-semibold text-slate-900"></p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-start gap-2">
+                                        <span class="material-symbols-rounded text-slate-400 text-[20px]">wc</span>
+                                        <div>
+                                            <p class="text-xs text-slate-500">Giới tính</p>
+                                            <p id="modal-user-gender" class="text-sm font-semibold text-slate-900"></p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-start gap-2">
+                                        <span class="material-symbols-rounded text-slate-400 text-[20px]">location_on</span>
+                                        <div>
+                                            <p class="text-xs text-slate-500">Địa chỉ</p>
+                                            <p id="modal-user-address" class="text-sm font-semibold text-slate-900"></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="space-y-4">
+                                <h4 class="text-sm font-bold text-slate-900 uppercase tracking-wider">Hoạt động</h4>
+                                <div class="space-y-3">
+                                    <div class="flex items-start gap-2">
+                                        <span class="material-symbols-rounded text-slate-400 text-[20px]">calendar_month</span>
+                                        <div>
+                                            <p class="text-xs text-slate-500">Ngày tham gia</p>
+                                            <p id="modal-user-created" class="text-sm font-semibold text-slate-900"></p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-start gap-2">
+                                        <span class="material-symbols-rounded text-slate-400 text-[20px]">login</span>
+                                        <div>
+                                            <p class="text-xs text-slate-500">Đăng nhập cuối</p>
+                                            <p id="modal-user-last-login" class="text-sm font-semibold text-slate-900"></p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-start gap-2">
+                                        <span class="material-symbols-rounded text-slate-400 text-[20px]">verified_user</span>
+                                        <div>
+                                            <p class="text-xs text-slate-500">Xác thực email</p>
+                                            <p id="modal-user-verified" class="text-sm font-semibold"></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Stats -->
+                        <div class="grid grid-cols-4 gap-4">
+                            <div class="bg-blue-50 p-4 rounded-lg">
+                                <p class="text-xs text-blue-600 font-semibold uppercase">Đơn hàng</p>
+                                <p id="modal-user-orders" class="text-2xl font-extrabold text-blue-700 mt-1">0</p>
+                            </div>
+                            <div class="bg-emerald-50 p-4 rounded-lg">
+                                <p class="text-xs text-emerald-600 font-semibold uppercase">Tổng chi</p>
+                                <p id="modal-user-spent" class="text-2xl font-extrabold text-emerald-700 mt-1">0đ</p>
+                            </div>
+                            <div class="bg-amber-50 p-4 rounded-lg">
+                                <p class="text-xs text-amber-600 font-semibold uppercase">Điểm tích lũy</p>
+                                <p id="modal-user-loyalty" class="text-2xl font-extrabold text-amber-700 mt-1">0</p>
+                            </div>
+                            <div class="bg-purple-50 p-4 rounded-lg">
+                                <p class="text-xs text-purple-600 font-semibold uppercase">Hạng</p>
+                                <p id="modal-user-tier" class="text-2xl font-extrabold text-purple-700 mt-1">-</p>
+                            </div>
+                        </div>
+
+                        <!-- Recent Orders -->
+                        <div>
+                            <h4 class="text-sm font-bold text-slate-900 uppercase tracking-wider mb-4">Đơn hàng gần đây</h4>
+                            <div id="modal-user-recent-orders" class="bg-slate-50 rounded-xl p-4 space-y-2">
+                                <!-- Dynamic content -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Footer -->
+                    <div class="p-6 border-t border-slate-100 flex justify-end gap-3">
+                        <button onclick="window.usersModule.closeDetails()" class="px-6 py-2.5 bg-slate-100 text-slate-700 rounded-xl text-sm font-bold hover:bg-slate-200 transition-all">
+                            Đóng</button>
+                        <button onclick="window.usersModule.editUser(document.getElementById('modal-user-uid').textContent.trim())" class="px-6 py-2.5 bg-primary hover:bg-primary-600 text-white rounded-xl text-sm font-bold shadow-lg shadow-primary/25 hover:shadow-primary/40 active:scale-95 transition-all">
+                            Chỉnh sửa
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Edit User Modal -->
+            <div id="edit-user-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+                <div class="bg-white rounded-2xl w-full max-w-2xl shadow-2xl max-h-[90vh] flex flex-col">
+                    <!-- Header -->
+                    <div class="p-6 border-b border-slate-100 flex items-center justify-between">
+                        <h3 class="text-xl font-bold text-slate-900">Chỉnh sửa thông tin người dùng</h3>
+                        <button onclick="window.usersModule.closeEditModal()" class="p-2 text-slate-400 hover:text-rose-500 hover:bg-rose-50 rounded-full transition-all">
+                            <span class="material-symbols-rounded">close</span>
+                        </button>
+                    </div>
+
+                    <!-- Content -->
+                    <div class="flex-1 overflow-y-auto p-6">
+                        <form id="edit-user-form" class="space-y-6">
+                            <input type="hidden" id="edit-user-id">
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-semibold text-slate-700 mb-2">Tên hiển thị</label>
+                                    <input type="text" id="edit-user-name" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-primary focus:border-primary">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-semibold text-slate-700 mb-2">Email</label>
+                                    <input type="email" id="edit-user-email" disabled class="w-full px-4 py-2.5 bg-slate-100 border border-slate-200 rounded-lg text-sm text-slate-500 cursor-not-allowed">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-semibold text-slate-700 mb-2">Số điện thoại</label>
+                                    <input type="tel" id="edit-user-phone" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-primary focus:border-primary">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-semibold text-slate-700 mb-2">Giới tính</label>
+                                    <select id="edit-user-gender" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-primary focus:border-primary">
+                                        <option value="male">Nam</option>
+                                        <option value="female">Nữ</option>
+                                        <option value="unisex">Khác</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-semibold text-slate-700 mb-2">Vai trò</label>
+                                    <select id="edit-user-role" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-primary focus:border-primary">
+                                        <option value="customer">Khách hàng</option>
+                                        <option value="admin">Admin</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-semibold text-slate-700 mb-2">Điểm tích lũy</label>
+                                    <input type="number" id="edit-user-loyalty" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-primary focus:border-primary">
+                                </div>
+                            </div>
+
+                            <div class="border-t border-slate-200 pt-6">
+                                <h4 class="text-sm font-bold text-slate-900 uppercase tracking-wider mb-4">Địa chỉ</h4>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div class="md:col-span-2">
+                                        <label class="block text-sm font-semibold text-slate-700 mb-2">Đường</label>
+                                        <input type="text" id="edit-user-street" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-primary focus:border-primary">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-semibold text-slate-700 mb-2">Phường/Xã</label>
+                                        <input type="text" id="edit-user-ward" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-primary focus:border-primary">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-semibold text-slate-700 mb-2">Quận/Huyện</label>
+                                        <input type="text" id="edit-user-district" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-primary focus:border-primary">
+                                    </div>
+                                    <div class="md:col-span-2">
+                                        <label class="block text-sm font-semibold text-slate-700 mb-2">Thành phố</label>
+                                        <input type="text" id="edit-user-city" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-primary focus:border-primary">
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Footer -->
+                    <div class="p-6 border-t border-slate-100 flex justify-end gap-3">
+                        <button onclick="window.usersModule.closeEditModal()" class="px-6 py-2.5 bg-slate-100 text-slate-700 rounded-xl text-sm font-bold hover:bg-slate-200 transition-all">
+                            Hủy
+                        </button>
+                        <button onclick="window.usersModule.saveUser()" class="px-6 py-2.5 bg-primary hover:bg-primary-600 text-white rounded-xl text-sm font-bold shadow-lg shadow-primary/25 hover:shadow-primary/40 active:scale-95 transition-all">
+                            Lưu thay đổi
+                        </button>
+                    </div>
                 </div>
             </div>
             `,
@@ -2229,6 +2437,12 @@
                     }, 100);
                 }
 
+                if (tabName === 'users' && window.usersModule) {
+                    setTimeout(() => {
+                        window.usersModule.init();
+                    }, 100);
+                }
+
                 if (tabName === 'customers' && window.usersModule) {
                     setTimeout(() => {
                         window.usersModule.reload();
@@ -2579,6 +2793,306 @@
     <script type="module" src="js/admin/reports.js"></script>
     <script type="module" src="js/admin/cms.js"></script>
     <script type="module" src="js/admin/settings.js"></script>
+
+    <!-- Confirmation Modal -->
+    <div id="confirm-modal" class="fixed inset-0 z-[10000] hidden items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+        <div class="bg-gradient-to-br from-slate-900 to-slate-800 rounded-2xl w-full max-w-md shadow-2xl transform scale-95 transition-transform duration-200" id="confirm-modal-content">
+            <!-- Header -->
+            <div class="p-6 border-b border-slate-700">
+                <div class="flex items-center gap-3">
+                    <span id="confirm-modal-icon" class="material-symbols-rounded text-3xl text-rose-400">warning</span>
+                    <h3 id="confirm-modal-title" class="text-xl font-bold text-white">Xác nhận</h3>
+                </div>
+            </div>
+            
+            <!-- Body -->
+            <div class="p-6">
+                <p id="confirm-modal-message" class="text-slate-200 leading-relaxed whitespace-pre-line"></p>
+                <p id="confirm-modal-submessage" class="text-sm text-slate-400 mt-2 hidden"></p>
+            </div>
+            
+            <!-- Footer -->
+            <div class="p-6 border-t border-slate-700 flex items-center justify-end gap-3">
+                <button id="confirm-modal-cancel" class="px-6 py-2.5 bg-slate-700 hover:bg-slate-600 text-white rounded-xl text-sm font-bold transition-all">
+                    Cancel
+                </button>
+                <button id="confirm-modal-ok" class="px-6 py-2.5 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white rounded-xl text-sm font-bold shadow-lg shadow-purple-500/30 transition-all">
+                    OK
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Alert Modal -->
+    <div id="alert-modal" class="fixed inset-0 z-[10000] hidden items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+        <div class="bg-gradient-to-br from-slate-900 to-slate-800 rounded-2xl w-full max-w-md shadow-2xl transform scale-95 transition-transform duration-200" id="alert-modal-content">
+            <!-- Header -->
+            <div class="p-6 border-b border-slate-700">
+                <div class="flex items-center gap-3">
+                    <span id="alert-modal-icon" class="material-symbols-rounded text-3xl text-blue-400">info</span>
+                    <h3 id="alert-modal-title" class="text-xl font-bold text-white">Thông báo</h3>
+                </div>
+            </div>
+            
+            <!-- Body -->
+            <div class="p-6">
+                <p id="alert-modal-message" class="text-slate-200 leading-relaxed whitespace-pre-line"></p>
+            </div>
+            
+            <!-- Footer -->
+            <div class="p-6 border-t border-slate-700 flex items-center justify-end">
+                <button id="alert-modal-ok" class="px-8 py-2.5 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white rounded-xl text-sm font-bold shadow-lg shadow-blue-500/30 transition-all">
+                    OK
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Global Modal Functions -->
+    <script>
+        // Confirmation Modal with Promise
+        window.showConfirm = function(message, options = {}) {
+            return new Promise((resolve) => {
+                const modal = document.getElementById('confirm-modal');
+                const modalContent = document.getElementById('confirm-modal-content');
+                const messageEl = document.getElementById('confirm-modal-message');
+                const submessageEl = document.getElementById('confirm-modal-submessage');
+                const titleEl = document.getElementById('confirm-modal-title');
+                const iconEl = document.getElementById('confirm-modal-icon');
+                const okBtn = document.getElementById('confirm-modal-ok');
+                const cancelBtn = document.getElementById('confirm-modal-cancel');
+
+                // Set content
+                messageEl.textContent = message;
+                titleEl.textContent = options.title || 'Xác nhận';
+                
+                // Set submessage if provided
+                if (options.submessage) {
+                    submessageEl.textContent = options.submessage;
+                    submessageEl.classList.remove('hidden');
+                } else {
+                    submessageEl.classList.add('hidden');
+                }
+
+                // Set icon and color based on type
+                const type = options.type || 'warning';
+                const iconMap = {
+                    danger: { icon: 'error', color: 'text-rose-400' },
+                    warning: { icon: 'warning', color: 'text-amber-400' },
+                    info: { icon: 'info', color: 'text-blue-400' },
+                    question: { icon: 'help', color: 'text-purple-400' }
+                };
+                const iconConfig = iconMap[type] || iconMap.warning;
+                iconEl.textContent = iconConfig.icon;
+                iconEl.className = `material-symbols-rounded text-3xl ${iconConfig.color}`;
+
+                // Set button text
+                okBtn.textContent = options.confirmText || 'OK';
+                cancelBtn.textContent = options.cancelText || 'Cancel';
+
+                // Show modal with animation
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+                setTimeout(() => {
+                    modalContent.classList.remove('scale-95');
+                    modalContent.classList.add('scale-100');
+                }, 10);
+
+                // Focus OK button
+                setTimeout(() => okBtn.focus(), 100);
+
+                // Handle buttons
+                const handleOk = () => {
+                    closeModal();
+                    resolve(true);
+                };
+
+                const handleCancel = () => {
+                    closeModal();
+                    resolve(false);
+                };
+
+                const closeModal = () => {
+                    modalContent.classList.remove('scale-100');
+                    modalContent.classList.add('scale-95');
+                    setTimeout(() => {
+                        modal.classList.add('hidden');
+                        modal.classList.remove('flex');
+                    }, 200);
+                    
+                    // Remove event listeners
+                    okBtn.removeEventListener('click', handleOk);
+                    cancelBtn.removeEventListener('click', handleCancel);
+                    document.removeEventListener('keydown', handleKeyPress);
+                };
+
+                const handleKeyPress = (e) => {
+                    if (e.key === 'Enter') handleOk();
+                    if (e.key === 'Escape') handleCancel();
+                };
+
+                okBtn.addEventListener('click', handleOk);
+                cancelBtn.addEventListener('click', handleCancel);
+                document.addEventListener('keydown', handleKeyPress);
+            });
+        };
+
+        // Alert Modal with Promise
+        window.showAlert = function(message, options = {}) {
+            return new Promise((resolve) => {
+                const modal = document.getElementById('alert-modal');
+                const modalContent = document.getElementById('alert-modal-content');
+                const messageEl = document.getElementById('alert-modal-message');
+                const titleEl = document.getElementById('alert-modal-title');
+                const iconEl = document.getElementById('alert-modal-icon');
+                const okBtn = document.getElementById('alert-modal-ok');
+
+                // Set content
+                messageEl.textContent = message;
+                titleEl.textContent = options.title || 'Thông báo';
+
+                // Set icon based on type
+                const type = options.type || 'info';
+                const iconMap = {
+                    success: { icon: 'check_circle', color: 'text-emerald-400' },
+                    error: { icon: 'error', color: 'text-rose-400' },
+                    warning: { icon: 'warning', color: 'text-amber-400' },
+                    info: { icon: 'info', color: 'text-blue-400' }
+                };
+                const iconConfig = iconMap[type] || iconMap.info;
+                iconEl.textContent = iconConfig.icon;
+                iconEl.className = `material-symbols-rounded text-3xl ${iconConfig.color}`;
+
+                // Show modal with animation
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+                setTimeout(() => {
+                    modalContent.classList.remove('scale-95');
+                    modalContent.classList.add('scale-100');
+                }, 10);
+
+                // Focus OK button
+                setTimeout(() => okBtn.focus(), 100);
+
+                const handleOk = () => {
+                    closeModal();
+                    resolve();
+                };
+
+                const closeModal = () => {
+                    modalContent.classList.remove('scale-100');
+                    modalContent.classList.add('scale-95');
+                    setTimeout(() => {
+                        modal.classList.add('hidden');
+                        modal.classList.remove('flex');
+                    }, 200);
+                    
+                    okBtn.removeEventListener('click', handleOk);
+                    document.removeEventListener('keydown', handleKeyPress);
+                };
+
+                const handleKeyPress = (e) => {
+                    if (e.key === 'Enter' || e.key === 'Escape') handleOk();
+                };
+
+                okBtn.addEventListener('click', handleOk);
+                document.addEventListener('keydown', handleKeyPress);
+            });
+        };
+    </script>
+
+    <!-- Notification Toast Container -->
+    <div id="notification-container" class="fixed top-4 right-4 z-[9999] flex flex-col gap-3 max-w-sm w-full pointer-events-none">
+        <!-- Notifications will be added here dynamically -->
+    </div>
+
+    <!-- Global Notification Script -->
+    <script>
+        // Global notification function
+        window.showNotification = function(message, type = 'info', duration = 5000) {
+            const container = document.getElementById('notification-container');
+            if (!container) return;
+
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.className = 'pointer-events-auto transform translate-x-full transition-transform duration-300 ease-out';
+            
+            // Icon and color based on type
+            let icon, bgColor, borderColor, iconColor, progressColor;
+            switch(type) {
+                case 'success':
+                    icon = 'check_circle';
+                    bgColor = 'bg-white';
+                    borderColor = 'border-emerald-200';
+                    iconColor = 'text-emerald-500';
+                    progressColor = 'bg-emerald-500';
+                    break;
+                case 'error':
+                    icon = 'error';
+                    bgColor = 'bg-white';
+                    borderColor = 'border-rose-200';
+                    iconColor = 'text-rose-500';
+                    progressColor = 'bg-rose-500';
+                    break;
+                case 'warning':
+                    icon = 'warning';
+                    bgColor = 'bg-white';
+                    borderColor = 'border-amber-200';
+                    iconColor = 'text-amber-500';
+                    progressColor = 'bg-amber-500';
+                    break;
+                default: // info
+                    icon = 'info';
+                    bgColor = 'bg-white';
+                    borderColor = 'border-blue-200';
+                    iconColor = 'text-blue-500';
+                    progressColor = 'bg-blue-500';
+            }
+
+            notification.innerHTML = `
+                <div class="${bgColor} rounded-xl shadow-lg border-2 ${borderColor} overflow-hidden">
+                    <div class="p-4 flex items-start gap-3">
+                        <span class="material-symbols-rounded ${iconColor} text-[24px] flex-shrink-0">${icon}</span>
+                        <div class="flex-1 min-w-0">
+                            <p class="text-sm font-semibold text-slate-900 break-words">${message}</p>
+                        </div>
+                        <button onclick="this.closest('div[role=alert]').remove()" 
+                                class="flex-shrink-0 p-1 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg transition-all">
+                            <span class="material-symbols-rounded text-[18px]">close</span>
+                        </button>
+                    </div>
+                    <div class="h-1 ${progressColor} notification-progress" style="animation: shrink ${duration}ms linear"></div>
+                </div>
+            `;
+            notification.setAttribute('role', 'alert');
+
+            container.appendChild(notification);
+
+            // Trigger slide-in animation
+            setTimeout(() => {
+                notification.classList.remove('translate-x-full');
+            }, 10);
+
+            // Auto remove after duration
+            setTimeout(() => {
+                notification.classList.add('translate-x-full', 'opacity-0');
+                setTimeout(() => notification.remove(), 300);
+            }, duration);
+        };
+
+        // Add CSS for progress bar animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes shrink {
+                from { width: 100%; }
+                to { width: 0%; }
+            }
+            .notification-progress {
+                transform-origin: left;
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
 
 </body>
 </html>
