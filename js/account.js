@@ -26,21 +26,25 @@ let currentUser = null;
 let cloudinaryWidget = null;
 let unsubscribeProfile = null;
 let unsubscribeOrders = null;
+let allUserOrders = []; // Store all orders for quick access
 
 // ============================================================================
 // INITIALIZATION
 // ============================================================================
 
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('Account page initializing...');
+    console.log('🚀 Account page initializing...');
+    console.log('🔥 Firebase Auth:', auth);
+    console.log('🔥 Firebase Database:', database);
     initAccountPage();
 });
 
 function initAccountPage() {
     // Check authentication state
+    console.log('🔍 Initializing account page...');
     onAuthStateChanged(auth, (user) => {
         if (user) {
-            console.log('User authenticated:', user.uid);
+            console.log('✅ User authenticated:', user.uid);
             currentUser = user;
             
             // Check if user has pending deletion request
@@ -53,7 +57,7 @@ function initAccountPage() {
             setupTabNavigation(); // Setup tabs
             checkUrlForTab(); // Check URL for tab param
         } else {
-            console.log('User not authenticated, redirecting...');
+            console.log('❌ User not authenticated, redirecting...');
             window.location.href = 'login.html';
         }
     });
@@ -75,21 +79,22 @@ function checkUrlForTab() {
 // ============================================================================
 
 function loadUserProfile(uid) {
+    console.log('📥 Loading user profile for:', uid);
     const userRef = ref(database, `users/${uid}`);
     
     // Real-time listener
     unsubscribeProfile = onValue(userRef, (snapshot) => {
         if (snapshot.exists()) {
             const userData = snapshot.val();
-            console.log('User data loaded:', userData);
+            console.log('✅ User data loaded:', userData);
             renderUserProfile(userData);
         } else {
-            console.warn('User data not found in database');
+            console.warn('⚠️ User data not found in database');
             // Create basic profile from auth data
             createBasicProfile(uid);
         }
     }, (error) => {
-        console.error('Error loading profile:', error);
+        console.error('❌ Error loading profile:', error);
         showToast('Không thể tải thông tin người dùng!', 'error');
     });
 }
@@ -133,17 +138,22 @@ async function loadUserOrders(uid) {
                 .map(([id, order]) => ({ ...order, id }))
                 .sort((a, b) => b.createdAt - a.createdAt);
             
+            // Store orders globally for modal access
+            allUserOrders = userOrders;
+            
             console.log('User orders loaded:', userOrders.length);
             renderOrderHistory(userOrders);
             updateOrderStats(userOrders);
         } else {
             console.log('No orders found for user');
+            allUserOrders = [];
             renderOrderHistory([]);
             updateOrderStats([]);
         }
     } catch (error) {
         console.error('Error loading orders:', error);
         // If permission denied or error, show empty state
+        allUserOrders = [];
         renderOrderHistory([]);
         updateOrderStats([]);
     }
@@ -298,7 +308,7 @@ function renderOrderHistory(orders) {
                 </td>
                 <td class="px-6 py-5 font-bold text-sm">${formatPrice(order.total)}</td>
                 <td class="px-6 py-5 text-right">
-                    <button class="bg-primary text-white text-[10px] font-black uppercase px-4 py-2 rounded-lg hover:bg-red-700 transition-colors">
+                    <button onclick="showOrderDetails('${order.id}')" class="bg-primary text-white text-[10px] font-black uppercase px-4 py-2 rounded-lg hover:bg-red-700 transition-colors">
                         Chi Tiết
                     </button>
                 </td>
@@ -786,12 +796,20 @@ function formatPrice(price) {
 
 function getStatusBadge(status) {
     const statusConfig = {
+        'pending': {
+            text: 'Chờ xử lý',
+            class: 'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400'
+        },
         'processing': {
             text: 'Đang xử lý',
             class: 'bg-primary/10 text-primary'
         },
         'shipping': {
             text: 'Đang gửi',
+            class: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400'
+        },
+        'shipped': {
+            text: 'Đang giao hàng',
             class: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400'
         },
         'delivered': {
@@ -807,6 +825,191 @@ function getStatusBadge(status) {
     const config = statusConfig[status] || statusConfig['processing'];
     return `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold uppercase ${config.class}">${config.text}</span>`;
 }
+
+// ============================================================================
+// ORDER DETAILS MODAL
+// ============================================================================
+
+function showOrderDetails(orderId) {
+    const order = allUserOrders.find(o => o.id === orderId);
+    if (!order) {
+        showToast('Không tìm thấy đơn hàng!', 'error');
+        return;
+    }
+
+    // Populate modal data
+    document.getElementById('modal-order-id').textContent = `#${order.orderId || order.id}`;
+    document.getElementById('modal-order-date').textContent = `Ngày đặt: ${formatDate(order.createdAt)}`;
+    document.getElementById('modal-order-status').innerHTML = getStatusBadge(order.status);
+    
+    // Customer info
+    const customerInfo = order.customerInfo || {};
+    document.getElementById('modal-customer-name').textContent = customerInfo.fullname || order.customerName || 'N/A';
+    document.getElementById('modal-customer-phone').textContent = customerInfo.phone || order.customerPhone || 'N/A';
+    document.getElementById('modal-customer-email').textContent = customerInfo.email || order.userEmail || 'N/A';
+    
+    const address = customerInfo.address ? 
+        `${customerInfo.address}, ${customerInfo.city || ''}` : 
+        (order.shippingAddress || 'N/A');
+    document.getElementById('modal-customer-address').textContent = address;
+
+    // Order items
+    const itemsContainer = document.getElementById('modal-order-items');
+    if (order.items && order.items.length > 0) {
+        itemsContainer.innerHTML = order.items.map(item => `
+            <div class="flex items-center gap-4 bg-gray-50 dark:bg-white/5 rounded-lg p-3">
+                <div class="w-16 h-16 bg-gray-200 dark:bg-gray-700 rounded-lg overflow-hidden flex-shrink-0">
+                    ${item.image ? 
+                        `<img src="${item.image}" alt="${item.name}" class="w-full h-full object-cover">` : 
+                        `<div class="w-full h-full flex items-center justify-center">
+                            <span class="material-symbols-outlined text-gray-400">image</span>
+                        </div>`
+                    }
+                </div>
+                <div class="flex-1">
+                    <p class="font-semibold text-sm">${item.name || 'Sản phẩm'}</p>
+                    <p class="text-xs text-gray-500 mt-1">
+                        ${item.size ? `Size: ${item.size}` : ''} 
+                        ${item.color ? `• Màu: ${item.color}` : ''}
+                    </p>
+                    <p class="text-xs text-gray-500">Số lượng: ${item.quantity || 1}</p>
+                </div>
+                <div class="text-right">
+                    <p class="font-bold text-primary">${formatPrice(item.price * item.quantity)}</p>
+                    <p class="text-xs text-gray-500">${formatPrice(item.price)}/sp</p>
+                </div>
+            </div>
+        `).join('');
+    } else {
+        itemsContainer.innerHTML = '<p class="text-center text-gray-500 py-4">Không có thông tin sản phẩm</p>';
+    }
+
+    // Order summary
+    document.getElementById('modal-subtotal').textContent = formatPrice(order.subtotal || 0);
+    document.getElementById('modal-tax').textContent = formatPrice(order.tax || 0);
+    document.getElementById('modal-total').textContent = formatPrice(order.total || 0);
+    document.getElementById('modal-payment-method').textContent = order.paymentMethod || 'COD';
+
+    // Action buttons logic
+    const confirmBtn = document.getElementById('btn-confirm-received');
+    const cancelBtn = document.getElementById('btn-cancel-order');
+    
+    // Reset buttons
+    confirmBtn.classList.add('hidden');
+    cancelBtn.classList.add('hidden');
+    
+    // Show buttons based on order status
+    if (order.status === 'shipped') {
+        // Đang giao hàng: Hiện nút "Đã nhận hàng", ẩn nút "Hủy đơn"
+        confirmBtn.classList.remove('hidden');
+        confirmBtn.onclick = () => confirmOrderReceived(orderId);
+    } else if (order.status !== 'delivered' && order.status !== 'cancelled') {
+        // Pending hoặc Processing: Hiện nút "Hủy đơn"
+        cancelBtn.classList.remove('hidden');
+        cancelBtn.onclick = () => cancelOrder(orderId);
+    }
+
+    // Show modal
+    const modal = document.getElementById('order-details-modal');
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeOrderDetailsModal() {
+    const modal = document.getElementById('order-details-modal');
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+    document.body.style.overflow = '';
+}
+
+async function confirmOrderReceived(orderId) {
+    if (!confirm('Bạn đã nhận được hàng và xác nhận đơn hàng hoàn thành?')) {
+        return;
+    }
+
+    const btn = document.getElementById('btn-confirm-received');
+    const originalText = btn.innerHTML;
+    
+    try {
+        btn.disabled = true;
+        btn.innerHTML = '<span class="material-symbols-outlined animate-spin">progress_activity</span> Đang xử lý...';
+
+        // Update order status to delivered
+        const orderRef = ref(database, `orders/${orderId}`);
+        await update(orderRef, {
+            status: 'delivered',
+            deliveredAt: Date.now(),
+            updatedAt: Date.now()
+        });
+
+        showToast('Đã xác nhận nhận hàng thành công!');
+        
+        // Reload orders to update UI
+        if (currentUser) {
+            await loadUserOrders(currentUser.uid);
+        }
+        
+        // Close modal
+        closeOrderDetailsModal();
+
+    } catch (error) {
+        console.error('Error confirming order:', error);
+        showToast('Có lỗi xảy ra. Vui lòng thử lại!', 'error');
+        btn.disabled = false;
+        btn.innerHTML = originalText;
+    }
+}
+
+async function cancelOrder(orderId) {
+    const reason = prompt('Vui lòng cho biết lý do hủy đơn:');
+    if (!reason || reason.trim() === '') {
+        return;
+    }
+
+    const btn = document.getElementById('btn-cancel-order');
+    const originalText = btn.innerHTML;
+    
+    try {
+        btn.disabled = true;
+        btn.innerHTML = '<span class="material-symbols-outlined animate-spin">progress_activity</span> Đang hủy...';
+
+        // Update order status to cancelled
+        const orderRef = ref(database, `orders/${orderId}`);
+        await update(orderRef, {
+            status: 'cancelled',
+            cancelledAt: Date.now(),
+            cancelReason: reason,
+            updatedAt: Date.now()
+        });
+
+        showToast('Đơn hàng đã được hủy!');
+        
+        // Reload orders to update UI
+        if (currentUser) {
+            await loadUserOrders(currentUser.uid);
+        }
+        
+        // Close modal
+        closeOrderDetailsModal();
+
+    } catch (error) {
+        console.error('Error cancelling order:', error);
+        showToast('Có lỗi xảy ra. Vui lòng thử lại!', 'error');
+        btn.disabled = false;
+        btn.innerHTML = originalText;
+    }
+}
+
+// Setup modal close button
+document.getElementById('close-order-modal')?.addEventListener('click', closeOrderDetailsModal);
+
+// Make functions available globally
+window.showOrderDetails = showOrderDetails;
+
+// ============================================================================
+// HELPER FUNCTIONS
+// ============================================================================
 
 function showToast(message, type = 'success') {
     if (window.showToast) {

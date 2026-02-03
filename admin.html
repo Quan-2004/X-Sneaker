@@ -260,6 +260,16 @@
             <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
                 <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
                     <div class="absolute right-0 top-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                        <span class="material-symbols-rounded text-6xl text-orange-500">schedule</span>
+                    </div>
+                    <p class="text-xs font-bold text-slate-600 uppercase tracking-wider">CHỜ XỬ LÝ</p>
+                    <div class="flex items-baseline gap-2 mt-2">
+                        <h3 id="stat-orders-pending" class="text-3xl font-extrabold text-slate-900">0</h3>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
+                    <div class="absolute right-0 top-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
                         <span class="material-symbols-rounded text-6xl text-yellow-500">pending</span>
                     </div>
                     <p class="text-xs font-bold text-slate-600 uppercase tracking-wider">ĐANG XỜ LÝ</p>
@@ -306,6 +316,7 @@
                 <div class="p-6 border-b border-slate-200 flex flex-wrap items-center gap-4">
                     <div class="flex items-center gap-2 p-1 bg-slate-100 rounded-lg">
                         <button id="filter-btn-all" onclick="window.ordersModule.setFilter('all')" class="px-4 py-2 bg-white text-slate-900 text-sm font-bold rounded-lg shadow-sm transition-all">Tất cả</button>
+                        <button id="filter-btn-pending" onclick="window.ordersModule.setFilter('pending')" class="px-4 py-2 text-slate-600 hover:text-slate-900 text-sm font-medium rounded-lg transition-all">Chờ xử lý</button>
                         <button id="filter-btn-processing" onclick="window.ordersModule.setFilter('processing')" class="px-4 py-2 text-slate-600 hover:text-slate-900 text-sm font-medium rounded-lg transition-all">Đang xử lý</button>
                         <button id="filter-btn-shipped" onclick="window.ordersModule.setFilter('shipped')" class="px-4 py-2 text-slate-600 hover:text-slate-900 text-sm font-medium rounded-lg transition-all">Đang giao</button>
                         <button id="filter-btn-delivered" onclick="window.ordersModule.setFilter('delivered')" class="px-4 py-2 text-slate-600 hover:text-slate-900 text-sm font-medium rounded-lg transition-all">Hoàn thành</button>

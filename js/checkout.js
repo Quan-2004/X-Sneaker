@@ -1,11 +1,12 @@
 /**
  * Checkout Logic
- * Handles cart summary display and order placement (COD)
+ * Handles cart summary display and order placement (COD & QR Transfer)
  */
 
 import { initAuthStateObserver, getUserData } from './auth.js';
 import { getFirebaseAuth, getFirebaseDatabase } from './firebase-config.js';
 import { ref, push, set } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-database.js";
+import { showQRPaymentModal } from './qr-payment.js';
 
 const auth = getFirebaseAuth();
 const database = getFirebaseDatabase();
@@ -123,7 +124,6 @@ document.addEventListener('DOMContentLoaded', () => {
             submitBtn.innerHTML = `<span class="material-symbols-outlined animate-spin">progress_activity</span> Đang xử lý...`;
 
             try {
-                // XỬ LÝ THANH TOÁN
                 const cart = window.getCart ? window.getCart() : [];
                 const user = auth.currentUser;
                 
@@ -139,49 +139,101 @@ document.addEventListener('DOMContentLoaded', () => {
                         address,
                         city
                     },
+                    customerName: fullname,
+                    customerPhone: phone,
                     items: cart.map(item => ({
-                        id: item.id,
-                        name: item.name,
-                        price: item.price,
-                        quantity: item.quantity,
-                        size: item.size,
-                        color: item.color,
-                        image: item.image
+                        id: item.id || '',
+                        name: item.name || 'Sản phẩm',
+                        price: item.price || 0,
+                        quantity: item.quantity || 1,
+                        size: item.size || '',
+                        color: item.color || '',
+                        image: item.image || ''
                     })),
                     total: _currentTotal,
                     subtotal: _currentTotal / (1 + TAX_RATE),
                     tax: _currentTotal - (_currentTotal / (1 + TAX_RATE)),
-                    paymentMethod: 'COD',
-                    status: 'processing',
+                    paymentMethod: paymentMethod === 'qr-transfer' ? 'QR Transfer' : 'COD',
+                    status: paymentMethod === 'qr-transfer' ? 'pending' : 'processing',
                     createdAt: Date.now(),
                     updatedAt: Date.now()
                 };
 
-                // 2. THANH TOÁN COD (Mặc định)
-                await new Promise(resolve => setTimeout(resolve, 1000)); // Fake delay
+                // XỬ LÝ THEO PHƯƠNG THỨC THANH TOÁN
+                if (paymentMethod === 'qr-transfer') {
+                    // ===== THANH TOÁN QR CODE =====
+                    submitBtn.innerHTML = originalBtnContent;
+                    submitBtn.disabled = false;
 
-                // Lưu đơn hàng vào Firebase
-                try {
-                    const ordersRef = ref(database, 'orders');
-                    const newOrderRef = push(ordersRef);
-                    await set(newOrderRef, orderData);
-                    console.log('✅ Đơn hàng đã được lưu vào Firebase:', orderData.orderId);
-                } catch (saveError) {
-                    console.error('❌ Lỗi lưu đơn hàng:', saveError);
-                    // Vẫn cho phép tiếp tục nếu lưu Firebase thất bại
+                    // Hiển thị QR Modal
+                    showQRPaymentModal(
+                        orderData.orderId,
+                        Math.round(_currentTotal),
+                        async () => {
+                            // Callback khi thanh toán thành công
+                            submitBtn.disabled = true;
+                            submitBtn.innerHTML = `<span class="material-symbols-outlined animate-spin">progress_activity</span> Đang lưu đơn hàng...`;
+
+                            try {
+                                // Lưu đơn hàng vào Firebase với status 'pending'
+                                const ordersRef = ref(database, 'orders');
+                                const newOrderRef = push(ordersRef);
+                                await set(newOrderRef, orderData);
+                                console.log('✅ Đơn hàng QR đã được lưu:', orderData.orderId);
+
+                                // Clear Cart
+                                localStorage.removeItem('cart');
+                                
+                                // Show Success
+                                submitBtn.innerHTML = `<span class="material-symbols-outlined">check</span> Thành công!`;
+                                window.showToast('Thanh toán thành công! Đơn hàng đang chờ xử lý.');
+
+                                // Redirect
+                                setTimeout(() => {
+                                    window.location.href = 'Account.html?tab=orders&orderSuccess=true';
+                                }, 1500);
+                            } catch (saveError) {
+                                console.error('❌ Lỗi lưu đơn hàng:', saveError);
+                                window.showToast('Thanh toán thành công nhưng không thể lưu đơn hàng. Vui lòng liên hệ CSKH.', 'error');
+                                submitBtn.disabled = false;
+                                submitBtn.innerHTML = originalBtnContent;
+                            }
+                        },
+                        () => {
+                            // Callback khi hủy thanh toán
+                            submitBtn.disabled = false;
+                            submitBtn.innerHTML = originalBtnContent;
+                            window.showToast('Đã hủy thanh toán QR', 'error');
+                        }
+                    );
+
+                } else {
+                    // ===== THANH TOÁN COD (Mặc định) =====
+                    await new Promise(resolve => setTimeout(resolve, 1000)); // Fake delay
+
+                    // Lưu đơn hàng vào Firebase
+                    try {
+                        const ordersRef = ref(database, 'orders');
+                        const newOrderRef = push(ordersRef);
+                        await set(newOrderRef, orderData);
+                        console.log('✅ Đơn hàng COD đã được lưu:', orderData.orderId);
+                    } catch (saveError) {
+                        console.error('❌ Lỗi lưu đơn hàng:', saveError);
+                        // Vẫn cho phép tiếp tục nếu lưu Firebase thất bại
+                    }
+
+                    // Clear Cart
+                    localStorage.removeItem('cart');
+                    
+                    // Show Success
+                    submitBtn.innerHTML = `<span class="material-symbols-outlined">check</span> Thành công!`;
+                    window.showToast('Đặt hàng thành công! Cảm ơn bạn đã mua sắm.');
+
+                    // Redirect
+                    setTimeout(() => {
+                        window.location.href = 'Account.html?tab=orders&orderSuccess=true';
+                    }, 1500);
                 }
-
-                // Clear Cart
-                localStorage.removeItem('cart');
-                
-                // Show Success
-                submitBtn.innerHTML = `<span class="material-symbols-outlined">check</span> Thành công!`;
-                window.showToast('Đặt hàng thành công! Cảm ơn bạn đã mua sắm.');
-
-                // Redirect
-                setTimeout(() => {
-                     window.location.href = 'index.html?orderSuccess=true';
-                }, 1500);
 
             } catch (error) {
                 console.error('Checkout error:', error);

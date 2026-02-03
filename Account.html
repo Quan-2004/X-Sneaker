@@ -12,6 +12,7 @@
     <script src="js/common.js" defer></script>
     <script src="https://upload-widget.cloudinary.com/global/all.js"></script>
     <script type="module" src="js/search.js"></script>
+    <script type="module" src="js/account.js"></script>
   </head>
 <body class="bg-background-light dark:bg-background-dark text-[#1b0e0f] dark:text-white transition-colors duration-300">
     <!-- Header -->
@@ -514,8 +515,109 @@
         </div>
     </div>
 
-    <!-- Account Logic -->
-    <script type="module" src="js/account.js"></script>
+    <!-- Order Details Modal -->
+    <div id="order-details-modal" class="fixed inset-0 z-[90] hidden items-center justify-center bg-black/70 backdrop-blur-sm p-4">
+        <div class="bg-white dark:bg-background-dark w-full max-w-3xl rounded-2xl shadow-2xl transform scale-95 transition-all duration-300 max-h-[90vh] overflow-y-auto">
+            <!-- Modal Header -->
+            <div class="sticky top-0 bg-gradient-to-r from-primary to-red-700 text-white p-6 rounded-t-2xl flex items-center justify-between">
+                <div>
+                    <h3 class="text-2xl font-bold" id="modal-order-id">Chi Tiết Đơn Hàng</h3>
+                    <p class="text-sm opacity-90 mt-1" id="modal-order-date">Ngày đặt: --</p>
+                </div>
+                <button id="close-order-modal" class="hover:bg-white/20 p-2 rounded-full transition-colors">
+                    <span class="material-symbols-outlined text-3xl">close</span>
+                </button>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="p-6 space-y-6">
+                <!-- Status Badge -->
+                <div class="flex items-center justify-between">
+                    <span class="text-sm font-semibold text-gray-600 dark:text-gray-400">Trạng thái:</span>
+                    <span id="modal-order-status"></span>
+                </div>
+
+                <!-- Customer Info -->
+                <div class="bg-gray-50 dark:bg-white/5 rounded-xl p-5 space-y-3">
+                    <h4 class="font-bold text-lg mb-3 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary">person</span>
+                        Thông Tin Người Nhận
+                    </h4>
+                    <div class="grid grid-cols-2 gap-4 text-sm">
+                        <div>
+                            <p class="text-gray-500 dark:text-gray-400 mb-1">Họ tên:</p>
+                            <p class="font-semibold" id="modal-customer-name">--</p>
+                        </div>
+                        <div>
+                            <p class="text-gray-500 dark:text-gray-400 mb-1">Số điện thoại:</p>
+                            <p class="font-semibold" id="modal-customer-phone">--</p>
+                        </div>
+                        <div class="col-span-2">
+                            <p class="text-gray-500 dark:text-gray-400 mb-1">Email:</p>
+                            <p class="font-semibold" id="modal-customer-email">--</p>
+                        </div>
+                        <div class="col-span-2">
+                            <p class="text-gray-500 dark:text-gray-400 mb-1">Địa chỉ giao hàng:</p>
+                            <p class="font-semibold" id="modal-customer-address">--</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Order Items -->
+                <div>
+                    <h4 class="font-bold text-lg mb-3 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary">shopping_bag</span>
+                        Sản Phẩm Đã Đặt
+                    </h4>
+                    <div class="space-y-3" id="modal-order-items">
+                        <!-- Items will be rendered here -->
+                    </div>
+                </div>
+
+                <!-- Order Summary -->
+                <div class="border-t dark:border-white/10 pt-4">
+                    <div class="space-y-2 text-sm">
+                        <div class="flex justify-between">
+                            <span class="text-gray-600 dark:text-gray-400">Tạm tính:</span>
+                            <span class="font-semibold" id="modal-subtotal">--</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600 dark:text-gray-400">Thuế (8%):</span>
+                            <span class="font-semibold" id="modal-tax">--</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600 dark:text-gray-400">Phí vận chuyển:</span>
+                            <span class="font-semibold text-green-600">Miễn phí</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600 dark:text-gray-400">Phương thức thanh toán:</span>
+                            <span class="font-semibold" id="modal-payment-method">--</span>
+                        </div>
+                        <div class="flex justify-between text-lg font-bold border-t dark:border-white/10 pt-3">
+                            <span>Tổng cộng:</span>
+                            <span class="text-primary" id="modal-total">--</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex gap-3 pt-4 border-t dark:border-white/10">
+                    <!-- Nút Đã Nhận Hàng - chỉ hiện khi status = shipped -->
+                    <button id="btn-confirm-received" class="flex-1 bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-xl transition-all flex items-center justify-center gap-2 hidden">
+                        <span class="material-symbols-outlined">task_alt</span>
+                        <span>Đã Nhận Hàng</span>
+                    </button>
+                    
+                    <!-- Nút Hủy Đơn - ẩn khi status = shipped hoặc delivered -->
+                    <button id="btn-cancel-order" class="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold py-3 rounded-xl transition-all flex items-center justify-center gap-2 hidden">
+                        <span class="material-symbols-outlined">cancel</span>
+                        <span>Hủy Đơn Hàng</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </body>
 </html>
 
