@@ -6,8 +6,8 @@
 
 // Cấu hình ngân hàng (có thể thay đổi theo nhu cầu)
 const BANK_CONFIG = {
-    bankId: '970422',          // MB Bank (Vietcombank: 970436, Techcombank: 970407)
-    accountNo: '0123456789',   // Số tài khoản nhận tiền
+    bankId: '970436',          // Vietcombank (Vietcombank: 970436, Techcombank: 970407)
+    accountNo: '1030790398',   // Số tài khoản nhận tiền
     accountName: 'CONG TY X-SNEAKER',
     template: 'compact2'       // Template QR code
 };
@@ -43,10 +43,10 @@ export function showQRPaymentModal(orderId, amount, onSuccess, onCancel) {
     
     // Tạo modal HTML
     const modalHTML = `
-        <div id="qr-payment-modal" class="fixed inset-0 bg-black/80 z-[100] flex items-center justify-center p-4 animate-fade-in">
-            <div class="bg-white dark:bg-[#2d1a1b] rounded-2xl max-w-md w-full shadow-2xl transform animate-scale-in">
+        <div id="qr-payment-modal" class="fixed inset-0 flex items-center justify-center p-4 animate-fade-in" style="z-index: 999999; background: rgba(0, 0, 0, 0.8);">
+            <div class="bg-white dark:bg-[#2d1a1b] rounded-2xl max-w-md w-full shadow-2xl transform animate-scale-in" style="position: relative; z-index: 1000000;">
                 <!-- Header -->
-                <div class="bg-gradient-to-r from-primary to-red-700 text-white p-6 rounded-t-2xl">
+                <div class="bg-gradient-to-r from-primary to-red-700 text-white p-6 rounded-t-2xl" style="position: relative; z-index: 1000001;">
                     <div class="flex items-center justify-between">
                         <div class="flex items-center gap-3">
                             <span class="material-symbols-outlined text-3xl">qr_code_2</span>
@@ -55,17 +55,17 @@ export function showQRPaymentModal(orderId, amount, onSuccess, onCancel) {
                                 <p class="text-sm opacity-90">Quét mã để chuyển khoản</p>
                             </div>
                         </div>
-                        <button id="qr-close-btn" class="hover:bg-white/20 p-2 rounded-full transition-colors">
+                        <button id="qr-close-btn" class="hover:bg-white/20 p-2 rounded-full transition-colors" style="position: relative; z-index: 1000002;">
                             <span class="material-symbols-outlined">close</span>
                         </button>
                     </div>
                 </div>
 
                 <!-- Body -->
-                <div class="p-8">
+                <div class="p-8" style="position: relative; z-index: 1000001;">
                     <!-- QR Code -->
-                    <div class="bg-white p-6 rounded-xl border-4 border-dashed border-gray-300 mb-6 flex flex-col items-center">
-                        <img src="${qrUrl}" alt="QR Code" class="w-64 h-64 object-contain" id="qr-code-image">
+                    <div class="bg-white p-6 rounded-xl border-4 border-dashed border-gray-300 mb-6 flex flex-col items-center" style="position: relative; z-index: 1000002;">
+                        <img src="${qrUrl}" alt="QR Code" class="w-64 h-64 object-contain" id="qr-code-image" loading="eager" style="pointer-events: auto !important; user-select: none; -webkit-user-drag: none; position: relative; z-index: 1000003;">
                         <p class="text-xs text-gray-500 mt-3 text-center">
                             Sử dụng app ngân hàng để quét mã QR
                         </p>
@@ -75,7 +75,7 @@ export function showQRPaymentModal(orderId, amount, onSuccess, onCancel) {
                     <div class="space-y-3 mb-6 bg-gray-50 dark:bg-black/20 p-4 rounded-xl">
                         <div class="flex justify-between text-sm">
                             <span class="text-gray-600 dark:text-gray-400">Ngân hàng:</span>
-                            <span class="font-bold text-gray-900 dark:text-white">MB Bank</span>
+                            <span class="font-bold text-gray-900 dark:text-white">Vietcombank</span>
                         </div>
                         <div class="flex justify-between text-sm">
                             <span class="text-gray-600 dark:text-gray-400">Số tài khoản:</span>

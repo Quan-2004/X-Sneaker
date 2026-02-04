@@ -128,17 +128,29 @@ export function getOptimizedImageUrl(url, options = {}) {
         return url;
     }
 
-    const {
-        width = 400,
-        height = 400,
-        crop = 'fill',
-        quality = 'auto',
-        format = 'auto'
-    } = options;
+    try {
+        const {
+            width = 400,
+            height = 400,
+            crop = 'fill',
+            quality = 'auto',
+            format = 'auto'
+        } = options;
 
-    // Insert transformation parameters
-    const transformation = `w_${width},h_${height},c_${crop},q_${quality},f_${format}`;
-    return url.replace('/upload/', `/upload/${transformation}/`);
+        // Simplified transformation for better compatibility
+        // Use c_limit instead of c_cover/c_fill for free tier
+        const transformation = `w_${width},h_${height},c_limit`;
+        
+        // Check if already has transformation
+        if (url.includes('/upload/')) {
+            return url.replace('/upload/', `/upload/${transformation}/`);
+        }
+        
+        return url;
+    } catch (error) {
+        console.warn('Image optimization failed, using original URL:', error);
+        return url;
+    }
 }
 
 console.log('✅ Cloudinary upload module loaded');

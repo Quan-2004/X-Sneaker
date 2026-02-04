@@ -5,7 +5,7 @@
 
 import { initAuthStateObserver, getUserData } from './auth.js';
 import { getFirebaseAuth, getFirebaseDatabase } from './firebase-config.js';
-import { ref, push, set } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-database.js";
+import { ref, push, set, get, update, runTransaction } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-database.js";
 import { showQRPaymentModal } from './qr-payment.js';
 
 const auth = getFirebaseAuth();
@@ -14,6 +14,8 @@ const database = getFirebaseDatabase();
 document.addEventListener('DOMContentLoaded', () => {
     const checkoutItemsContainer = document.getElementById('checkout-items');
     const subtotalEl = document.getElementById('checkout-subtotal');
+    const discountEl = document.getElementById('checkout-discount');
+    const discountRowEl = document.getElementById('checkout-discount-row');
     const taxEl = document.getElementById('checkout-tax');
     const totalEl = document.getElementById('checkout-total');
     const checkoutForm = document.getElementById('checkout-form');
@@ -52,6 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const TAX_RATE = 0.08;
     let _currentTotal = 0; // Biến lưu tổng tiền để dùng cho thanh toán
+    let _appliedCoupon = null; // Lưu thông tin mã giảm giá
 
     // --- 1. Load Cart Summary ---
     function loadOrderSummary() {
@@ -88,12 +91,78 @@ document.addEventListener('DOMContentLoaded', () => {
         // Calculate Totals
         let subtotal = 0;
         cart.forEach(item => subtotal += item.price * item.quantity);
-        const tax = subtotal * TAX_RATE;
-        _currentTotal = subtotal + tax;
+        
+        // Load applied coupon from localStorage
+        let discount = 0;
+        const savedCoupon = localStorage.getItem('appliedCoupon');
+        if (savedCoupon) {
+            try {
+                _appliedCoupon = JSON.parse(savedCoupon);
+                discount = calculateDiscount(subtotal, _appliedCoupon);
+                
+                // Show discount row
+                if (discountRowEl) discountRowEl.classList.remove('hidden');
+                if (discountEl) discountEl.textContent = '-' + window.formatPrice(discount);
+            } catch (e) {
+                console.error('Error parsing coupon:', e);
+                localStorage.removeItem('appliedCoupon');
+            }
+        } else {
+            // Hide discount row if no coupon
+            if (discountRowEl) discountRowEl.classList.add('hidden');
+        }
+        
+        const afterDiscount = subtotal - discount;
+        const tax = afterDiscount * TAX_RATE;
+        _currentTotal = afterDiscount + tax;
 
         if (subtotalEl) subtotalEl.textContent = window.formatPrice(subtotal);
         if (taxEl) taxEl.textContent = window.formatPrice(tax);
         if (totalEl) totalEl.textContent = window.formatPrice(_currentTotal);
+    }
+    
+    /**
+     * Calculate discount amount based on coupon
+     */
+    function calculateDiscount(subtotal, coupon) {
+        let discount = 0;
+        
+        if (coupon.type === 'percentage') {
+            discount = subtotal * (coupon.value / 100);
+            // Apply max discount limit if exists
+            if (coupon.maxDiscount && discount > coupon.maxDiscount) {
+                discount = coupon.maxDiscount;
+            }
+        } else if (coupon.type === 'fixed') {
+            discount = coupon.value;
+        }
+        
+        // Discount cannot exceed subtotal
+        return Math.min(discount, subtotal);
+    }
+    
+    /**
+     * Update promotion usage count in Firebase
+     */
+    async function updatePromotionUsage(couponId) {
+        if (!couponId) return;
+        
+        try {
+            const promotionRef = ref(database, `promotions/${couponId}`);
+            
+            // Use transaction to ensure atomic increment
+            await runTransaction(promotionRef, (currentData) => {
+                if (currentData) {
+                    currentData.usageCount = (currentData.usageCount || 0) + 1;
+                }
+                return currentData;
+            });
+            
+            console.log('✅ Đã cập nhật usageCount cho mã:', couponId);
+        } catch (error) {
+            console.error('❌ Lỗi cập nhật promotion usage:', error);
+            // Don't throw error - order is already placed
+        }
     }
 
     // --- 2. Handle Order Submission ---
@@ -127,6 +196,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 const cart = window.getCart ? window.getCart() : [];
                 const user = auth.currentUser;
                 
+                // Calculate subtotal and discount
+                let subtotal = 0;
+                cart.forEach(item => subtotal += item.price * item.quantity);
+                
+                let discount = 0;
+                if (_appliedCoupon) {
+                    discount = calculateDiscount(subtotal, _appliedCoupon);
+                }
+                
+                const afterDiscount = subtotal - discount;
+                const tax = afterDiscount * TAX_RATE;
+                
                 // Tạo order data
                 const orderData = {
                     userId: user ? user.uid : 'guest',
@@ -150,9 +231,15 @@ document.addEventListener('DOMContentLoaded', () => {
                         color: item.color || '',
                         image: item.image || ''
                     })),
+                    subtotal: subtotal,
+                    discount: discount,
+                    tax: tax,
                     total: _currentTotal,
-                    subtotal: _currentTotal / (1 + TAX_RATE),
-                    tax: _currentTotal - (_currentTotal / (1 + TAX_RATE)),
+                    coupon: _appliedCoupon ? {
+                        code: _appliedCoupon.code,
+                        type: _appliedCoupon.type,
+                        value: _appliedCoupon.value
+                    } : null,
                     paymentMethod: paymentMethod === 'qr-transfer' ? 'QR Transfer' : 'COD',
                     status: 'pending', // Tất cả đơn mới đều là 'pending'
                     createdAt: Date.now(),
@@ -181,8 +268,14 @@ document.addEventListener('DOMContentLoaded', () => {
                                 await set(newOrderRef, orderData);
                                 console.log('✅ Đơn hàng QR đã được lưu:', orderData.orderId);
 
-                                // Clear Cart
+                                // Update promotion usage count if coupon was used
+                                if (_appliedCoupon && _appliedCoupon.id) {
+                                    await updatePromotionUsage(_appliedCoupon.id);
+                                }
+
+                                // Clear Cart and Coupon
                                 localStorage.removeItem('cart');
+                                localStorage.removeItem('appliedCoupon');
                                 
                                 // Show Success
                                 submitBtn.innerHTML = `<span class="material-symbols-outlined">check</span> Thành công!`;
@@ -217,13 +310,19 @@ document.addEventListener('DOMContentLoaded', () => {
                         const newOrderRef = push(ordersRef);
                         await set(newOrderRef, orderData);
                         console.log('✅ Đơn hàng COD đã được lưu:', orderData.orderId);
+                        
+                        // Update promotion usage count if coupon was used
+                        if (_appliedCoupon && _appliedCoupon.id) {
+                            await updatePromotionUsage(_appliedCoupon.id);
+                        }
                     } catch (saveError) {
                         console.error('❌ Lỗi lưu đơn hàng:', saveError);
                         // Vẫn cho phép tiếp tục nếu lưu Firebase thất bại
                     }
 
-                    // Clear Cart
+                    // Clear Cart and Coupon
                     localStorage.removeItem('cart');
+                    localStorage.removeItem('appliedCoupon');
                     
                     // Show Success
                     submitBtn.innerHTML = `<span class="material-symbols-outlined">check</span> Thành công!`;

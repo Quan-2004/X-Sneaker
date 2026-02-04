@@ -15,6 +15,17 @@
     }
   },
   "blogComments": {
+    "-OkXctorGXfuSYik-zd3": {
+      "-OkZeZqnc2kf3JJuLO9_": {
+        "content": "ádasd",
+        "likes": 0,
+        "timestamp": 1770141666799,
+        "userAvatar": "https://res.cloudinary.com/dvcebine7/image/upload/v1770020096/Upload-Preset/eohq5zzyzo3wy5l5jz6d.jpg",
+        "userEmail": "quantrixsneaker251@gmail.com",
+        "userId": "lQncKDLoCPMEDW1iazyB9cHADS53",
+        "userName": "Admin"
+      }
+    },
     "blog_001": {
       "comment_001": {
         "content": "Bài viết rất hữu ích! Mình đã áp dụng cách phối với quần jeans và trông rất đẹp.",
@@ -165,7 +176,7 @@
       "thumbnailImage": "https://res.cloudinary.com/dvcebine7/image/upload/v1770107672/Upload-Preset/i0ej6akpvktdtfhmqw7f.jpg",
       "title": "Cảnh báo: Cách phân biệt giày Real và Fake mới nhất 2026 - Đừng để mất tiền oan!",
       "updatedAt": 1770107683200,
-      "views": 0
+      "views": 2
     },
     "-OkXdT8dH5GZVcsduGdI": {
       "author": {
@@ -541,53 +552,74 @@
       "updatedAt": 1770107249280,
       "userEmail": "phucvuong175@gmail.com",
       "userId": "1R6z4Qb66HOqu0HWsyjJj929uxy1"
+    },
+    "-OkZjeJhlifXJLar4xBg": {
+      "createdAt": 1770142997019,
+      "customerInfo": {
+        "address": "ưeqw",
+        "city": "qưeqw",
+        "email": "quantrixsneaker251@gmail.com",
+        "fullname": "Admin",
+        "phone": "09876"
+      },
+      "customerName": "Admin",
+      "customerPhone": "09876",
+      "items": [
+        {
+          "color": "",
+          "id": 1770142661179,
+          "image": "https://res.cloudinary.com/dvcebine7/image/upload/v1770101801/Upload-Preset/cwhjgo6kxuuti8curvw6.jpg",
+          "name": "Nike Air Force 1 '07",
+          "price": 2900000,
+          "quantity": 1,
+          "size": "Free Size"
+        }
+      ],
+      "orderId": "ORD-1770142997019",
+      "paymentMethod": "COD",
+      "status": "processing",
+      "subtotal": 2900000,
+      "tax": 232000,
+      "total": 3132000,
+      "updatedAt": 1770142997019,
+      "userEmail": "quantrixsneaker251@gmail.com",
+      "userId": "lQncKDLoCPMEDW1iazyB9cHADS53"
+    },
+    "-OkZkdTXW_nCy-PEOoWD": {
+      "createdAt": 1770143252418,
+      "customerInfo": {
+        "address": "qưeq",
+        "city": "qưeqw",
+        "email": "quantrixsneaker251@gmail.com",
+        "fullname": "Admin",
+        "phone": "098765432"
+      },
+      "customerName": "Admin",
+      "customerPhone": "098765432",
+      "deliveredAt": 1770144365354,
+      "items": [
+        {
+          "color": "",
+          "id": 1770143239133,
+          "image": "https://res.cloudinary.com/dvcebine7/image/upload/v1770101801/Upload-Preset/cwhjgo6kxuuti8curvw6.jpg",
+          "name": "Nike Air Force 1 '07",
+          "price": 2900000,
+          "quantity": 1,
+          "size": "Free Size"
+        }
+      ],
+      "orderId": "ORD-1770143252417",
+      "paymentMethod": "QR Transfer",
+      "status": "delivered",
+      "subtotal": 2900000,
+      "tax": 232000,
+      "total": 3132000,
+      "updatedAt": 1770144365354,
+      "userEmail": "quantrixsneaker251@gmail.com",
+      "userId": "lQncKDLoCPMEDW1iazyB9cHADS53"
     }
   },
   "products": {
-    "-OkWOR8a9WdkKVjyr0J2": {
-      "brand": "Nike",
-      "category": "lifestyle",
-      "colorImages": {
-        "đen": "https://res.cloudinary.com/dvcebine7/image/upload/v1770086811/Upload-Preset/byvimmo2puxe9bjmxlzo.jpg",
-        "đỏ": "https://res.cloudinary.com/dvcebine7/image/upload/v1770086808/Upload-Preset/gqksn5zwxzkoixoas2np.jpg"
-      },
-      "colors": [
-        "đỏ",
-        "đen"
-      ],
-      "createdAt": 1770086842062,
-      "description": "qưưqew",
-      "discount": 0,
-      "featured": true,
-      "gender": "male",
-      "images": [
-        "https://res.cloudinary.com/dvcebine7/image/upload/v1770086842/Upload-Preset/rgbftwkwruq3lpiy6ovc.jpg"
-      ],
-      "inventory": {
-        "đen": {
-          "38": 6,
-          "39": 3
-        },
-        "đỏ": {
-          "38": 8,
-          "39": 2
-        }
-      },
-      "isBestSeller": false,
-      "isNew": true,
-      "name": "ưqeq",
-      "originalPrice": 300000,
-      "price": 299000,
-      "rating": 0,
-      "reviews": 0,
-      "sizes": [
-        38,
-        39
-      ],
-      "sold": 0,
-      "stock": 19,
-      "updatedAt": 1770088074689
-    },
     "-OkXHCiS_TdkoonzDG5n": {
       "brand": "Nike",
       "category": "lifestyle",
@@ -1224,6 +1256,36 @@
     }
   },
   "reviews": {
+    "-OkXHCiS_TdkoonzDG5n": {
+      "-OkZd_0rUukwPSs_pagf": {
+        "comment": "ádaádaádas",
+        "createdAt": 1770141405461,
+        "helpful": 3,
+        "productId": "-OkXHCiS_TdkoonzDG5n",
+        "rating": 5,
+        "title": "sad",
+        "updatedAt": 1770141405461,
+        "userAvatar": "https://res.cloudinary.com/dvcebine7/image/upload/v1770020096/Upload-Preset/eohq5zzyzo3wy5l5jz6d.jpg",
+        "userEmail": "quantrixsneaker251@gmail.com",
+        "userId": "lQncKDLoCPMEDW1iazyB9cHADS53",
+        "userName": "Admin",
+        "verified": false
+      },
+      "-OkZeSrXi5yWyn_Wvx5a": {
+        "comment": "ádasdádasdas",
+        "createdAt": 1770141638163,
+        "helpful": 0,
+        "productId": "-OkXHCiS_TdkoonzDG5n",
+        "rating": 5,
+        "title": "áda",
+        "updatedAt": 1770141638163,
+        "userAvatar": "https://res.cloudinary.com/dvcebine7/image/upload/v1770020096/Upload-Preset/eohq5zzyzo3wy5l5jz6d.jpg",
+        "userEmail": "quantrixsneaker251@gmail.com",
+        "userId": "lQncKDLoCPMEDW1iazyB9cHADS53",
+        "userName": "Admin",
+        "verified": false
+      }
+    },
     "prod_001": {
       "review_001": {
         "comment": "Mình đã mua đôi Air Jordan này và rất hài lòng. Chất liệu da cao cấp, đế êm ái, thiết kế iconic. Đáng đồng tiền bát gạo!",
@@ -1422,7 +1484,7 @@
       "email": "quantrixsneaker251@gmail.com",
       "emailVerified": false,
       "isAdmin": true,
-      "lastLogin": 1770138524881,
+      "lastLogin": 1770144109020,
       "loyaltyPoints": 0,
       "photoURL": "https://res.cloudinary.com/dvcebine7/image/upload/v1770020096/Upload-Preset/eohq5zzyzo3wy5l5jz6d.jpg",
       "role": "admin",
@@ -1437,6 +1499,15 @@
         "image": "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/b7d9211c-26e7-431a-ac24-b0540fb3c00f/air-jordan-1-retro-high-og-shoe.png",
         "name": "Nike Air Jordan 1 Retro High OG",
         "price": 4500000
+      }
+    },
+    "lQncKDLoCPMEDW1iazyB9cHADS53": {
+      "-OkWOR8a9WdkKVjyr0J2": {
+        "addedAt": 1770141798543,
+        "id": "-OkWOR8a9WdkKVjyr0J2",
+        "image": "https://res.cloudinary.com/dvcebine7/image/upload/v1770086842/Upload-Preset/rgbftwkwruq3lpiy6ovc.jpg",
+        "name": "ưqeq",
+        "price": 299000
       }
     }
   }

@@ -145,11 +145,16 @@ function updateStats() {
     const sevenDaysAgo = Date.now() - (7 * 24 * 60 * 60 * 1000);
     const newUsers = state.users.filter(u => u.createdAt && u.createdAt >= sevenDaysAgo).length;
     
-    // Update DOM
-    document.getElementById('stat-users-total').textContent = totalUsers;
-    document.getElementById('stat-users-admin').textContent = adminUsers;
-    document.getElementById('stat-users-customer').textContent = customerUsers;
-    document.getElementById('stat-users-new').textContent = newUsers;
+    // Safely update DOM - check if elements exist first
+    const totalEl = document.getElementById('stat-users-total');
+    const adminEl = document.getElementById('stat-users-admin');
+    const customerEl = document.getElementById('stat-users-customer');
+    const newEl = document.getElementById('stat-users-new');
+    
+    if (totalEl) totalEl.textContent = totalUsers;
+    if (adminEl) adminEl.textContent = adminUsers;
+    if (customerEl) customerEl.textContent = customerUsers;
+    if (newEl) newEl.textContent = newUsers;
 }
 
 /**

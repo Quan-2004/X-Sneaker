@@ -251,7 +251,11 @@
 
             if (password !== confirmPassword) {
                 if(window.showToast) window.showToast('Mật khẩu nhập lại không khớp!');
-                else alert('Mật khẩu nhập lại không khớp!');
+                else {
+                    if (window.showToast) {
+                        window.showToast('Mật khẩu nhập lại không khớp!', 'error');
+                    }
+                }
                 return;
             }
             
