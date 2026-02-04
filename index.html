@@ -629,8 +629,16 @@
         <span class="material-symbols-outlined text-sm">arrow_forward</span>
       </a>
     </div>
-    <div id="best-sellers-products" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-      <!-- Products will be loaded by home-products.js -->
+    <div class="relative">
+      <div id="best-sellers-products" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 overflow-hidden">
+        <!-- Products will be loaded by home-products.js -->
+      </div>
+      <button id="best-sellers-prev" class="hidden absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 size-10 rounded-full glass text-gray-700 dark:text-white items-center justify-center hover:bg-primary hover:text-white transition-colors z-10 shadow-lg">
+        <span class="material-symbols-outlined">chevron_left</span>
+      </button>
+      <button id="best-sellers-next" class="hidden absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 size-10 rounded-full glass text-gray-700 dark:text-white items-center justify-center hover:bg-primary hover:text-white transition-colors z-10 shadow-lg">
+        <span class="material-symbols-outlined">chevron_right</span>
+      </button>
     </div>
   </div>
 </section>
@@ -648,8 +656,16 @@
         <span class="material-symbols-outlined text-sm">arrow_forward</span>
       </a>
     </div>
-    <div id="new-arrivals-products" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-      <!-- Products will be loaded by home-products.js -->
+    <div class="relative">
+      <div id="new-arrivals-products" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 overflow-hidden">
+        <!-- Products will be loaded by home-products.js -->
+      </div>
+      <button id="new-arrivals-prev" class="hidden absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 size-10 rounded-full glass text-gray-700 dark:text-white items-center justify-center hover:bg-primary hover:text-white transition-colors z-10 shadow-lg">
+        <span class="material-symbols-outlined">chevron_left</span>
+      </button>
+      <button id="new-arrivals-next" class="hidden absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 size-10 rounded-full glass text-gray-700 dark:text-white items-center justify-center hover:bg-primary hover:text-white transition-colors z-10 shadow-lg">
+        <span class="material-symbols-outlined">chevron_right</span>
+      </button>
     </div>
   </div>
 </section>

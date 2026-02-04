@@ -446,11 +446,15 @@ async function handleFormSubmit(e) {
         }
 
         closeModal();
-        alert('✅ Lưu sản phẩm thành công!');
+        if (window.showToast) {
+            window.showToast('Lưu sản phẩm thành công!', 'success');
+        }
         
     } catch (error) {
         console.error('Error saving product:', error);
-        alert('❌ Lỗi khi lưu sản phẩm: ' + error.message);
+        if (window.showToast) {
+            window.showToast('Lỗi khi lưu sản phẩm: ' + error.message, 'error');
+        }
     } finally {
         submitBtn.innerHTML = originalBtnText;
         submitBtn.disabled = false;
@@ -458,12 +462,27 @@ async function handleFormSubmit(e) {
 }
 
 async function deleteProduct(id) {
-    if (confirm('Are you sure you want to delete this product?')) {
+    const confirmed = await window.showConfirm(
+        'Bạn có chắc muốn xóa sản phẩm này?',
+        {
+            title: 'Xác nhận xóa',
+            type: 'warning',
+            confirmText: 'Xóa',
+            cancelText: 'Hủy'
+        }
+    );
+    
+    if (confirmed) {
         try {
             await remove(ref(db, `products/${id}`));
+            if (window.showToast) {
+                window.showToast('Xóa sản phẩm thành công!', 'success');
+            }
         } catch (error) {
             console.error(error);
-            alert('Failed to delete product');
+            if (window.showToast) {
+                window.showToast('Lỗi khi xóa sản phẩm', 'error');
+            }
         }
     }
 }
@@ -508,7 +527,9 @@ async function importCSV(file) {
             }
         }
         
-        alert(`Import completed!\nSuccess: ${successCount}\nFailed: ${failCount}`);
+        if (window.showToast) {
+            window.showToast(`Import hoàn tất! Thành công: ${successCount}, Thất bại: ${failCount}`, successCount > 0 ? 'success' : 'warning');
+        }
         loadProducts(); // Refresh
     };
     reader.readAsText(file);
@@ -663,7 +684,9 @@ function generateInventoryTable() {
     const sizesText = sizesInput.value.trim();
     
     if (!colorsText || !sizesText) {
-        alert('Vui lòng nhập màu sắc và size trước!');
+        if (window.showToast) {
+            window.showToast('Vui lòng nhập màu sắc và size trước!', 'warning');
+        }
         return;
     }
     
@@ -671,7 +694,9 @@ function generateInventoryTable() {
     const sizes = sizesText.split(',').map(s => s.trim()).filter(s => s);
     
     if (colors.length === 0 || sizes.length === 0) {
-        alert('Màu sắc hoặc size không hợp lệ!');
+        if (window.showToast) {
+            window.showToast('Màu sắc hoặc size không hợp lệ!', 'warning');
+        }
         return;
     }
     
@@ -754,7 +779,9 @@ function generateInventoryTable() {
                 }
             } catch (error) {
                 console.error('Error uploading color image:', error);
-                alert('Lỗi khi tải ảnh lên: ' + error.message);
+                if (window.showToast) {
+                    window.showToast('Lỗi khi tải ảnh lên: ' + error.message, 'error');
+                }
                 if (preview) {
                     preview.innerHTML = '<span class="material-symbols-rounded text-red-400 text-sm">error</span>';
                 }

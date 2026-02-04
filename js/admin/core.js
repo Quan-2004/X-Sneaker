@@ -20,7 +20,9 @@ function checkAuth() {
     onAuthStateChanged(auth, (user) => {
         if (!user) {
             console.warn('User not logged in. Redirecting to login...');
-            alert('Access Denied. You must be logged in as an Admin to access this panel.');
+            if (window.showToast) {
+                window.showToast('Truy cập bị từ chối. Bạn phải đăng nhập với quyền Admin.', 'error');
+            }
             window.location.href = 'login.html'; 
         } else {
             console.log('Admin Logged in as:', user.email);

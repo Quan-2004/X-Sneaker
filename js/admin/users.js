@@ -591,7 +591,17 @@ export async function toggleAdmin(userId, makeAdmin) {
         ? `Bạn có chắc muốn cấp quyền Admin cho "${user.displayName}"?`
         : `Bạn có chắc muốn gỡ quyền Admin của "${user.displayName}"?`;
     
-    if (!confirm(confirmMessage)) return;
+    const confirmed = await window.showConfirm(
+        confirmMessage,
+        {
+            title: makeAdmin ? 'Cấp quyền Admin' : 'Gỡ quyền Admin',
+            type: 'warning',
+            confirmText: 'Đồng ý',
+            cancelText: 'Hủy'
+        }
+    );
+    
+    if (!confirmed) return;
     
     try {
         const userRef = ref(database, `users/${userId}`);
@@ -751,9 +761,10 @@ function showNotification(message, type = 'info') {
     // Use global notification system
     if (window.showNotification) {
         window.showNotification(message, type);
+    } else if (window.showToast) {
+        window.showToast(message, type);
     } else {
-        // Fallback to alert if notification system not loaded
-        alert(message);
+        console.log(`[${type.toUpperCase()}] ${message}`);
     }
 }
 

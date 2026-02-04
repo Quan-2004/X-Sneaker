@@ -197,8 +197,8 @@ function showErrorMessage(message) {
         }, 8000);
     } else {
         // Fallback if error div doesn't exist
-        console.error('Error div not found, showing alert');
-        alert(message);
+        console.error('Error div not found');
+        console.log(`[ERROR] ${message}`);
     }
 }
 

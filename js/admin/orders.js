@@ -133,7 +133,9 @@ function setPage(page) {
  */
 function exportCSV() {
     if (!filteredOrders.length) {
-        alert("Không có dữ liệu để xuất!");
+        if (window.showToast) {
+            window.showToast('Không có dữ liệu để xuất!', 'warning');
+        }
         return;
     }
     
@@ -382,19 +384,32 @@ function getInitials(name) {
 /**
  * Update Order Status
  */
-function updateStatus(orderId, newStatus) {
-    if (!confirm(`Bạn có chắc muốn chuyển trạng thái đơn hàng thành "${newStatus}"?`)) return;
+async function updateStatus(orderId, newStatus) {
+    const confirmed = await window.showConfirm(
+        `Bạn có chắc muốn chuyển trạng thái đơn hàng thành "${newStatus}"?`,
+        {
+            title: 'Xác nhận cập nhật',
+            type: 'info',
+            confirmText: 'Cập nhật',
+            cancelText: 'Hủy'
+        }
+    );
+    
+    if (!confirmed) return;
 
     const orderRef = ref(db, `orders/${orderId}`);
     update(orderRef, {
         status: newStatus,
         updatedAt: Date.now()
     }).then(() => {
-        // Notification logic could go here
-        alert('Cập nhật trạng thái thành công!');
+        if (window.showToast) {
+            window.showToast('Cập nhật trạng thái thành công!', 'success');
+        }
     }).catch((error) => {
         console.error('Lỗi cập nhật:', error);
-        alert('Không thể cập nhật trạng thái');
+        if (window.showToast) {
+            window.showToast('Không thể cập nhật trạng thái', 'error');
+        }
     });
 }
 
@@ -804,12 +819,16 @@ async function saveOrder() {
 
     // Validation
     if (!fullname || !email || !phone || !address || !city) {
-        alert('Vui lòng điền đầy đủ thông tin khách hàng!');
+        if (window.showToast) {
+            window.showToast('Vui lòng điền đầy đủ thông tin khách hàng!', 'warning');
+        }
         return;
     }
 
     if (selectedItems.length === 0) {
-        alert('Vui lòng chọn ít nhất một sản phẩm!');
+        if (window.showToast) {
+            window.showToast('Vui lòng chọn ít nhất một sản phẩm!', 'warning');
+        }
         return;
     }
     
@@ -863,12 +882,16 @@ async function saveOrder() {
 
     try {
         await push(ref(db, 'orders'), newOrder);
-        alert('Tạo đơn hàng thành công!');
+        if (window.showToast) {
+            window.showToast('Tạo đơn hàng thành công!', 'success');
+        }
         closeCreateModal();
         reload(); // Refresh table
     } catch (error) {
         console.error('Lỗi tạo đơn:', error);
-        alert('Lỗi tạo đơn hàng: ' + error.message);
+        if (window.showToast) {
+            window.showToast('Lỗi tạo đơn hàng: ' + error.message, 'error');
+        }
     }
 }
 

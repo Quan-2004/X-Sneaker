@@ -312,11 +312,15 @@ async function saveBlog(e) {
         }
 
         closeModal();
-        alert('✅ Post saved successfully!');
+        if (window.showToast) {
+            window.showToast('Lưu bài viết thành công!', 'success');
+        }
         
     } catch (error) {
         console.error('Error saving blog:', error);
-        alert('❌ Failed to save post: ' + error.message);
+        if (window.showToast) {
+            window.showToast('Lỗi khi lưu bài viết: ' + error.message, 'error');
+        }
     } finally {
         submitBtn.innerHTML = originalBtnText;
         submitBtn.disabled = false;
@@ -324,12 +328,27 @@ async function saveBlog(e) {
 }
 
 async function deleteBlog(id) {
-    if (confirm('Are you sure you want to delete this post? This action cannot be undone.')) {
+    const confirmed = await window.showConfirm(
+        'Bạn có chắc muốn xóa bài viết này? Hành động này không thể hoàn tác.',
+        {
+            title: 'Xác nhận xóa',
+            type: 'error',
+            confirmText: 'Xóa',
+            cancelText: 'Hủy'
+        }
+    );
+    
+    if (confirmed) {
         try {
             await remove(ref(db, `blogs/${id}`));
+            if (window.showToast) {
+                window.showToast('Xóa bài viết thành công!', 'success');
+            }
         } catch (error) {
             console.error(error);
-            alert('Failed to delete post');
+            if (window.showToast) {
+                window.showToast('Lỗi khi xóa bài viết', 'error');
+            }
         }
     }
 }

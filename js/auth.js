@@ -41,7 +41,7 @@ function showToast(message, type = "success") {
   if (window.showToast) {
     window.showToast(message);
   } else {
-    alert(message);
+    console.log(`[${type.toUpperCase()}] ${message}`);
   }
 }
 

@@ -98,13 +98,17 @@ async function getCommentCount(blogId) {
 
 async function postComment(blogId, content, parentId = null) {
     if (!currentUser) {
-        alert('Vui lòng đăng nhập để bình luận');
+        if (window.showToast) {
+            window.showToast('Vui lòng đăng nhập để bình luận', 'warning');
+        }
         window.location.href = 'login.html';
         return false;
     }
     
     if (!content.trim()) {
-        alert('Nội dung bình luận không được để trống');
+        if (window.showToast) {
+            window.showToast('Nội dung bình luận không được để trống', 'warning');
+        }
         return false;
     }
     
@@ -129,7 +133,9 @@ async function postComment(blogId, content, parentId = null) {
         return true;
     } catch (error) {
         console.error('❌ Error posting comment:', error);
-        alert('Có lỗi xảy ra khi đăng bình luận. Vui lòng thử lại.');
+        if (window.showToast) {
+            window.showToast('Có lỗi xảy ra khi đăng bình luận. Vui lòng thử lại.', 'error');
+        }
         return false;
     }
 }
@@ -308,7 +314,9 @@ function setupReplyButtons(blogId) {
 
 function showReplyForm(commentId, userName, blogId) {
     if (!currentUser) {
-        alert('Vui lòng đăng nhập để trả lời');
+        if (window.showToast) {
+            window.showToast('Vui lòng đăng nhập để trả lời', 'warning');
+        }
         window.location.href = 'login.html';
         return;
     }

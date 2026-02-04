@@ -107,11 +107,15 @@ function initCMS() {
                     set(ref(db, 'settings/contactInfo'), contactData)
                 ]);
 
-                alert('✅ CMS Content Saved Successfully!');
+                if (window.showToast) {
+                    window.showToast('Lưu nội dung CMS thành công!', 'success');
+                }
 
             } catch (error) {
                 console.error(error);
-                alert('❌ Failed to save content: ' + error.message);
+                if (window.showToast) {
+                    window.showToast('Lỗi khi lưu nội dung: ' + error.message, 'error');
+                }
             } finally {
                 btnSave.innerHTML = originalText;
                 btnSave.disabled = false;

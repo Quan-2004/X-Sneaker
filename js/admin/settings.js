@@ -22,10 +22,19 @@ function initSettings() {
 }
 
 // Sub-tab Switching
-function switchSubTab(tabName) {
+async function switchSubTab(tabName) {
     // Check for unsaved changes
     if (hasUnsavedChanges) {
-        if (!confirm('You have unsaved changes. Do you want to discard them?')) {
+        const confirmed = await window.showConfirm(
+            'Bạn có thay đổi chưa lưu. Bạn có muốn hủy bỏ chúng?',
+            {
+                title: 'Thay đổi chưa lưu',
+                type: 'warning',
+                confirmText: 'Hủy bỏ',
+                cancelText: 'Tiếp tục chỉnh sửa'
+            }
+        );
+        if (!confirmed) {
             return;
         }
         hasUnsavedChanges = false;
@@ -454,11 +463,21 @@ async function exportData() {
 }
 
 // Clear Cache
-function clearCache() {
-    if (confirm('Are you sure you want to clear the cache? This will log you out.')) {
+async function clearCache() {
+    const confirmed = await window.showConfirm(
+        'Bạn có chắc muốn xóa cache? Bạn sẽ bị đăng xuất.',
+        {
+            title: 'Xác nhận xóa cache',
+            type: 'warning',
+            confirmText: 'Xóa',
+            cancelText: 'Hủy'
+        }
+    );
+    
+    if (confirmed) {
         localStorage.clear();
         sessionStorage.clear();
-        showToast('Cache cleared! Redirecting to login...', 'success');
+        showToast('Cache đã được xóa! Đang chuyển đến trang đăng nhập...', 'success');
         setTimeout(() => {
             window.location.href = 'login.html';
         }, 1500);
@@ -466,9 +485,18 @@ function clearCache() {
 }
 
 // Reset Form
-function resetForm() {
+async function resetForm() {
     if (hasUnsavedChanges) {
-        if (confirm('Are you sure you want to discard your changes?')) {
+        const confirmed = await window.showConfirm(
+            'Bạn có chắc muốn hủy bỏ các thay đổi?',
+            {
+                title: 'Xác nhận hủy',
+                type: 'warning',
+                confirmText: 'Hủy bỏ',
+                cancelText: 'Tiếp tục'
+            }
+        );
+        if (confirmed) {
             loadAllSettings();
             hasUnsavedChanges = false;
             showToast('Changes discarded', 'info');
@@ -901,7 +929,17 @@ async function updateSlideText(index, field, value) {
 
 // Delete Slide
 async function deleteSlide(index) {
-    if (!confirm('Bạn có chắc muốn xóa slide này?')) return;
+    const confirmed = await window.showConfirm(
+        'Bạn có chắc muốn xóa slide này?',
+        {
+            title: 'Xác nhận xóa',
+            type: 'warning',
+            confirmText: 'Xóa',
+            cancelText: 'Hủy'
+        }
+    );
+    
+    if (!confirmed) return;
     
     try {
         const snapshot = await new Promise((resolve) => {
