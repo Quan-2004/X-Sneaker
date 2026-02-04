@@ -951,81 +951,183 @@ function closeOrderDetailsModal() {
 }
 
 async function confirmOrderReceived(orderId) {
-    if (!confirm('Bạn đã nhận được hàng và xác nhận đơn hàng hoàn thành?')) {
-        return;
-    }
+    // Show confirmation modal
+    showConfirmReceivedModal(orderId);
+}
 
-    const btn = document.getElementById('btn-confirm-received');
-    const originalText = btn.innerHTML;
+function showConfirmReceivedModal(orderId) {
+    const modal = document.getElementById('confirm-received-modal');
+    const closeBtn = document.getElementById('btn-confirm-received-close');
+    const submitBtn = document.getElementById('btn-confirm-received-submit');
     
-    try {
-        btn.disabled = true;
-        btn.innerHTML = '<span class="material-symbols-outlined animate-spin">progress_activity</span> Đang xử lý...';
+    // Show modal with animation
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+    setTimeout(() => {
+        modal.classList.remove('opacity-0');
+        modal.querySelector('div').classList.remove('scale-95');
+        modal.querySelector('div').classList.add('scale-100');
+    }, 10);
+    
+    // Close modal function
+    const closeConfirmModal = () => {
+        modal.classList.add('opacity-0');
+        modal.querySelector('div').classList.remove('scale-100');
+        modal.querySelector('div').classList.add('scale-95');
+        setTimeout(() => {
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }, 300);
+    };
+    
+    // Handle close button
+    const handleClose = () => {
+        closeConfirmModal();
+        closeBtn.removeEventListener('click', handleClose);
+        submitBtn.removeEventListener('click', handleSubmit);
+    };
+    
+    // Handle submit
+    const handleSubmit = async () => {
+        const originalText = submitBtn.innerHTML;
+        try {
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span class="material-symbols-outlined animate-spin">progress_activity</span> Đang xử lý...';
 
-        // Update order status to delivered
-        const orderRef = ref(database, `orders/${orderId}`);
-        await update(orderRef, {
-            status: 'delivered',
-            deliveredAt: Date.now(),
-            updatedAt: Date.now()
-        });
+            // Update order status to delivered
+            const orderRef = ref(database, `orders/${orderId}`);
+            await update(orderRef, {
+                status: 'delivered',
+                deliveredAt: Date.now(),
+                updatedAt: Date.now()
+            });
 
-        showToast('Đã xác nhận nhận hàng thành công!');
-        
-        // Reload orders to update UI
-        if (currentUser) {
-            await loadUserOrders(currentUser.uid);
+            showToast('Đã xác nhận nhận hàng thành công!');
+            
+            // Reload orders to update UI
+            if (currentUser) {
+                await loadUserOrders(currentUser.uid);
+            }
+            
+            // Close modals
+            closeConfirmModal();
+            closeOrderDetailsModal();
+
+        } catch (error) {
+            console.error('Error confirming order:', error);
+            showToast('Có lỗi xảy ra. Vui lòng thử lại!', 'error');
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalText;
+        } finally {
+            closeBtn.removeEventListener('click', handleClose);
+            submitBtn.removeEventListener('click', handleSubmit);
         }
-        
-        // Close modal
-        closeOrderDetailsModal();
-
-    } catch (error) {
-        console.error('Error confirming order:', error);
-        showToast('Có lỗi xảy ra. Vui lòng thử lại!', 'error');
-        btn.disabled = false;
-        btn.innerHTML = originalText;
-    }
+    };
+    
+    closeBtn.addEventListener('click', handleClose);
+    submitBtn.addEventListener('click', handleSubmit);
 }
 
 async function cancelOrder(orderId) {
-    const reason = prompt('Vui lòng cho biết lý do hủy đơn:');
-    if (!reason || reason.trim() === '') {
-        return;
-    }
+    // Show cancel reason modal
+    showCancelReasonModal(orderId);
+}
 
-    const btn = document.getElementById('btn-cancel-order');
-    const originalText = btn.innerHTML;
+function showCancelReasonModal(orderId) {
+    const modal = document.getElementById('cancel-reason-modal');
+    const input = document.getElementById('cancel-reason-input');
+    const closeBtn = document.getElementById('btn-cancel-reason-close');
+    const submitBtn = document.getElementById('btn-cancel-reason-submit');
     
-    try {
-        btn.disabled = true;
-        btn.innerHTML = '<span class="material-symbols-outlined animate-spin">progress_activity</span> Đang hủy...';
-
-        // Update order status to cancelled
-        const orderRef = ref(database, `orders/${orderId}`);
-        await update(orderRef, {
-            status: 'cancelled',
-            cancelledAt: Date.now(),
-            cancelReason: reason,
-            updatedAt: Date.now()
-        });
-
-        showToast('Đơn hàng đã được hủy!');
-        
-        // Reload orders to update UI
-        if (currentUser) {
-            await loadUserOrders(currentUser.uid);
+    // Clear previous input
+    input.value = '';
+    
+    // Show modal with animation
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+    setTimeout(() => {
+        modal.classList.remove('opacity-0');
+        modal.querySelector('div').classList.remove('scale-95');
+        modal.querySelector('div').classList.add('scale-100');
+    }, 10);
+    
+    // Focus input
+    setTimeout(() => input.focus(), 100);
+    
+    // Close modal function
+    const closeCancelModal = () => {
+        modal.classList.add('opacity-0');
+        modal.querySelector('div').classList.remove('scale-100');
+        modal.querySelector('div').classList.add('scale-95');
+        setTimeout(() => {
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }, 300);
+    };
+    
+    // Handle close button
+    const handleClose = () => {
+        closeCancelModal();
+        closeBtn.removeEventListener('click', handleClose);
+        submitBtn.removeEventListener('click', handleSubmit);
+    };
+    
+    // Handle submit
+    const handleSubmit = async () => {
+        const reason = input.value.trim();
+        if (!reason) {
+            showToast('Vui lòng nhập lý do hủy đơn', 'error');
+            input.focus();
+            return;
         }
         
-        // Close modal
-        closeOrderDetailsModal();
+        const originalText = submitBtn.innerHTML;
+        try {
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span class="material-symbols-outlined animate-spin">progress_activity</span> Đang hủy...';
 
-    } catch (error) {
-        console.error('Error cancelling order:', error);
-        showToast('Có lỗi xảy ra. Vui lòng thử lại!', 'error');
-        btn.disabled = false;
-        btn.innerHTML = originalText;
-    }
+            // Update order status to cancelled
+            const orderRef = ref(database, `orders/${orderId}`);
+            await update(orderRef, {
+                status: 'cancelled',
+                cancelledAt: Date.now(),
+                cancelReason: reason,
+                updatedAt: Date.now()
+            });
+
+            showToast('Đơn hàng đã được hủy!');
+            
+            // Reload orders to update UI
+            if (currentUser) {
+                await loadUserOrders(currentUser.uid);
+            }
+            
+            // Close modals
+            closeCancelModal();
+            closeOrderDetailsModal();
+
+        } catch (error) {
+            console.error('Error cancelling order:', error);
+            showToast('Có lỗi xảy ra. Vui lòng thử lại!', 'error');
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalText;
+        } finally {
+            closeBtn.removeEventListener('click', handleClose);
+            submitBtn.removeEventListener('click', handleSubmit);
+        }
+    };
+    
+    closeBtn.addEventListener('click', handleClose);
+    submitBtn.addEventListener('click', handleSubmit);
+    
+    // Allow Enter to submit
+    const handleEnter = (e) => {
+        if (e.key === 'Enter' && e.ctrlKey) {
+            handleSubmit();
+            input.removeEventListener('keydown', handleEnter);
+        }
+    };
+    input.addEventListener('keydown', handleEnter);
 }
 
 // Setup modal close button

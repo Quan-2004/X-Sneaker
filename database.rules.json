@@ -34,7 +34,19 @@
       ".read": "auth != null",
       "$orderId": {
         ".read": "auth != null",
-        ".write": "auth != null && (root.child('users').child(auth.uid).child('role').val() === 'admin' || root.child('users').child(auth.uid).child('isAdmin').val() === true || !data.exists())"
+        ".write": "auth != null && (root.child('users').child(auth.uid).child('role').val() === 'admin' || root.child('users').child(auth.uid).child('isAdmin').val() === true || !data.exists() || data.child('userId').val() === auth.uid)",
+        "status": {
+          ".write": "auth != null && data.parent().child('userId').val() === auth.uid"
+        },
+        "cancelledAt": {
+          ".write": "auth != null && data.parent().child('userId').val() === auth.uid"
+        },
+        "cancelReason": {
+          ".write": "auth != null && data.parent().child('userId').val() === auth.uid"
+        },
+        "updatedAt": {
+          ".write": "auth != null && data.parent().child('userId').val() === auth.uid"
+        }
       }
     },
     "cart": {
